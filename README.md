@@ -30,7 +30,7 @@ Instalación y estado: `artifacts/release-notes.md`.
 - `android-sdk-v5-uxsdk/`: UX SDK de DJI.
 - `algorithms/`: recetas JSON de ejemplo.
 - `legacy/`: variante MSDK V4 para Phantom 4, con `preflight.sh` y registro de hardware.
-- `docs/`: compatibilidad, seguridad y configuración.
+- `docs/`: compatibilidad, seguridad, configuración y [pruebas en móvil](docs/PRUEBAS.md).
 - `artifacts/`: APK/AAB generados, notas de release y manifiesto de hashes. Los binarios no se versionan; se publican como assets del release.
 - `config/`: configuración local de firma (no publicar claves privadas).
 

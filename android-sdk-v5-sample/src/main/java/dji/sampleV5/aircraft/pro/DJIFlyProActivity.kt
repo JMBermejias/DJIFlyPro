@@ -37,6 +37,9 @@ class DJIFlyProActivity : AppCompatActivity() {
     private lateinit var progress: ProgressBar
     private lateinit var lastMission: TextView
 
+    /** App Key as baked into the manifest. Null when it was not configured. */
+    private var apiKey: String? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initializeUxSdk()
@@ -60,13 +63,11 @@ class DJIFlyProActivity : AppCompatActivity() {
             startActivity(Intent(this, DocumentationActivity::class.java))
         }
 
-        val apiKey = runCatching {
+        apiKey = runCatching {
             packageManager.getApplicationInfo(packageName, PackageManager.GET_META_DATA)
                 .metaData?.getString("com.dji.sdk.API_KEY")
-        }.getOrNull().orEmpty()
-        if (apiKey.isBlank() || apiKey.contains("Please add", true)) {
-            connectionStatus.text = "SDK iniciado; falta configurar la API Key de DJI"
-        }
+        }.getOrNull()
+        connectionStatus.text = ConnectionStatusMessage.initial(apiKey)
 
         requestRuntimePermissions()
         observeSdk()
@@ -85,12 +86,11 @@ class DJIFlyProActivity : AppCompatActivity() {
             progress.visibility = if (event == DJISDKInitEvent.INITIALIZE_COMPLETE) android.view.View.GONE else android.view.View.VISIBLE
         }
         msdkManagerVM.lvRegisterState.observe(this) { (registered, error) ->
-            if (registered) {
-                connectionStatus.text = "DJI Mobile SDK registrado correctamente"
-            } else {
-                val detail = error?.description()?.takeIf { it.isNotBlank() } ?: "Esperando registro"
-                connectionStatus.text = "Registro DJI: $detail"
-            }
+            connectionStatus.text = ConnectionStatusMessage.registration(
+                registered = registered,
+                errorDescription = error?.description(),
+                apiKey = apiKey
+            )
         }
         msdkManagerVM.lvProductConnectionState.observe(this) { (connected, productId) ->
             productStatus.text = if (connected) {
