@@ -130,6 +130,21 @@ inventarse que está al día.
 El orden importa: `update.json` describe un APK concreto por su hash, así que si
 el APK se reconstruye después hay que regenerar el manifiesto.
 
+## Comprobarlo sin dispositivo
+
+`scripts/verify-published-release.sh [versionCodeInstalado]` reproduce el
+camino entero contra la release publicada: busca el manifiesto por la misma
+API, lo valida con las mismas reglas, decide si hay versión nueva, descarga el
+APK y comprueba el hash y el firmante.
+
+```bash
+./scripts/verify-published-release.sh 5
+```
+
+No sustituye a las pruebas unitarias, que son la red permanente. Comprueba lo
+que un `gradlew test` no puede ver: que la release publicada y la app hablan el
+mismo idioma.
+
 ## Lo que no cubre
 
 - **No hay actualización porWi-Fi ni en segundo plano.** La comprobación ocurre
