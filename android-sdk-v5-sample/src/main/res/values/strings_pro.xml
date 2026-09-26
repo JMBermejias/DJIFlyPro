@@ -24,6 +24,7 @@
     <string name="dash_mission_planner">Planificar misión</string>
     <string name="dash_algorithms">Algoritmos y recetas</string>
     <string name="dash_documentation">Documentación y compatibilidad</string>
+    <string name="dash_check_update">Buscar actualizaciones</string>
     <string name="dash_last_mission">Última misión</string>
     <string name="dash_no_missions">No hay misiones guardadas</string>
     <string name="dash_safety_notice">DJIFlyPro no sustituye las comprobaciones de vuelo. Verifica espacio aéreo, obstáculos, permisos, batería y mantenimiento antes de despegar.</string>
@@ -31,6 +32,24 @@
     <string name="dash_product_disconnected">Producto: no conectado</string>
     <string name="dash_permissions_denied">Se denegaron algunos permisos; el control del aircraft puede no estar disponible</string>
     <string name="dash_last_mission_value">%1$s\n%2$d puntos · %3$s km</string>
+
+    <string name="dash_update_checking">Buscando actualizaciones…</string>
+    <string name="dash_update_none">Sin novedades. La app comprueba si hay una versión nueva al abrirse, y también desde «Buscar actualizaciones».</string>
+    <string name="dash_update_available">Hay una versión nueva: %1$s. Puedes instalarla desde aquí.</string>
+    <string name="dash_update_apply">Actualizar ahora</string>
+    <string name="dash_update_check_failed">No se ha podido comprobar si hay actualizaciones: %1$s</string>
+    <string name="dash_update_up_to_date">Estás en la última versión (%1$s).</string>
+
+    <!-- ===== Actualización ===== -->
+    <string name="update_title_new">Hay una versión nueva</string>
+    <string name="update_title_none">Sin actualizaciones nuevas</string>
+    <string name="update_downloading">Descargando %1$s</string>
+    <string name="update_hash_mismatch">La descarga no coincide con la release</string>
+    <string name="update_wrong_signer">Firma distinta</string>
+    <string name="update_download_failed">No se ha podido descargar</string>
+    <string name="update_understood">Entendido</string>
+    <string name="update_later">Ahora no</string>
+    <string name="update_action">Actualizar</string>
 
     <!-- ===== Centro de control ===== -->
     <string name="control_center_title">Centro de control de vuelo</string>

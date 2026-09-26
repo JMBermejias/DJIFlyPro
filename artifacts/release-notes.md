@@ -1,11 +1,11 @@
-# DJIFlyPro v1.1.0-alpha.4
+# DJIFlyPro v1.1.0-alpha.5
 
 **La App Key de DJI ya está en el binario.** Esta prerelease sí puede registrarse
 con el SDK. Es un cambio respecto a `v1.1.0-alpha.1`, cuyos binarios se
 compilaron sin key y no podían conectarse a ningún aircraft.
 
 `applicationId com.djiflypro.app`, DJI Mobile SDK V5.18.0,
-`versionName 1.1.0-alpha.4`, `versionCode 5`.
+`versionName 1.1.0-alpha.5`, `versionCode 6`.
 
 ## Qué sigue sin estar hecho
 
@@ -20,6 +20,42 @@ compilaron sin key y no podían conectarse a ningún aircraft.
 - La firma es la keystore de desarrollo local. No publicable en Google Play.
 - El mapa abre sin teselas: `GMAP_API_KEY` y `MAPLIBRE_TOKEN` siguen vacías.
   El resto de la cartografía no depende del mapa.
+
+## Novedad de esta versión: actualización desde la propia app
+
+Al abrir el programa, DJIFlyPro comprueba si hay una versión nueva y, si la
+hay, lo avisa con un botón para instalarla. También hay **Buscar actualizaciones**
+en el panel principal.
+
+La descarga se comprueba contra **dos** cosas antes de llegar al instalador:
+
+1. El hash SHA-256 que publica la release, descargado por HTTPS desde GitHub.
+2. El certificado con el que está firmado el APK, que tiene que ser el mismo que
+   el de la app ya instalada.
+
+La segunda comprobación es la que importa: si alguien publica una release
+manipulada controla el manifiesto, y con solo el hash podría hacer que la app
+instalara cualquier APK. Comparar el firmante impide que un APK de otra
+aplicación pase por uno de DJIFlyPro. Si cualquiera de las dos falla, el
+fichero se borra y no se instala nada.
+
+**La app nunca instala por su cuenta:** el flujo termina en la pantalla de
+instalación del sistema, que es la que muestra qué va a cambiar y pide la
+confirmación.
+
+Detalles a tener en cuenta:
+
+- Android 8 y posteriores piden además que concedas a DJIFlyPro el permiso de
+  "instalar apps desconocidas". Se pide en el momento, con un diálogo que lleva
+  a Ajustes. Si prefieres no concederlo, se puede descargar el APK a mano.
+- La comprobación se hace como mucho **una vez cada seis horas**: es una
+  petición a GitHub cada vez que se abre la app, y esa es una coste que no
+  compensa pagar siempre.
+- Se descarga el APK entero, unos 205 MB. No hay actualización delta.
+- Cada release publica un `update.json`. **Si se sube sin él, la app no
+  encuentra nada que actualizar** y lo dice, en vez de fingir que está al día.
+
+Ver `docs/ACTUALIZACIONES.md`.
 
 ## Novedad de esta versión: toda la aplicación en español
 
@@ -162,7 +198,7 @@ nada, y lo dice en pantalla.
 
 ## Qué instalar
 
-Solo hay un APK: `DJIFlyPro-1.1.0-alpha.4.apk`. Si ya tienes una versión
+Solo hay un APK: `DJIFlyPro-1.1.0-alpha.5.apk`. Si ya tienes una versión
 anterior de DJIFlyPro instalada, no la desinstales: todas las releases
 comparten certificado, así que se actualiza encima. Si en algún momento
 tuviste instalada una build depurable, esa sí hay que desinstalarla antes,
@@ -196,8 +232,9 @@ rellenar. Ver `docs/COMPATIBILITY.md` y `docs/SAFETY.md`.
 
 | Archivo | Tamaño | SHA-256 |
 |---|---:|---|
-| `DJIFlyPro-1.1.0-alpha.4.apk` | 205,113,194 bytes | `4f95403da5aca91af9dcaa1ae45ec671912e441e7b395938eed7ad48c1a860cd` |
-| `DJIFlyPro-1.1.0-alpha.4.aab` | 198,923,664 bytes | `c6734bde078f232378d7cd320af65149c4fbc92294c2d0a57f86608a268963fe` |
+| `DJIFlyPro-1.1.0-alpha.5.apk` | 205,135,390 bytes | `b0e8b9af8ce3768017f53923d60e66496b59d44951e2072f9715d09c376ee325` |
+| `DJIFlyPro-1.1.0-alpha.5.aab` | 198,943,944 bytes | `c09f41dc66ad7a208d054bc175caa3cd0ed692a7407bd2c95bc620ce9d278913` |
+| `update.json` | — | manifiesto de actualización, lo publica la propia app |
 
 El `.aab` es para subir a Google Play, no para instalar a mano.
 
@@ -209,6 +246,7 @@ sha256sum -c SHA256SUMS.txt
 
 ## Documentación
 
+- `docs/ACTUALIZACIONES.md`: cómo se comprueba y se instala una versión nueva.
 - `docs/IDIOMA.md`: por qué la aplicación es solo en español y dónde vive cada
   cadena.
 - `docs/CARTOGRAFIA.md`: el modelo cartográfico completo, las matemáticas y las

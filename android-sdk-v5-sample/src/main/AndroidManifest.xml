@@ -13,6 +13,24 @@
     <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
     <uses-permission android:name="android.permission.BLUETOOTH_SCAN" android:usesPermissionFlags="neverForLocation" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <!--
+      Necesario para que el sistema pueda instalar la actualización descargada.
+      Android 8 y posteriores piden además que el usuario conceda a la app el
+      permiso de instalar paquetes desconocidos, que se pide en el momento y
+      no se concede en la instalación.
+    -->
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
+
+    <!-- Para lanzar el instalador del sistema en Android 11 y posteriores. -->
+    <queries>
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:mimeType="application/vnd.android.package-archive" />
+        </intent>
+        <intent>
+            <action android:name="android.settings.MANAGE_UNKNOWN_APP_SOURCES" />
+        </intent>
+    </queries>
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" android:maxSdkVersion="28" />
 
@@ -84,6 +102,10 @@
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:exported="false" />
 
+        <activity
+            android:name="dji.sampleV5.aircraft.pro.update.UpdateActivity"
+            android:exported="false"
+            android:theme="@style/pro_theme" />
         <activity
             android:name="dji.sampleV5.aircraft.pro.cartography.CartographyActivity"
             android:exported="false"

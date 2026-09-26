@@ -21,6 +21,11 @@ import dji.v5.common.utils.GeoidManager
 import dji.v5.ux.core.communication.DefaultGlobalPreferences
 import dji.v5.ux.core.communication.GlobalPreferencesManager
 import dji.v5.ux.core.util.UxSharedPreferencesUtil
+import dji.sampleV5.aircraft.pro.update.UpdateActivity
+import dji.sampleV5.aircraft.pro.update.UpdateClient
+import dji.sampleV5.aircraft.pro.update.UpdateManifest
+import dji.sampleV5.aircraft.pro.update.UpdatePrefs
+import java.util.concurrent.Executors
 
 class DJIFlyProActivity : AppCompatActivity() {
     private val msdkManagerVM: MSDKManagerVM by globalViewModels()
@@ -36,6 +41,15 @@ class DJIFlyProActivity : AppCompatActivity() {
     private lateinit var productStatus: TextView
     private lateinit var progress: ProgressBar
     private lateinit var lastMission: TextView
+    private lateinit var updateNotice: TextView
+    private lateinit var applyUpdateButton: Button
+
+    private val updateExecutor = Executors.newSingleThreadExecutor()
+    private val updatePrefs by lazy { UpdatePrefs(this) }
+    private val updateClient = UpdateClient()
+
+    /** The newest release seen, held so the button can act without re-checking. */
+    private var pendingUpdate: UpdateManifest? = null
 
     /** App Key as baked into the manifest. Null when it was not configured. */
     private var apiKey: String? = null
@@ -49,6 +63,10 @@ class DJIFlyProActivity : AppCompatActivity() {
         productStatus = findViewById(R.id.dashboard_product_status)
         progress = findViewById(R.id.dashboard_progress)
         lastMission = findViewById(R.id.dashboard_last_mission)
+        updateNotice = findViewById(R.id.dashboard_update_notice)
+        applyUpdateButton = findViewById(R.id.button_apply_update)
+        applyUpdateButton.setOnClickListener { offerUpdate(automatic = false) }
+        findViewById<Button>(R.id.button_check_update).setOnClickListener { checkForUpdate(force = true) }
 
         findViewById<Button>(R.id.button_control_center).setOnClickListener {
             startActivity(Intent(this, ControlCenterActivity::class.java))
@@ -65,6 +83,13 @@ class DJIFlyProActivity : AppCompatActivity() {
         findViewById<Button>(R.id.button_documentation).setOnClickListener {
             startActivity(Intent(this, DocumentationActivity::class.java))
         }
+
+        // Runs at most every six hours and never blocks the dashboard.
+        updateExecutor.execute {
+            Thread.sleep(1500)
+            runOnUiThread { checkForUpdate(force = false) }
+        }
+
 
         apiKey = runCatching {
             packageManager.getApplicationInfo(packageName, PackageManager.GET_META_DATA)
@@ -135,5 +160,77 @@ class DJIFlyProActivity : AppCompatActivity() {
         UxSharedPreferencesUtil.initialize(this)
         GlobalPreferencesManager.initialize(DefaultGlobalPreferences(this))
         GeoidManager.getInstance().init(this)
+    }
+
+    /**
+     * An update check is a request to a third party, so it happens at most every
+     * six hours and never blocks the dashboard. A failure is a line of text and
+     * nothing else: "no update available" must not be indistinguishable from a
+     * broken network, and a broken network must not look like something the
+     * operator has to act on.
+     */
+    private fun checkForUpdate(force: Boolean) {
+        if (!force && updatePrefs.isFresh()) {
+            updatePrefs.cachedManifest()?.let { renderUpdate(it) }
+            return
+        }
+        updateNotice.text = getString(R.string.dash_update_checking)
+        applyUpdateButton.isEnabled = false
+        val installed = installedVersionCode()
+        updateExecutor.execute {
+            val result = updateClient.check(installed)
+            runOnUiThread {
+                if (isFinishing) return@runOnUiThread
+                when (result) {
+                    is UpdateClient.Result.Available -> {
+                        updatePrefs.cacheManifest(result.manifest)
+                        renderUpdate(result.manifest)
+                        offerUpdate(automatic = true)
+                    }
+                    UpdateClient.Result.UpToDate -> {
+                        updatePrefs.clear()
+                        updatePrefs.markCheckedNow()
+                        pendingUpdate = null
+                        applyUpdateButton.isEnabled = false
+                        updateNotice.text = getString(R.string.dash_update_up_to_date, currentVersionName())
+                    }
+                    is UpdateClient.Result.Failed -> {
+                        updatePrefs.markCheckedNow()
+                        applyUpdateButton.isEnabled = false
+                        updateNotice.text = getString(R.string.dash_update_check_failed, result.reason)
+                    }
+                }
+            }
+        }
+    }
+
+    private fun renderUpdate(manifest: UpdateManifest) {
+        pendingUpdate = manifest
+        updateNotice.text = getString(R.string.dash_update_available, manifest.versionName)
+        applyUpdateButton.isEnabled = true
+    }
+
+    private fun offerUpdate(automatic: Boolean) {
+        val manifest = pendingUpdate
+        if (manifest == null) {
+            checkForUpdate(force = true)
+            return
+        }
+        startActivity(UpdateActivity.launchIntent(this, manifest, automatic))
+    }
+
+    private fun installedVersionCode(): Int = runCatching {
+        @Suppress("DEPRECATION")
+        packageManager.getPackageInfo(packageName, 0).versionCode
+    }.getOrDefault(0)
+
+    private fun currentVersionName(): String = runCatching {
+        @Suppress("DEPRECATION")
+        packageManager.getPackageInfo(packageName, 0).versionName ?: "?"
+    }.getOrDefault("?")
+
+    override fun onDestroy() {
+        updateExecutor.shutdownNow()
+        super.onDestroy()
     }
 }

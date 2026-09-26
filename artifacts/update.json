@@ -1,0 +1,13 @@
+{
+  "schema": "djiflypro.update/v1",
+  "versionCode": 6,
+  "versionName": "1.1.0-alpha.5",
+  "tag": "v1.1.0-alpha.5",
+  "apkUrl": "https://github.com/JMBermejias/DJIFlyPro/releases/tag/v1.1.0-alpha.5/download/DJIFlyPro-1.1.0-alpha.5.apk",
+  "apkSize": 205135390,
+  "sha256": "b0e8b9af8ce3768017f53923d60e66496b59d44951e2072f9715d09c376ee325",
+  "signingCertificateSha256": "8a3aac2e456093f76dc0a2ccd717538b1732da3cecf470231feb48de187def43",
+  "releaseUrl": "https://github.com/JMBermejias/DJIFlyPro/releases/tag/v1.1.0-alpha.5",
+  "notes": "Novedad de esta versi\u00f3n: toda la aplicaci\u00f3n en espa\u00f1ol",
+  "publishedAt": "2026-09-26T15:44:26Z"
+}

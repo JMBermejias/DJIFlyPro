@@ -40,14 +40,26 @@ fi
 # distributable. See docs/BUILD.md.
 GRADLE_ARGS=()
 MODE="distributable"
-for arg in "$@"; do
-  case "$arg" in
+TAG=""
+while [ $# -gt 0 ]; do
+  case "$1" in
     --allow-missing-api-key)
       export DJIFLYPRO_ALLOW_MISSING_API_KEY=1
       MODE="local-verification-only"
+      shift
+      ;;
+    --tag)
+      [ $# -ge 2 ] || { echo "Error: --tag needs a value" >&2; exit 1; }
+      TAG="$2"
+      shift 2
+      ;;
+    --tag=*)
+      TAG="${1#--tag=}"
+      shift
       ;;
     *)
-      GRADLE_ARGS+=("$arg")
+      GRADLE_ARGS+=("$1")
+      shift
       ;;
   esac
 done
@@ -94,6 +106,12 @@ stage "$OUT/apk/release/sample-release.apk" \
 stage "$OUT/bundle/release/sample-release.aab" \
       "$ROOT_DIR/artifacts/DJIFlyPro-$VERSION_NAME.aab"
 
+# The update manifest is written once the binaries it describes exist, so its
+# versionCode, size and digests cannot drift from what was just built. It is
+# hashed below along with them, because the app verifies that digest before it
+# will hand a downloaded APK to the system installer.
+"$ROOT_DIR/scripts/build-update-manifest.sh" "$TAG"
+
 # The hash manifest has to describe exactly the binaries that were just staged.
 # SHA256SUMS.txt is tracked in git while the binaries are not, so nothing
 # regenerates it on an ordinary rebuild and it silently goes stale: a manifest
@@ -103,13 +121,15 @@ stage "$OUT/bundle/release/sample-release.aab" \
 # mistake fails this script instead of the person installing the APK.
 (
   cd "$ROOT_DIR/artifacts"
-  if [ ! -f "DJIFlyPro-$VERSION_NAME.apk" ] || [ ! -f "DJIFlyPro-$VERSION_NAME.aab" ]; then
+  if [ ! -f "DJIFlyPro-$VERSION_NAME.apk" ] || [ ! -f "DJIFlyPro-$VERSION_NAME.aab" ] || [ ! -f update.json ]; then
     echo "Error: the release artifacts are not staged" >&2
     exit 1
   fi
   # Only the two release artifacts, named explicitly, so the manifest describes
   # this release and nothing else that happens to be lying in the directory.
-  sha256sum "DJIFlyPro-$VERSION_NAME.apk" "DJIFlyPro-$VERSION_NAME.aab" \
+  # update.json is included: the updater refuses to install anything whose hash
+  # is not in it, so it has to travel with the manifest that points at them.
+  sha256sum "DJIFlyPro-$VERSION_NAME.apk" "DJIFlyPro-$VERSION_NAME.aab" update.json \
     | sed 's#\./##' > SHA256SUMS.txt
   if ! sha256sum -c SHA256SUMS.txt >/dev/null 2>&1; then
     echo "Error: SHA256SUMS.txt does not match the staged artifacts" >&2

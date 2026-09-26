@@ -14,7 +14,7 @@ de la cadena cartográfica.
 
 ## Releases
 
-- [v1.1.0-alpha.4](https://github.com/JMBermejias/DJIFlyPro/releases/tag/v1.1.0-alpha.4) — **la que hay que instalar**. Toda la aplicación en español, un solo APK, con la App Key de DJI incrustada.
+- [v1.1.0-alpha.5](https://github.com/JMBermejias/DJIFlyPro/releases/tag/v1.1.0-alpha.5) — **la que hay que instalar**. Actualización desde la propia app, toda la aplicación en español, con la App Key de DJI incrustada.
 - [v1.1.0-alpha.2](https://github.com/JMBermejias/DJIFlyPro/releases/tag/v1.1.0-alpha.2) — igual, pero además con un APK debug de otro certificado que no se puede instalar encima.
 - [v1.1.0-alpha.1](https://github.com/JMBermejias/DJIFlyPro/releases/tag/v1.1.0-alpha.1) — compilada sin App Key: no puede registrarse con DJI.
 - [v0.1.0-alpha.1](https://github.com/JMBermejias/DJIFlyPro/releases/tag/v0.1.0-alpha.1) — base de planificación de rutas.
@@ -31,6 +31,17 @@ La capa de dominio (validadores, barrera de ejecución, motor de GSD, control
 terrestre) también está en español, y las fichas de entrega que genera
 —GeoJSON, KML, ficha de vuelo e informe de validación— salen con los textos en
 español. Ver `docs/IDIOMA.md`.
+
+## Actualizaciones
+
+Al abrirse, la app comprueba si hay una versión nueva y, si la hay, lo avisa y
+ofrece un botón para instalarla. La descarga se comprueba contra el hash que
+publica la release **y** contra el certificado con el que está firmada esta
+misma app: si las dos cosas no coinciden, no instala nada y lo dice. El
+instalador es siempre el del sistema, que es quien pide la confirmación.
+
+La comprobación se hace como mucho una vez cada seis horas, y también a mano
+desde **Buscar actualizaciones**. Ver `docs/ACTUALIZACIONES.md`.
 
 ## Qué hace
 
@@ -105,8 +116,9 @@ waypoint automática de DJI. La aplicación no lo oculta ni lo sube:
 - `algorithms/`: copias de las recetas de ejemplo.
 - `legacy/`: variante MSDK V4 para Phantom 4, con `preflight.sh` y registro de
   hardware.
-- `docs/`: [idioma](docs/IDIOMA.md), cartografía, algoritmos, compatibilidad,
-  seguridad, compilación y [pruebas en móvil](docs/PRUEBAS.md).
+- `docs/`: [idioma](docs/IDIOMA.md), cartografía,
+  [actualizaciones dentro de la app](docs/ACTUALIZACIONES.md), algoritmos,
+  compatibilidad, seguridad, compilación y [pruebas en móvil](docs/PRUEBAS.md).
 - `artifacts/`: APK/AAB generados, notas de release y manifiesto de hashes. Los
   binarios no se versionan; se publican como assets del release.
 - `config/`: configuración local de firma (no publicar claves privadas).
