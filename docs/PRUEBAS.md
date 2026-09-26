@@ -52,6 +52,40 @@ genérico:
 
 > Falta la API Key de DJI: registra com.djiflypro.app en DJI Developer
 
+## Pedir la App Key a DJI
+
+La App Key no se genera: se pide. El proceso, según la documentación oficial de
+MSDK V5:
+
+1. **Cuenta de desarrollador** en https://developer.dji.com. DJI pide email y,
+   según la versión del registro que te toque, una tarjeta o un teléfono para
+   verificar la identidad. La documentación de DJI de 2020 decía que la tarjeta
+   solo se usaba para verificar y no se cobraba nada; **confírmalo en sus
+   condiciones actuales** antes de introducir datos de pago.
+2. **Crear la app** en el Developer Center: pestaña **Apps** → **CREATE APP**.
+   Rellena App Type, App Name, Software Platform (**Android**) y **Package
+   Name**.
+3. **Esperar el correo de activación.** La App Key no existe hasta que
+   completas esa activación. Cuenta con que tarde, no es inmediato.
+4. **Copiar la App Key**: 24 dígitos hexadecimales, visibles ya en el developer
+   center.
+
+El Package Name debe ser exactamente el `applicationId` del proyecto, que en
+este repo es `com.djiflypro.app` (`android-sdk-v5-sample/build.gradle`). Si no
+coinciden, el registro falla con:
+
+```
+errorType='SDK', errorCode='INVALID_METADATA'
+```
+
+DJI genera además un **APP ID** con una communication key de 256 dígitos. Ese
+es otro producto, para *Application Activation and Aircraft Binding* y Flight
+Hub, y **no hace falta** para volar con el MSDK. Solo se necesita la App Key.
+
+El cableado ya está hecho: `build.gradle` declara el `applicationId` y rellena
+`manifestPlaceholders["API_KEY"]` desde `AIRCRAFT_API_KEY`. No hay que tocar
+ningún fichero, solo definir la variable.
+
 ## Cómo habilitar las pruebas con drone
 
 1. **Identifica el aircraft y el control remoto.** Modelo exacto, versión de
