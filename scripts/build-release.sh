@@ -17,6 +17,23 @@ if [ -f "$ROOT_DIR/.local/signing.properties" ]; then
   done < "$ROOT_DIR/.local/signing.properties"
 fi
 
+# The DJI App Key lives in .local/, which is git-ignored, and reaches Gradle as
+# an environment variable. gradle.properties is tracked, so a key written there
+# would be committed; the build reads the environment first precisely so the
+# local file is enough and nothing has to be versioned.
+if [ -f "$ROOT_DIR/.local/api-key.properties" ]; then
+  while IFS='=' read -r key value; do
+    case "$key" in
+      AIRCRAFT_API_KEY)
+        case "$value" in
+          \#*|"") ;;
+          *) export "AIRCRAFT_API_KEY=${value}" ;;
+        esac
+        ;;
+    esac
+  done < "$ROOT_DIR/.local/api-key.properties"
+fi
+
 # The release build refuses to run without a DJI App Key, because an APK built
 # without one can never register with the SDK. Pass --allow-missing-api-key only
 # to exercise the R8/lint/signing pipeline locally; the result is not
@@ -35,7 +52,12 @@ for arg in "$@"; do
   esac
 done
 
-./gradlew :sample:assembleRelease :sample:bundleRelease --stacktrace "${GRADLE_ARGS[@]}"
+# The debug variant is built here, in the same run and with the same
+# environment, instead of being copied if it happens to be lying around from
+# some earlier build. A stale debug APK next to a fresh release APK is worse
+# than no debug APK: it looks like part of the release and it was not built
+# from this source or with this DJI App Key.
+./gradlew :sample:assembleDebug :sample:assembleRelease :sample:bundleRelease --stacktrace "${GRADLE_ARGS[@]}"
 
 # Name artifacts after the product and the version the build actually reports,
 # so a downloaded file identifies itself instead of being called
@@ -62,10 +84,8 @@ stage "$OUT/apk/release/sample-release.apk" \
 stage "$OUT/bundle/release/sample-release.aab" \
       "$ROOT_DIR/artifacts/DJIFlyPro-$VERSION_NAME.aab"
 
-if [ -f "$OUT/apk/debug/sample-debug.apk" ]; then
-  stage "$OUT/apk/debug/sample-debug.apk" \
-        "$ROOT_DIR/artifacts/DJIFlyPro-$VERSION_NAME-debug.apk"
-fi
+stage "$OUT/apk/debug/sample-debug.apk" \
+      "$ROOT_DIR/artifacts/DJIFlyPro-$VERSION_NAME-debug.apk"
 
 # The hash manifest has to describe exactly the binaries that were just staged.
 # SHA256SUMS.txt is tracked in git while the binaries are not, so nothing

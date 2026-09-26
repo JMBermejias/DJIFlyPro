@@ -5,19 +5,21 @@ planificación de bloques de vuelo orientada a resolución y solape, control
 terrestre, y entrega de la planificación en los formatos que consume el resto
 de la cadena cartográfica.
 
-> **Estado: prerelease no funcional para volar.** Sin la App Key de DJI
-> registrada para `com.djiflypro.app` la aplicación no puede conectarse a
-> ningún aircraft, y la ejecución automática de misiones WPML está bloqueada.
-> Compila, pasa 292 pruebas y no tiene errores de lint, pero la validación
-> física de vuelo no está realizada. Ver `docs/SAFETY.md`.
+> **Estado: prerelease sin validar en vuelo.** Desde `v1.1.0-alpha.2` la App Key
+> de DJI va incrustada en el binario, así que la aplicación puede registrarse
+> con el SDK. Pero la conexión con un aircraft no se ha probado en hardware, y
+> la ejecución automática de misiones WPML sigue bloqueada porque la allowlist
+> de validación física se publica vacía. Compila, pasa 292 pruebas y no tiene
+> errores de lint. Ver `docs/SAFETY.md` y `docs/PRUEBAS.md`.
 
 ## Releases
 
-- [v1.1.0-alpha.1](https://github.com/JMBermejias/DJIFlyPro/releases/tag/v1.1.0-alpha.1) — cartografía por resolución, control terrestre, GeoJSON/KML/ficha de vuelo y revisión en el mapa.
+- [v1.1.0-alpha.2](https://github.com/JMBermejias/DJIFlyPro/releases/tag/v1.1.0-alpha.2) — cartografía por resolución, control terrestre, GeoJSON/KML/ficha de vuelo y revisión en el mapa. Con App Key de DJI incrustada.
+- [v1.1.0-alpha.1](https://github.com/JMBermejias/DJIFlyPro/releases/tag/v1.1.0-alpha.1) — lo mismo, compilado sin App Key: no puede registrarse con DJI.
 - [v0.1.0-alpha.1](https://github.com/JMBermejias/DJIFlyPro/releases/tag/v0.1.0-alpha.1) — base de planificación de rutas.
 
-Ambas son prereleases y ninguna puede volar todavía. Instalación y estado:
-`artifacts/release-notes.md`.
+Todas son prereleases. La única que puede registrarse con DJI es `v1.1.0-alpha.2`.
+Instalación y estado: `artifacts/release-notes.md`.
 
 ## Qué hace
 
@@ -113,15 +115,26 @@ Ver `docs/BUILD.md`.
 
 ## DJI App Key
 
-1. Registra en DJI Developer una aplicación Android.
-2. Usa exactamente el `applicationId` `com.djiflypro.app`.
-3. Pega la clave en `AIRCRAFT_API_KEY` en `android-sdk-v5-as/gradle.properties`
-   o como variable de entorno `AIRCRAFT_API_KEY`.
-4. Usa el firmware y el control remoto soportados por DJI para el modelo
-   concreto.
+La clave de esta compilación está en `.local/api-key.properties`, que está en
+`.gitignore` y con permisos `600`. `scripts/build-release.sh` la lee y la
+exporta como `AIRCRAFT_API_KEY`. **No la escribas en `gradle.properties`**: ese
+fichero está versionado y la clave acabaría en el repositorio.
 
-Sin la App Key, la interfaz, la cartografía y la generación y exportación de
-planes funcionan; el registro del SDK y la conexión real no.
+Para reconstruir con la clave:
+
+```bash
+echo "AIRCRAFT_API_KEY=<tu clave>" > .local/api-key.properties
+chmod 600 .local/api-key.properties
+./scripts/build-release.sh
+```
+
+Para registrar una clave nueva hay que hacerlo en DJI Developer con el
+`applicationId` exacto `com.djiflypro.app`, y usar el firmware y el control
+remoto soportados por DJI para el modelo concreto.
+
+Si la clave falta, el preflight de release aborta la build. Con
+`DJIFLYPRO_ALLOW_MISSING_API_KEY=1` se salta, pero el resultado no puede
+registrarse con DJI.
 
 ## Mapa
 

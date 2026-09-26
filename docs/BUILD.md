@@ -26,7 +26,7 @@ El zip del sample oficial de MSDK V5 incluye `msdkkeystore.jks`. DJI tampoco lo 
 
 El build release **aborta** si falta cualquiera de estos dos requisitos:
 
-- `AIRCRAFT_API_KEY`: sin la App Key registrada para `com.djiflypro.app` el APK no puede registrarse con DJI, por muy bien compilado y firmado que esté.
+- `AIRCRAFT_API_KEY`: sin la App Key registrada para `com.djiflypro.app` el APK no puede registrarse con DJI, por muy bien compilado y firmado que esté. La clave de la compilación actual está en `.local/api-key.properties` (`.gitignore`, permisos `600`) y el script la exporta al entorno. **Nunca en `gradle.properties`**, que está versionado.
 - Firma completa: `STORE_FILE`, `STORE_PASSWORD`, `KEY_ALIAS` y `KEY_PASSWORD`.
 
 Para ejercitar el pipeline local (R8, lint, firma) sin la App Key:
@@ -35,7 +35,8 @@ Para ejercitar el pipeline local (R8, lint, firma) sin la App Key:
 ./scripts/build-release.sh --allow-missing-api-key
 ```
 
-El resultado se marca como `local-verification-only` y no es distribuible. Ese es exactamente el estado de los artefactos actuales.
+El resultado se marca como `local-verification-only` y no es distribuible. Los
+artefactos actuales sí llevan la App Key, así que se construyeron sin ese flag.
 
 ## Dependencias
 
@@ -61,8 +62,14 @@ Verificación reproducible usada en esta entrega:
 
 ```bash
 ./gradlew clean :sample:testDebugUnitTest :sample:lintDebug :sample:assembleDebug --no-daemon
-./scripts/build-release.sh --allow-missing-api-key --no-daemon
+./scripts/build-release.sh --no-daemon
 ```
+
+`scripts/build-release.sh` sin `--allow-missing-api-key` exige que exista la App
+Key y aborta si falta, y construye las tres variantes en la misma pasada. La key
+se lee de `.local/api-key.properties`; con `--allow-missing-api-key` se
+comprueba el pipeline R8/lint/firma sin ella, y el resultado no puede
+registrarse con DJI.
 
 Resultados obtenidos: 292 pruebas correctas, `lintDebug` con 0 errores, y release sin advertencias de clase ausente de R8. Las advertencias de "implicit default constructor" que quedan provienen de `proguard-android-optimize.txt` de AGP y de los `proguard.txt` de DJI SDK, Play Services, Room, Lifecycle, Navigation, Glide, OkHttp y JetBrains.
 

@@ -1,42 +1,32 @@
-# DJIFlyPro v1.1.0-alpha.1
+# DJIFlyPro v1.1.0-alpha.2
 
-Prerelease de **cartografía**. Esta versión deja de ser un planificador de rutas
-y pasa a planificar por resolución: se introduce la cámara y la resolución
-objetivo, y la aplicación deduce la altura de vuelo y las separaciones.
+**La App Key de DJI ya está en el binario.** Esta prerelease sí puede registrarse
+con el SDK. Es un cambio respecto a `v1.1.0-alpha.1`, cuyos binarios se
+compilaron sin key y no podían conectarse a ningún aircraft.
 
-`applicationId com.djiflypro.app`, DJI Mobile SDK V5.18.0, `versionCode 2`.
+`applicationId com.djiflypro.app`, DJI Mobile SDK V5.18.0,
+`versionName 1.1.0-alpha.2`, `versionCode 3`.
 
-## Aviso: estos artefactos aún no pueden volar
+## Qué sigue sin estar hecho
 
-Este release **no es funcional para control de vuelos**. Los APK se compilaron
-usando el flag `--allow-missing-api-key` porque `AIRCRAFT_API_KEY` está vacía:
-
-> Sin la App Key de DJI registrada para `com.djiflypro.app`, la aplicación no
-> puede registrarse con el SDK ni conectarse a ningún aircraft. La interfaz, la
-> cartografía, la planificación y la exportación funcionan; todo lo que toque el
-> aircraft real fallará.
-
-Y aunque hubiera App Key, la ejecución automática de misiones WPML sigue
-bloqueada: la allowlist de validación física se publica vacía.
-
-Para que sirvan de algo hace falta, en este orden:
-
-1. Registrar `com.djiflypro.app` en el DJI Developer Console y obtener su App Key.
-2. Compilar de nuevo con `AIRCRAFT_API_KEY` definida. El build release **aborta**
-   si falta, así que no es posible publicar por accidente otro APK sin clave.
-3. Firmar con una clave privada de producción fuera del repositorio.
-4. Hacer la validación física y rellenar la allowlist antes de habilitar
-   misiones automáticas.
-
-Publicamos esta prerelease como evidencia de compilación, R8, lint y firma, y
-como base sobre la que iterar.
+- **La conexión con un aircraft no se ha probado en un dispositivo.** La key está
+  en el manifiesto, pero que DJI la acepte para `com.djiflypro.app` sólo se
+  comprueba volando. La interfaz y toda la cartografía se pueden probar sin
+  hardware.
+- **La ejecución automática de misiones WPML sigue bloqueada.** La allowlist de
+  validación física se publica vacía a propósito. Aunque la app se registre, no
+  puede subir ni iniciar una misión automática hasta que haya validación
+  física documentada.
+- La firma es la keystore de desarrollo local. No publicable en Google Play.
+- El mapa abre sin teselas: `GMAP_API_KEY` y `MAPLIBRE_TOKEN` siguen vacías.
+  El resto de la cartografía no depende del mapa.
 
 ## Novedad de esta versión: cartografía
 
 ### Motor de resolución
 
-La aplicación trabaja en la dirección en que trabaja un encargo de cartografía:
-la resolución y el solape se declaran, la altura se deduce. Un P1 a 2 cm/px son
+La aplicación trabaja en la dirección en que llega un encargo de cartografía: la
+resolución y el solape se declaran, la altura se deduce. Un P1 a 2 cm/px son
 160 m de altura, con una huella de 164 m: 49 m entre líneas al 70 % de solape
 transversal y 33 m entre fotos al 80 % de solape longitudinal.
 
@@ -55,7 +45,7 @@ Un P1 a 2 cm/px vuela a 160 m, por encima del techo de 120 m de una misión
 waypoint automática de DJI. La aplicación no lo sube:
 
 - **120 m** es un error duro para cualquier subida o inicio automático, y se
-  comprueba otra vez justo antes de subir y justo antes de iniciar.
+  comprueba otra vez justo antes de subir y otra vez justo antes de iniciar.
 - **500 m** es el techo de planificación. Por encima se puede planificar,
   guardar, exportar y volar con la guía manual, donde la persona está al mando.
 
@@ -80,8 +70,8 @@ al `altitudeMode` que lo representa.
 ### Sistemas de referencia
 
 WGS84 geográfico ↔ UTM con el desarrollo en serie de Snyder, incluidas las
-ensanchaciones de Noruega y Svalbard. La ficha de vuelo y el GeoJSON entregan
-las dos referencias con su código EPSG, más la superficie en hectáreas.
+ensanchaciones de Noruega y Svalbard. La ficha de vuelo y el GeoJSON entregan las
+dos referencias con su código EPSG, más la superficie en hectáreas.
 
 ### Geometría de bloque corregida
 
@@ -114,10 +104,9 @@ producto la limita la de su control.
 Huella, líneas de vuelo y control sobre un mapa MapLibre del UX SDK, y
 colocación de un punto de control donde está realmente pintado en vez de
 escribirlo de memoria. Es una vista de apoyo: no mueve el aircraft y no verifica
-nada, y lo dice en pantalla. Sin llave de mapa la aplicación sigue
-funcionando; el resto de la cartografía no depende de él.
+nada, y lo dice en pantalla.
 
-## Otras correcciones de esta versión
+## Correcciones
 
 - El planificador ya no fija la acción de fin a "regreso a casa": hay selector.
 - Las recetas algorítmicas se cargan de `assets/algorithms/` en vez de estar
@@ -130,46 +119,37 @@ funcionando; el resto de la cartografía no depende de él.
 - Corregido el conteo de líneas de vuelo, que podía partir una línea en dos
   cuando su posición cruzaba exactamente un límite de la rejilla de agrupación.
 - `mission.json` conserva el perfil cartográfico y los puntos de control.
-- Proguard protege los nuevos modelos serializados.
+- `scripts/build-release.sh` construye también el APK debug, en la misma pasada
+  y con el mismo entorno, en vez de copiar el que hubiera de una build anterior.
 
 ## Verificaciones
 
 - 292 pruebas unitarias, 0 fallos.
 - `lintDebug`: 0 errores.
-- R8: 0 advertencias de clase ausente y ninguna regla `-dontwarn` aplicada a
-  código propio.
+- `com.dji.sdk.API_KEY` presente en el manifiesto de los tres binarios.
 - `apksigner verify`: correcto, APK Signature Scheme v2.
 - `jarsigner -verify` sobre el AAB: código 0.
+- `sha256sum -c` sobre los binarios recién construidos, dentro del script.
 - El asset `validated_wpml_profiles.json` va empaquetado y vacío, así que la
   ejecución automática está bloqueada.
+- La App Key no aparece en ningún fichero versionado: vive en
+  `.local/api-key.properties`, que está en `.gitignore`.
 
 ## Barrera de ejecución WPML
 
-Sin cambios respecto a `v0.1.0-alpha.1`. La subida y la ejecución automática
-siguen **bloqueadas**: hacen falta conexión, registro, firmware versionado,
-modelo de control remoto, firmware del control remoto y un perfil de validación
-física con coincidencia exacta. La allowlist se publica vacía, un perfil no
-válido deja la allowlist vacía, y el build falla si el asset contiene marcadores
-sin rellenar. Ver `docs/COMPATIBILITY.md` y `docs/SAFETY.md`.
-
-## Límites conocidos
-
-- Un GSD planificado se cumple sobre terreno de altura conocida. En relieve se
-  desvía, y el desvio crece con la altura y con la posición del sensor.
-- La aplicación no comprueba espacio aéreo, obstáculos, líneas eléctricas,
-  permisos ni zonas reguladas.
-- No genera el orto, el DSM ni la nube de puntos. Genera la planificación y la
-  documentación necesarias para generarlos.
-- El mapa necesita `MAPLIBRE_TOKEN` o `GMAP_API_KEY` para mostrar teselas.
-- La validación física de vuelo no está realizada.
+Sin cambios. La subida y la ejecución automática siguen **bloqueadas**: hacen
+falta conexión, registro, firmware versionado, modelo de control remoto, firmware
+del control remoto y un perfil de validación física con coincidencia exacta. La
+allowlist se publica vacía y el build falla si el asset contiene marcadores sin
+rellenar. Ver `docs/COMPATIBILITY.md` y `docs/SAFETY.md`.
 
 ## Binarios
 
 | Archivo | Tamaño | SHA-256 |
 |---|---:|---|
-| `DJIFlyPro-1.1.0.apk` | 205,002,138 bytes | `c93f36f8bf5e276924a829d5858d989d4616cb6c7f148a61419aedf494a35727` |
-| `DJIFlyPro-1.1.0.aab` | 198,917,491 bytes | `83deb28a9b1408f5337e8a6a4a57e3bdc0e61f5a5cfb137165851cf9d7171686` |
-| `DJIFlyPro-1.1.0-debug.apk` | 238,557,908 bytes | `fef20561703da7d1a46961251c29785cc162e734b44ae06e380821ddd74af24d` |
+| `DJIFlyPro-1.1.0-alpha.2.apk` | 205,002,230 bytes | `9d33fb2b78f12afef345a321fcaff9eaf8346b1fcb7a70c3bf657e29e0cdf19f` |
+| `DJIFlyPro-1.1.0-alpha.2.aab` | 198,917,609 bytes | `469872bc57db2514795fe742623be14199762ea3fb2fdf365d9189e0bc86f3d7` |
+| `DJIFlyPro-1.1.0-alpha.2-debug.apk` | 238,562,076 bytes | `60f6fcd6f18e050f152fc741d401578ccb48af5bfa96724e2fc32a9117231643` |
 
 Los nombres llevan la `versionName` que declara el propio build. Verifica con:
 
