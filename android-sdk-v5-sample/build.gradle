@@ -187,6 +187,20 @@ tasks.withType(Test).configureEach {
         .withPathSensitivity(PathSensitivity.RELATIVE)
 }
 
+/**
+ * Prints the app version so release scripts can name artifacts from a single
+ * source of truth instead of repeating the version by hand, which is how a
+ * published filename ends up disagreeing with the binary it contains.
+ */
+tasks.register('printAppVersion') {
+    def versionName = android.defaultConfig.versionName
+    def versionCode = android.defaultConfig.versionCode
+    doLast {
+        println "versionName=$versionName"
+        println "versionCode=$versionCode"
+    }
+}
+
 dependencies {
     /** <-----------------依赖MSDK--------------------> **/
     compileOnly deps.aircraftProvided

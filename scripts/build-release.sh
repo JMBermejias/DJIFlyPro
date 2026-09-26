@@ -36,6 +36,36 @@ for arg in "$@"; do
 done
 
 ./gradlew :sample:assembleRelease :sample:bundleRelease --stacktrace "${GRADLE_ARGS[@]}"
+
+# Name artifacts after the product and the version the build actually reports,
+# so a downloaded file identifies itself instead of being called
+# "sample-release.apk". The version comes from the build, never from a literal
+# repeated here.
+VERSION_NAME="$(./gradlew -q :sample:printAppVersion --console=plain \
+  | sed -n 's/^versionName=//p' | tail -1 | tr -d '[:space:]')"
+if [ -z "$VERSION_NAME" ]; then
+  echo "Error: could not read versionName from the build." >&2
+  exit 1
+fi
+printf 'Building DJIFlyPro %s (mode: %s)\n' "$VERSION_NAME" "$MODE"
+
 mkdir -p "$ROOT_DIR/artifacts"
-find "$ROOT_DIR/android-sdk-v5-sample/build/outputs" -type f \( -name '*.apk' -o -name '*.aab' \) -exec cp -f {} "$ROOT_DIR/artifacts/" \;
+OUT="$ROOT_DIR/android-sdk-v5-sample/build/outputs"
+
+stage() { # <source> <destination>
+  [ -f "$1" ] || { echo "Error: expected $1 to exist" >&2; exit 1; }
+  cp -f "$1" "$2"
+}
+
+stage "$OUT/apk/release/sample-release.apk" \
+      "$ROOT_DIR/artifacts/DJIFlyPro-$VERSION_NAME.apk"
+stage "$OUT/bundle/release/sample-release.aab" \
+      "$ROOT_DIR/artifacts/DJIFlyPro-$VERSION_NAME.aab"
+
+if [ -f "$OUT/apk/debug/sample-debug.apk" ]; then
+  stage "$OUT/apk/debug/sample-debug.apk" \
+        "$ROOT_DIR/artifacts/DJIFlyPro-$VERSION_NAME-debug.apk"
+fi
+
 printf 'Artifacts copied to %s/artifacts (mode: %s)\n' "$ROOT_DIR" "$MODE"
+ls -l "$ROOT_DIR/artifacts" | grep -E '\.apk$|\.aab$' || true
