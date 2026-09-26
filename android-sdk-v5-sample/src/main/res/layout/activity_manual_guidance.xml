@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/pro_background"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="18dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Guía de vuelo manual"
+            style="@style/pro_title" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="La app no vuela el aircraft. Tú pilotas con el mando y la app te indica hacia dónde y a qué altura. Esta guía sustituye a las misiones WPML en aircraft cuyo firmware no las soporta."
+            style="@style/pro_body" />
+
+        <TextView
+            android:id="@+id/guidance_status"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/pro_caption" />
+
+        <TextView
+            android:id="@+id/guidance_progress"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/pro_section" />
+
+        <TextView
+            android:id="@+id/guidance_target"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/pro_body" />
+
+        <TextView
+            android:id="@+id/guidance_turn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:textColor="@color/pro_accent"
+            android:textSize="32sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/guidance_metrics"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/pro_body" />
+
+        <TextView
+            android:id="@+id/guidance_safety"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="8dp"
+            style="@style/pro_caption" />
+
+        <Button
+            android:id="@+id/button_guidance_reached"
+            style="@style/pro_button"
+            android:text="Marcar como alcanzado" />
+
+        <Button
+            android:id="@+id/button_guidance_previous"
+            style="@style/pro_button_secondary"
+            android:text="Punto anterior" />
+
+        <Button
+            android:id="@+id/button_guidance_skip"
+            style="@style/pro_button_secondary"
+            android:text="Saltar punto" />
+
+        <Button
+            android:id="@+id/button_guidance_restart"
+            style="@style/pro_button_secondary"
+            android:text="Reiniciar guía" />
+    </LinearLayout>
+</ScrollView>

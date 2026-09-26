@@ -46,6 +46,7 @@ class MissionPlannerActivity : AppCompatActivity() {
     private lateinit var startButton: Button
     private lateinit var pauseButton: Button
     private lateinit var stopButton: Button
+    private lateinit var manualGuidanceButton: Button
     private lateinit var exportJsonButton: Button
     private lateinit var exportKmzButton: Button
 
@@ -137,6 +138,7 @@ class MissionPlannerActivity : AppCompatActivity() {
         startButton = findViewById(R.id.button_start_mission)
         pauseButton = findViewById(R.id.button_pause_mission)
         stopButton = findViewById(R.id.button_stop_mission)
+        manualGuidanceButton = findViewById(R.id.button_manual_guidance)
         exportJsonButton = findViewById(R.id.button_export_json)
         exportKmzButton = findViewById(R.id.button_export_kmz)
 
@@ -181,6 +183,24 @@ class MissionPlannerActivity : AppCompatActivity() {
         startButton.setOnClickListener { startMission() }
         pauseButton.setOnClickListener { pauseOrResumeMission() }
         stopButton.setOnClickListener { stopMission() }
+        manualGuidanceButton.setOnClickListener { openManualGuidance() }
+    }
+
+    /**
+     * Manual guidance is offered whenever a plan exists, with no connection and
+     * no upload involved. On a model whose firmware has no waypoint missions it
+     * is the only way to fly a plan, and it works with nothing but telemetry.
+     */
+    private fun openManualGuidance() {
+        val plan = currentPlan ?: store.latest() ?: run {
+            showError("No hay misión", "Genera o carga una misión antes de abrir la guía")
+            return
+        }
+        audit.append("guidance.requested", plan.id, mapOf("template" to plan.request.template.key))
+        startActivity(
+            Intent(this, dji.sampleV5.aircraft.pro.guidance.ManualGuidanceActivity::class.java)
+                .putExtra(dji.sampleV5.aircraft.pro.guidance.ManualGuidanceActivity.EXTRA_MISSION_ID, plan.id)
+        )
     }
 
     private fun observeSdk() {
@@ -263,6 +283,8 @@ class MissionPlannerActivity : AppCompatActivity() {
             result.waypointExecutionSupported && canStart
         pauseButton.isEnabled = hasUploadedMission && missionControlAvailable && canControl
         stopButton.isEnabled = hasUploadedMission && missionControlAvailable && canControl
+        // Independent of the WPML gate on purpose: guidance needs only a plan.
+        manualGuidanceButton.isEnabled = currentPlan != null || store.latest() != null
     }
 
     private fun handleMissionState(state: WaypointMissionExecuteState) {

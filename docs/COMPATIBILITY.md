@@ -109,7 +109,7 @@ habilita nada por sí solo: el allowlist empaquetado sigue vacío.
 
 | Campo | Valor | Estado |
 |---|---|---|
-| Aircraft | DJI Mini 3 (variante exacta sin confirmar: normal o Pro) | Sin conectar nunca |
+| Aircraft | DJI Mini 3 (normal, no Pro) | Sin conectar nunca |
 | Control remoto | DJI RC-N3 | Sin conectar nunca |
 | Firmware aircraft | Desconocido | Leer con el informe de validación |
 | Firmware control remoto | Desconocido | Leer con el informe de validación |

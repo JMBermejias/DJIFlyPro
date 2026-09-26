@@ -217,5 +217,11 @@
             style="@style/pro_button_secondary"
             android:enabled="false"
             android:text="Detener misión" />
+
+        <Button
+            android:id="@+id/button_manual_guidance"
+            style="@style/pro_button"
+            android:enabled="false"
+            android:text="Guía de vuelo manual" />
     </LinearLayout>
 </ScrollView>

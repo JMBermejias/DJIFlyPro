@@ -90,7 +90,53 @@ Con una Mini 3 sí funcionan: conexión, telemetría, cámara, vídeo, control m
 y RTH. El planificador y la exportación WPML/KMZ también siguen sirviendo para
 generar y revisar planes en el móvil.
 
-Ver `docs/COMPATIBILITY.md` para las citastextuales y el detalle técnico.
+Ver `docs/COMPATIBILITY.md` para las citas textuales y el detalle técnico.
+
+## Guía de vuelo manual: cómo volar un plan sin misiones WPML
+
+Como la Mini 3 no puede ejecutar misiones de ruta, la app incluye una guía que
+reemplaza esa parte. **La app no vuela el aircraft en ningún momento**: tú
+pilotas con el mando y la pantalla te dice hacia dónde ir.
+
+Se abre desde el planificador con **Guía de vuelo manual**, y funciona con
+cualquier plan guardado. No necesita conexión para cargarse, ni subida, ni
+perfil de allowlist.
+
+Qué muestra:
+
+- Punto actual sobre el total, y porcentaje completado.
+- Coordenadas exactas del punto y altitud objetivo.
+- **Distancia** hasta el punto y rumbo en grados.
+- **Giro a ejecutar**: "GIRA IZQUIERDA 40°" o "GIRA DERECHA 12°". Es el
+  rumbo menos el morro del aircraft, con el signo ya resuelto: positivo es
+  derecha.
+- Diferencia de altitud, en metros, con "sube" o "baja".
+- Batería, nivel GPS y distancia a casa.
+
+Cómo avanza:
+
+- **Automáticamente** cuando estás a 8 m o menos del punto y a 3 m o menos de la
+  altura planificada.
+- A mano con **Marcar como alcanzado**, si el radio te parece estrecho.
+- **Saltar punto** para saltarte uno, y **Punto anterior** para retroceder.
+
+Detalles que importan:
+
+- Si el enlace está caído, la pantalla dice **SIN ENLACE** en lugar de mostrar
+  una dirección calculada con datos viejos. Guidar hacia el punto equivocado es
+  peor que no guidar.
+- Si el SDK no entrega rumbo, dice **GIRO DESCONOCIDO** en vez de inventar un
+  lado.
+- El rumbo viene de `KeyCompassHeading`, que es un rumbo de brújula, no el yaw
+  relativo al cuerpo. Así el cálculo no depende del modo de attitude.
+- Las coordenadas no utilizables (fuera de rango, NaN, o 0/0) se descartan al
+  construir la sesión, y la app dice cuántos descartó.
+- Cada llegada, salto, retroceso y reinicio queda en `audit.jsonl`.
+
+La geometría está aislada en `NavigationGuidance` y las etiquetas de pantalla en
+`GuidanceLabels`, ambas con tests. La dirección del giro tiene tests explícitos
+para ambos hemisferios y para el cruce de 0/360, porque un error de signo ahí
+apunta al aircraft en dirección contraria.
 
 ## Misiones automáticas en general: bloqueadas por diseño
 
