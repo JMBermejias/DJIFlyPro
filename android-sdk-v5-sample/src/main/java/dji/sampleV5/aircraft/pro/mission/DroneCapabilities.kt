@@ -6,6 +6,26 @@ import dji.v5.et.create
 import dji.v5.et.get
 import java.util.Locale
 
+/**
+ * What the aircraft itself reports about waypoint missions, read from
+ * `WaypointMissionExecuteState`. This is the only capability signal that comes
+ * from the aircraft rather than from a table in this file.
+ */
+enum class FirmwareWaypointSupport {
+    /** No waypoint capability state has been reported yet. */
+    UNKNOWN,
+
+    /** The aircraft reported a live waypoint mission state, so it implements them. */
+    SUPPORTED,
+
+    /**
+     * The aircraft reported `NOT_SUPPORTED`. No App Key, no allowlist profile
+     * and no build flag can change this: the firmware does not implement
+     * waypoint missions. Reported by DJI for the Mini 3 / Mini 3 Pro.
+     */
+    NOT_SUPPORTED
+}
+
 /** Conservative capability gate for the V5 SDK. */
 object DroneCapabilities {
     data class Result(
@@ -17,8 +37,16 @@ object DroneCapabilities {
         val waypointExecutionSupported: Boolean,
         val reason: String,
         val remoteControllerName: String? = null,
-        val remoteControllerFirmwareVersion: String? = null
+        val remoteControllerFirmwareVersion: String? = null,
+        val firmwareWaypointSupport: FirmwareWaypointSupport = FirmwareWaypointSupport.UNKNOWN
     )
+
+    /**
+     * ProductType names for the Mini 3 family, matched exactly. A substring
+     * test would also accept future names such as DJI_MINI_3X, which would make
+     * this gate silently mis-classify a product it knows nothing about.
+     */
+    private val MINI_3_PRODUCTS = setOf("DJI_MINI_3", "DJI_MINI_3_PRO")
 
     /**
      * Reads the current product identity and evaluates the gate with the
@@ -32,7 +60,8 @@ object DroneCapabilities {
         firmwareVersion: String? = null,
         remoteControllerName: String? = null,
         remoteControllerFirmwareVersion: String? = null,
-        validatedProfiles: Set<ValidatedWpmlProfile> = emptySet()
+        validatedProfiles: Set<ValidatedWpmlProfile> = emptySet(),
+        firmwareWaypointSupport: FirmwareWaypointSupport = FirmwareWaypointSupport.UNKNOWN
     ): Result {
         val product = runCatching {
             ProductKey.KeyProductType.create().get(ProductType.UNKNOWN)
@@ -44,7 +73,8 @@ object DroneCapabilities {
             firmwareVersion = firmwareVersion,
             remoteControllerName = remoteControllerName,
             remoteControllerFirmwareVersion = remoteControllerFirmwareVersion,
-            validatedProfiles = validatedProfiles
+            validatedProfiles = validatedProfiles,
+            firmwareWaypointSupport = firmwareWaypointSupport
         )
     }
 
@@ -60,7 +90,8 @@ object DroneCapabilities {
         firmwareVersion: String?,
         remoteControllerName: String? = null,
         remoteControllerFirmwareVersion: String? = null,
-        validatedProfiles: Set<ValidatedWpmlProfile> = emptySet()
+        validatedProfiles: Set<ValidatedWpmlProfile> = emptySet(),
+        firmwareWaypointSupport: FirmwareWaypointSupport = FirmwareWaypointSupport.UNKNOWN
     ): Result {
         val name = productName.trim().ifBlank { "UNKNOWN" }
         val upper = name.uppercase(Locale.ROOT)
@@ -70,7 +101,7 @@ object DroneCapabilities {
         val enterprise = upper.contains("M350") || upper.contains("M300") ||
             upper.contains("M30_SERIES") || upper.contains("MAVIC_3_ENTERPRISE") ||
             upper.contains("MATRICE_400") || upper.contains("MATRICE_4")
-        val mini3 = upper.contains("MINI_3")
+        val mini3 = upper in MINI_3_PRODUCTS
         val phantom = upper.contains("PHANTOM_4") || upper == "P4" ||
             upper.startsWith("P4P") || upper.startsWith("P4A") || upper.startsWith("P4R") ||
             upper.startsWith("P4_")
@@ -81,12 +112,19 @@ object DroneCapabilities {
             }.getOrDefault(false)
         }
         val supported = connected && registered && enterprise && firmware != null &&
-            remoteName != null && remoteFirmware != null && matchingProfile != null
+            remoteName != null && remoteFirmware != null && matchingProfile != null &&
+            firmwareWaypointSupport != FirmwareWaypointSupport.NOT_SUPPORTED
         val reason = when {
             !connected -> "No aircraft connected"
             !registered -> "DJI SDK registration is pending or failed"
             phantom -> "Phantom 4 requires the legacy DJI SDK; this V5 build cannot connect to it"
-            mini3 -> "Mini 3 is exposed by MSDK V5, but this build does not claim onboard WPML execution for it"
+            // What the aircraft says about itself outranks anything in this file.
+            firmwareWaypointSupport == FirmwareWaypointSupport.NOT_SUPPORTED ->
+                "The aircraft reports that its firmware does not support waypoint missions; " +
+                    "this cannot be enabled from the app"
+            mini3 -> "Mini 3 and Mini 3 Pro firmware do not support waypoint missions " +
+                "(DJI confirms DJI Fly has no route feature on these models); " +
+                "use the app for telemetry, camera and manual control only"
             !enterprise -> "Automatic waypoint execution is not enabled for this product"
             firmware == null -> "Aircraft firmware is unknown; WPML execution is blocked until the firmware is identified and validated"
             remoteName == null -> "Remote-controller model is unknown; WPML execution remains blocked"
@@ -103,7 +141,8 @@ object DroneCapabilities {
             waypointExecutionSupported = supported,
             reason = reason,
             remoteControllerName = remoteName,
-            remoteControllerFirmwareVersion = remoteFirmware
+            remoteControllerFirmwareVersion = remoteFirmware,
+            firmwareWaypointSupport = firmwareWaypointSupport
         )
     }
 

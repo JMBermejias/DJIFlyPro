@@ -212,8 +212,24 @@ class MissionPlannerActivity : AppCompatActivity() {
         firmwareVersion = firmwareVersion,
         remoteControllerName = remoteControllerName,
         remoteControllerFirmwareVersion = remoteControllerFirmwareVersion,
-        validatedProfiles = validatedProfiles
+        validatedProfiles = validatedProfiles,
+        firmwareWaypointSupport = firmwareWaypointSupport()
     )
+
+    /**
+     * Translates the live `WaypointMissionExecuteState` into the capability
+     * signal the gate understands. `NOT_SUPPORTED` is the aircraft itself
+     * declaring that its firmware cannot run waypoint missions, which is
+     * stronger evidence than any product table.
+     */
+    private fun firmwareWaypointSupport(): FirmwareWaypointSupport =
+        when (missionState) {
+            WaypointMissionExecuteState.NOT_SUPPORTED -> FirmwareWaypointSupport.NOT_SUPPORTED
+            WaypointMissionExecuteState.DISCONNECTED,
+            WaypointMissionExecuteState.UNKNOWN,
+            WaypointMissionExecuteState.IDLE -> FirmwareWaypointSupport.UNKNOWN
+            else -> FirmwareWaypointSupport.SUPPORTED
+        }
 
     private fun refreshCapability() {
         val result = currentCapability()

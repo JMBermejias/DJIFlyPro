@@ -50,8 +50,73 @@ El informe emitido nunca es una aprobación por sí mismo: su referencia de vali
 | Matrice 300 RTK | WPML bloqueado por defecto | Validar payload, control remoto y comportamiento de breakpoint según la versión. |
 | Matrice 30/4/400 | WPML bloqueado por defecto | La lista exacta depende de MSDK 5.18.0 y de la combinación probada. |
 | Mavic 3 Enterprise | WPML bloqueado por defecto | Comprobar modelo, control remoto, firmware y comportamiento de misión. |
-| Mini 3 | Telemetría/control condicional | Esta entrega no afirma ejecución de WPML a bordo para Mini 3; permite generar y exportar planes. |
+| Mini 3 / Mini 3 Pro | Sin misiones WPML, por firmware | Ver abajo. Telemetría, cámara, vídeo y control manual sí son objetivo de MSDK. |
 | Phantom 4 | No compatible con V5 | Necesita una variante Legacy basada en MSDK V4; no se mezclan SDK en esta APK. |
+
+## Mini 3 y Mini 3 Pro no pueden ejecutar misiones WPML
+
+Esto no es una restricción de esta app: es una limitación del firmware del
+aircraft, confirmada por el soporte de DJI.
+
+DJI ha respondido de forma explícita en tickets de soporte y en el repositorio
+oficial de MSDK V5:
+
+> Mini 3/Mini 3 Pro's firmware does not support the native waypointMission
+> function so SDK cannot support this feature as well.
+
+> The Mini 3 Pro aircraft firmware still does not support waypoint missions.
+> The DJI Fly app still lacks a route/waypoint feature, so the MSDK's waypoint
+> mission functionality is not supported either.
+
+El síntoma en la app es un error `errorType=WAYPOINT`,
+`errorCode=REQUEST_HANDLER_NOT_FOUND` al subir el KMZ. No se arregla registrando
+`com.djiflypro.app`, ni añadiendo un perfil de allowlist, ni cambiando de
+firmware dentro de la misma familia.
+
+Por qué el SDK no lo filtra antes: en MSDK 5.18.0,
+`WaypointMissionOperatorFactory.build(ProductType)` solo trata de forma
+especial `M300_RTK`, `M350_RTK`, `M30_SERIES` y `DJI_MATRICE_400`. Todo lo demás,
+incluida la Mini 3, cae en la rama por defecto y recibe
+`WaypointMissionV3Impl`. El rechazo llega del aircraft, no del SDK.
+
+### Qué sí funciona con una Mini 3
+
+- Conexión y enlace con el control remoto.
+- Telemetría de vuelo.
+- Cámara y captura de imagen/vídeo.
+- Control manual y RTH.
+
+### Qué no funciona con una Mini 3
+
+- Subida y ejecución de misiones WPML.
+
+El planificador, la exportación WPML/KMZ y la biblioteca algorítmica siguen
+sirviendo: se pueden generar y revisar los planes en el móvil y exportarlos,
+aunque no se puedan ejecutar a bordo de este modelo.
+
+### La app lo dice por sí misma
+
+`WaypointMissionExecuteState.NOT_SUPPORTED` existe en el SDK y significa
+"This aircraft does not support waypoint mission 3.0". La app registra ese
+estado y, cuando aparece, muestra que el firmware no admite misiones, en lugar
+de un motivo burocrático como "no hay perfil validado". Es la única señal de
+capacidad que viene del aircraft en vez de de una tabla de este repositorio.
+
+## Hardware declarado, sin validar
+
+Registrado a petición del usuario, pendiente de prueba física. Esto no
+habilita nada por sí solo: el allowlist empaquetado sigue vacío.
+
+| Campo | Valor | Estado |
+|---|---|---|
+| Aircraft | DJI Mini 3 (variante exacta sin confirmar: normal o Pro) | Sin conectar nunca |
+| Control remoto | DJI RC-N3 | Sin conectar nunca |
+| Firmware aircraft | Desconocido | Leer con el informe de validación |
+| Firmware control remoto | Desconocido | Leer con el informe de validación |
+
+El RC-N3 aparece como `DJI_RC_N3` en `RemoteControllerType` de MSDK 5.18.0, así
+que el SDK lo identifica. Aun así, hace falta probarlo: que el enum lo conozca no
+significa que el enlace funcione con esta unidad concreta.
 
 ## Por qué existe la separación
 

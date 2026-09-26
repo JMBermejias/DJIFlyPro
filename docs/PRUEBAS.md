@@ -74,13 +74,31 @@ genérico:
 6. **Prueba en una zona segura**, con observador, y empieza por lo que no
    vuela: conexión, telemetría, cámara, antes de tocar el centro de control.
 
-## Misiones automáticas: siguen bloqueadas a propósito
+## Misiones automáticas en una Mini 3: no van a funcionar
 
-Aunque la App Key esté puesta y el aircraft conectado, la **subida y ejecución
-automática de misiones WPML no se habilitan** hasta que exista un perfil
-revisado en `validated_wpml_profiles.json` con coincidencia exacta de producto,
-control remoto y ambas versiones de firmware, más la referencia de una prueba
-física registrada. La allowlist incluida está vacía a propósito.
+Si el aircraft es una DJI Mini 3 o Mini 3 Pro, la **subida y ejecución de
+misiones WPML no funcionarán nunca con ese modelo**, y no es culpa de esta app.
+El firmware del aircraft no implementa misiones de ruta, así que el MSDK no
+puede ofrecerlas. DJI lo confirma explícitamente: *la app DJI Fly tampoco tiene
+función de rutas en estos modelos*.
+
+El síntoma es un error `errorType=WAYPOINT`,
+`errorCode=REQUEST_HANDLER_NOT_FOUND` al subir el KMZ. Registrar la App Key, o
+añadir un perfil de allowlist, no lo cambia.
+
+Con una Mini 3 sí funcionan: conexión, telemetría, cámara, vídeo, control manual
+y RTH. El planificador y la exportación WPML/KMZ también siguen sirviendo para
+generar y revisar planes en el móvil.
+
+Ver `docs/COMPATIBILITY.md` para las citastextuales y el detalle técnico.
+
+## Misiones automáticas en general: bloqueadas por diseño
+
+Aun con un aircraft que sí soporte WPML, la subida y ejecución automática no se
+habilitan hasta que exista un perfil revisado en `validated_wpml_profiles.json`
+con coincidencia exacta de producto, control remoto y ambas versiones de
+firmware, más la referencia de una prueba física registrada. La allowlist
+incluida está vacía a propósito.
 
 No es un descuido pendiente de clave: es la barrera que impide que la app envíe un
 plan de vuelo a un aircraft con el que nadie la ha probado. Para añadir un
@@ -94,10 +112,12 @@ Conectar el aircraft no basta: hace falta el control remoto de DJI emparejado.
 El MSDK V5 trabaja sobre el enlace del control remoto, no sobre el móvil. El
 móvil hace de terminal y visualizador.
 
-Si el aircraft es de la serie Mavic 3 / Mini 3 / Air 3, la app oficial de DJI se
-conecta directamente por Wi-Fi a esos modelos; una app MSDK se comporta distinto
-y puede no tener soporte nativo de waypoint. Eso hay que comprobarlo con el
-modelo concreto, no suponerlo.
+Un detalle sobre la serie Mavic 3 / Mini 3 / Air 3: la app oficial de DJI se
+conecta a esos modelos por su propio enlace, y una app MSDK es un cliente
+distinto de ese enlace. Que el modelo aparezca en la lista de productos
+soportados de MSDK significa que el SDK lo reconoce, no que todas las funciones
+funcionen: el caso de las misiones de ruta en la Mini 3 es exactamente el
+contraejemplo.
 
 ## Antes de publicar de verdad
 
