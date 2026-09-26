@@ -14,12 +14,14 @@ de la cadena cartográfica.
 
 ## Releases
 
-- [v1.1.0-alpha.2](https://github.com/JMBermejias/DJIFlyPro/releases/tag/v1.1.0-alpha.2) — cartografía por resolución, control terrestre, GeoJSON/KML/ficha de vuelo y revisión en el mapa. Con App Key de DJI incrustada.
-- [v1.1.0-alpha.1](https://github.com/JMBermejias/DJIFlyPro/releases/tag/v1.1.0-alpha.1) — lo mismo, compilado sin App Key: no puede registrarse con DJI.
+- [v1.1.0-alpha.3](https://github.com/JMBermejias/DJIFlyPro/releases/tag/v1.1.0-alpha.3) — **la que hay que instalar**. Un solo APK, con la App Key de DJI incrustada.
+- [v1.1.0-alpha.2](https://github.com/JMBermejias/DJIFlyPro/releases/tag/v1.1.0-alpha.2) — igual, pero además con un APK debug de otro certificado que no se puede instalar encima.
+- [v1.1.0-alpha.1](https://github.com/JMBermejias/DJIFlyPro/releases/tag/v1.1.0-alpha.1) — compilada sin App Key: no puede registrarse con DJI.
 - [v0.1.0-alpha.1](https://github.com/JMBermejias/DJIFlyPro/releases/tag/v0.1.0-alpha.1) — base de planificación de rutas.
 
-Todas son prereleases. La única que puede registrarse con DJI es `v1.1.0-alpha.2`.
-Instalación y estado: `artifacts/release-notes.md`.
+Todas son prereleases. Cada build es una release nueva con su etiqueta; los
+assets de una release publicada no se reemplazan. Instalación y estado:
+`artifacts/release-notes.md`.
 
 ## Qué hace
 

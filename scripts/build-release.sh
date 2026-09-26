@@ -52,12 +52,17 @@ for arg in "$@"; do
   esac
 done
 
-# The debug variant is built here, in the same run and with the same
-# environment, instead of being copied if it happens to be lying around from
-# some earlier build. A stale debug APK next to a fresh release APK is worse
-# than no debug APK: it looks like part of the release and it was not built
-# from this source or with this DJI App Key.
-./gradlew :sample:assembleDebug :sample:assembleRelease :sample:bundleRelease --stacktrace "${GRADLE_ARGS[@]}"
+# Only the release variant belongs in a release. The debug variant is signed
+# with a different certificate ("CN=Android Debug") than the release one
+# ("CN=DJIFlyPro Local Test"), so the two cannot be installed over each other:
+# whoever installed the release APK first cannot sideload the debug APK without
+# uninstalling first, and several OEM installers report that refusal as "the
+# app is not valid". The debug APK is also android:debuggable and carries
+# unstripped symbols, which is a reason not to hand it to anyone.
+#
+# It is still buildable on demand for local debugging, just not publishable:
+#   ./gradlew :sample:assembleDebug
+./gradlew :sample:assembleRelease :sample:bundleRelease --stacktrace "${GRADLE_ARGS[@]}"
 
 # Name artifacts after the product and the version the build actually reports,
 # so a downloaded file identifies itself instead of being called
@@ -79,13 +84,15 @@ stage() { # <source> <destination>
   cp -f "$1" "$2"
 }
 
+# Only the release variant is staged. A leftover debug APK from an earlier run
+# would otherwise be picked up by the hashing below and published next to a
+# release it was not built from.
+rm -f "$ROOT_DIR"/artifacts/DJIFlyPro-*-debug.apk
+
 stage "$OUT/apk/release/sample-release.apk" \
       "$ROOT_DIR/artifacts/DJIFlyPro-$VERSION_NAME.apk"
 stage "$OUT/bundle/release/sample-release.aab" \
       "$ROOT_DIR/artifacts/DJIFlyPro-$VERSION_NAME.aab"
-
-stage "$OUT/apk/debug/sample-debug.apk" \
-      "$ROOT_DIR/artifacts/DJIFlyPro-$VERSION_NAME-debug.apk"
 
 # The hash manifest has to describe exactly the binaries that were just staged.
 # SHA256SUMS.txt is tracked in git while the binaries are not, so nothing
@@ -96,11 +103,14 @@ stage "$OUT/apk/debug/sample-debug.apk" \
 # mistake fails this script instead of the person installing the APK.
 (
   cd "$ROOT_DIR/artifacts"
-  if ! sha256sum ./*.apk ./*.aab >/dev/null 2>&1; then
-    echo "Error: no artifacts staged to hash" >&2
+  if [ ! -f "DJIFlyPro-$VERSION_NAME.apk" ] || [ ! -f "DJIFlyPro-$VERSION_NAME.aab" ]; then
+    echo "Error: the release artifacts are not staged" >&2
     exit 1
   fi
-  sha256sum ./*.apk ./*.aab | sed 's#\./##' > SHA256SUMS.txt
+  # Only the two release artifacts, named explicitly, so the manifest describes
+  # this release and nothing else that happens to be lying in the directory.
+  sha256sum "DJIFlyPro-$VERSION_NAME.apk" "DJIFlyPro-$VERSION_NAME.aab" \
+    | sed 's#\./##' > SHA256SUMS.txt
   if ! sha256sum -c SHA256SUMS.txt >/dev/null 2>&1; then
     echo "Error: SHA256SUMS.txt does not match the staged artifacts" >&2
     exit 1

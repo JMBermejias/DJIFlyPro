@@ -9,14 +9,22 @@ La compilación release incluye R8 y lint vital.
 
 | Archivo | Tamaño | SHA-256 |
 |---|---:|---|
-| `DJIFlyPro-1.1.0-alpha.2.apk` | 205,002,230 bytes | `ce47e8857bac39214dbedbbd1d3feb9ec87f08399ab98a455124bc23f90f810a` |
-| `DJIFlyPro-1.1.0-alpha.2.aab` | 198,917,609 bytes | `469872bc57db2514795fe742623be14199762ea3fb2fdf365d9189e0bc86f3d7` |
-| `DJIFlyPro-1.1.0-alpha.2-debug.apk` | 238,562,076 bytes | `60f6fcd6f18e050f152fc741d401578ccb48af5bfa96724e2fc32a9117231643` |
+| `DJIFlyPro-1.1.0-alpha.3.apk` | 205,002,230 bytes | `df27ec9dbdbd9d7193a4401edf22e7b7ee12cd4b36251b617e06d143bb4b0c34` |
+| `DJIFlyPro-1.1.0-alpha.3.aab` | 198,917,596 bytes | `a089cd197832ca75bd6d757b13d61c51d922ab5a000719b3c7ae446d0ae72ee7` |
 
-Los tres binarios salen del mismo build y del mismo entorno, incluido el
-`assembleDebug`, que `scripts/build-release.sh` ejecuta siempre en la misma
-pasada. Antes el APK debug se copiaba solo si ya existía, lo que dejaba
-posibilidad de publicar junto a un release un debug de otra build, sin la key.
+**Solo se publica el APK release.** El APK debug no va en la release, y no por
+tamaño:
+
+- Va firmado con otro certificado. El release con `CN=DJIFlyPro Local Test`, el
+  debug con `CN=Android Debug`. Android no permite instalar uno encima del otro,
+  y varios instaladores de fabricante informan de ese rechazo como "la
+  aplicación no es válida". Quien tenga el release instalado no puede instalar
+  el debug sin desinstalar antes.
+- Es `android:debuggable`, con depuración y símbolos sin strippear. No es algo
+  que haya que repartir.
+
+Sigue siendo construible en local con `./gradlew :sample:assembleDebug` para
+depurar; simplemente no se publica.
 
 `scripts/build-release.sh` nombra los binarios a partir de la `versionName` que
 declara el propio build, no de un literal escrito a mano. Así el fichero
@@ -42,8 +50,9 @@ DJIFlyPro release preflight failed: AIRCRAFT_API_KEY is empty.
 - `com.dji.sdk.API_KEY` presente en el manifiesto de los **tres** binarios
   (APK release, APK debug y AAB), verificado con `aapt2 dump xmltree` y
   extrayendo el manifiesto del AAB.
-- `DJIFlyPro-1.1.0-alpha.2.apk`: `apksigner verify --verbose` correcto; APK
-  Signature Scheme v2 y v3, un firmante, RSA 2048. La v1 (JAR) no se emite:
+- `DJIFlyPro-1.1.0-alpha.3.apk`: `apksigner verify --verbose` correcto; APK
+  Signature Scheme v2 y v3, un firmante `CN=DJIFlyPro Local Test`, RSA 2048,
+  y `android:debuggable` ausente. La v1 (JAR) no se emite:
   AGP la omite con `minSdk 24` porque la plataforma verifica la v2 por su
   cuenta. `v2` y `v3` se piden de forma explícita en `signingConfigs` para que
   los esquemas del artefacto publicado sean una decisión y no un efecto del
@@ -54,8 +63,8 @@ DJIFlyPro release preflight failed: AIRCRAFT_API_KEY is empty.
 - El APK contiene solo `lib/arm64-v8a`. Es lo que declara `abiFilters` y lo que
   instala en móviles y tablets ARM de 64 bits. No instala en emuladores x86_64
   ni en ARM de 32 bits; para eso hay que quitar el `abiFilters` y recompilar.
-- `DJIFlyPro-1.1.0-alpha.2.aab`: `jarsigner -verify` terminó con código 0.
-- Identidad: `com.djiflypro.app`, `versionName 1.1.0-alpha.2`, `versionCode 3`,
+- `DJIFlyPro-1.1.0-alpha.3.aab`: `jarsigner -verify` terminó con código 0.
+- Identidad: `com.djiflypro.app`, `versionName 1.1.0-alpha.3`, `versionCode 4`,
   `minSdk 24`, `targetSdk 35`, `compileSdk 35`.
 - El APK y el manifiesto merged no declaran `MANAGE_EXTERNAL_STORAGE`.
 - El asset `assets/validated_wpml_profiles.json` está empaquetado y contiene una
@@ -87,15 +96,20 @@ clave de producción y no debe usarse para publicar en Google Play.
 
 ## Release en GitHub
 
-Estos tres binarios están publicados como assets del release
-`v1.1.0-alpha.2`, junto con `SHA256SUMS.txt` y las notas de
+Estos dos binarios están publicados como assets del release
+`v1.1.0-alpha.3`, junto con `SHA256SUMS.txt` y las notas de
 `artifacts/release-notes.md`.
+
+Cada build es una release nueva con su etiqueta. No se reemplazan los assets de
+una release ya publicada: un hash que cambia bajo un mismo nombre de fichero es
+indistinguible de un binario manipulado.
 
 El manifiesto de hashes usa nombres de fichero sin ruta, para que
 `sha256sum -c SHA256SUMS.txt` funcione sobre los ficheros descargados juntos.
 
-El release `v1.1.0-alpha.1` anterior se conserva: sus binarios se compilaron
-sin App Key y no pueden registrarse con DJI.
+Las releases anteriores se conservan tal cual: `v1.1.0-alpha.1` compilada sin
+App Key, y `v1.1.0-alpha.2` con el APK debug, que ya no se publica en nuevas
+releases.
 
 Para publicar una versión nueva: `scripts/publish-release.sh <version>`.
 

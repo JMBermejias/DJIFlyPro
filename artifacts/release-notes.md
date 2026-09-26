@@ -1,11 +1,11 @@
-# DJIFlyPro v1.1.0-alpha.2
+# DJIFlyPro v1.1.0-alpha.3
 
 **La App Key de DJI ya está en el binario.** Esta prerelease sí puede registrarse
 con el SDK. Es un cambio respecto a `v1.1.0-alpha.1`, cuyos binarios se
 compilaron sin key y no podían conectarse a ningún aircraft.
 
 `applicationId com.djiflypro.app`, DJI Mobile SDK V5.18.0,
-`versionName 1.1.0-alpha.2`, `versionCode 3`.
+`versionName 1.1.0-alpha.3`, `versionCode 4`.
 
 ## Qué sigue sin estar hecho
 
@@ -119,12 +119,29 @@ nada, y lo dice en pantalla.
 - Corregido el conteo de líneas de vuelo, que podía partir una línea en dos
   cuando su posición cruzaba exactamente un límite de la rejilla de agrupación.
 - `mission.json` conserva el perfil cartográfico y los puntos de control.
-- `scripts/build-release.sh` construye también el APK debug, en la misma pasada
-  y con el mismo entorno, en vez de copiar el que hubiera de una build anterior.
+- **El APK debug desaparece del release.** Estaba firmado con un certificado
+  distinto al del APK release (`CN=Android Debug` frente a
+  `CN=DJIFlyPro Local Test`), así que los dos no se pueden instalar uno sobre
+  otro: quien tenga el release instalado no puede instalar el debug sin
+  desinstalar antes, y varios instaladores de fabricante informan de ese
+  rechazo como "la aplicación no es válida". Además era `android:debuggable`,
+  con símbolos sin strippear. Sigue siendo construible en local con
+  `./gradlew :sample:assembleDebug`, pero ya no se publica.
+
+## Qué instalar
+
+Solo hay un APK: `DJIFlyPro-1.1.0-alpha.3.apk`. Si ya tienes una versión
+anterior de DJIFlyPro instalada, no la desinstales: todas las releases
+comparten certificado, así que se actualiza encima. Si en algún momento
+tuviste instalada una build depurable, esa sí hay que desinstalarla antes,
+porque su certificado es otro.
 
 ## Verificaciones
 
 - 292 pruebas unitarias, 0 fallos.
+- `unzip -t` sin errores, `zipalign -c 4` correcto, `aapt2 dump badging`
+  correcto, `apksigner verify` con v2 y v3.
+- `android:debuggable` ausente en el APK publicado.
 - `lintDebug`: 0 errores.
 - `com.dji.sdk.API_KEY` presente en el manifiesto de los tres binarios.
 - `apksigner verify`: correcto, APK Signature Scheme v2.
@@ -147,9 +164,10 @@ rellenar. Ver `docs/COMPATIBILITY.md` y `docs/SAFETY.md`.
 
 | Archivo | Tamaño | SHA-256 |
 |---|---:|---|
-| `DJIFlyPro-1.1.0-alpha.2.apk` | 205,002,230 bytes | `9d33fb2b78f12afef345a321fcaff9eaf8346b1fcb7a70c3bf657e29e0cdf19f` |
-| `DJIFlyPro-1.1.0-alpha.2.aab` | 198,917,609 bytes | `469872bc57db2514795fe742623be14199762ea3fb2fdf365d9189e0bc86f3d7` |
-| `DJIFlyPro-1.1.0-alpha.2-debug.apk` | 238,562,076 bytes | `60f6fcd6f18e050f152fc741d401578ccb48af5bfa96724e2fc32a9117231643` |
+| `DJIFlyPro-1.1.0-alpha.3.apk` | 205,002,230 bytes | `df27ec9dbdbd9d7193a4401edf22e7b7ee12cd4b36251b617e06d143bb4b0c34` |
+| `DJIFlyPro-1.1.0-alpha.3.aab` | 198,917,596 bytes | `a089cd197832ca75bd6d757b13d61c51d922ab5a000719b3c7ae446d0ae72ee7` |
+
+El `.aab` es para subir a Google Play, no para instalar a mano.
 
 Los nombres llevan la `versionName` que declara el propio build. Verifica con:
 
