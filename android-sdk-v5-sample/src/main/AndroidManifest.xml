@@ -84,6 +84,16 @@
             android:exported="false" />
 
         <activity
+            android:name="dji.sampleV5.aircraft.pro.cartography.CartographyActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/pro_theme" />
+        <activity
+            android:name="dji.sampleV5.aircraft.pro.map.MissionMapActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/pro_theme" />
+        <activity
             android:name="dji.sampleV5.aircraft.pro.guidance.ManualGuidanceActivity"
             android:theme="@style/pro_theme"
             android:screenOrientation="portrait"

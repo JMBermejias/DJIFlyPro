@@ -53,6 +53,9 @@ class DJIFlyProActivity : AppCompatActivity() {
         findViewById<Button>(R.id.button_control_center).setOnClickListener {
             startActivity(Intent(this, ControlCenterActivity::class.java))
         }
+        findViewById<Button>(R.id.button_cartography).setOnClickListener {
+            startActivity(Intent(this, dji.sampleV5.aircraft.pro.cartography.CartographyActivity::class.java))
+        }
         findViewById<Button>(R.id.button_mission_planner).setOnClickListener {
             startActivity(Intent(this, dji.sampleV5.aircraft.pro.mission.MissionPlannerActivity::class.java))
         }

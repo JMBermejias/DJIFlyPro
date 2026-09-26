@@ -7,8 +7,10 @@ local.properties
 *.iml
 .idea/
 
-# Local SDK and secrets
+# Local SDK, JDK and secrets
 tools/android-sdk/
+tools/jdk/
+tools/jdk*/
 .local/
 config/*.jks
 config/*.keystore

@@ -77,6 +77,11 @@
             android:text="Centro de control" />
 
         <Button
+            android:id="@+id/button_cartography"
+            style="@style/pro_button"
+            android:text="Cartografía" />
+
+        <Button
             android:id="@+id/button_mission_planner"
             style="@style/pro_button"
             android:text="Planificar misión" />

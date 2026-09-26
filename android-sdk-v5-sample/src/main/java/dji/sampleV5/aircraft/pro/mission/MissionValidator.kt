@@ -4,10 +4,33 @@ import kotlin.math.abs
 
 object MissionValidator {
     const val MAX_WAYPOINTS = 900
+
+    /**
+     * DJI's default ceiling for an automatic waypoint mission. Nothing above
+     * this can be uploaded or started automatically, whatever else is allowed.
+     */
     const val MAX_ALTITUDE_METERS = 120.0
+
+    /**
+     * Ceiling for a route a person flies by hand, guided by the app. Mapping
+     * payloads need real height to reach a useful ground sample distance, and
+     * a human flying the aircraft is what makes that safe, so the route may be
+     * planned higher than it may ever be automated.
+     */
+    const val MAX_GUIDED_ALTITUDE_METERS = 500.0
+
     const val MAX_SPEED_MPS = 15.0
 
-    fun validate(request: MissionRequest, plan: MissionPlan? = null): MissionValidation {
+    /**
+     * Everything that has to hold for the route to exist, be saved, or be
+     * offered for manual guidance.
+     */
+    @JvmOverloads
+    fun validate(
+        request: MissionRequest,
+        plan: MissionPlan? = null,
+        altitudeCeiling: Double = MAX_GUIDED_ALTITUDE_METERS
+    ): MissionValidation {
         val errors = mutableListOf<String>()
         val warnings = mutableListOf<String>()
 
@@ -37,8 +60,12 @@ object MissionValidator {
         if (request.photoSpacingMeters < 0.5 || request.photoSpacingMeters > 100.0) {
             errors += "Photo spacing must be between 0.5 m and 100 m"
         }
-        if (request.altitudeMeters !in 2.0..MAX_ALTITUDE_METERS) {
-            errors += "Altitude must be between 2 m and ${MAX_ALTITUDE_METERS.toInt()} m"
+        if (request.altitudeMeters !in 2.0..altitudeCeiling) {
+            errors += "Altitude must be between 2 m and ${altitudeCeiling.toInt()} m"
+        }
+        if (request.altitudeMeters > MAX_ALTITUDE_METERS) {
+            warnings += "Above ${MAX_ALTITUDE_METERS.toInt()} m this block cannot run as an automatic waypoint mission; " +
+                "it has to be flown with manual guidance."
         }
         if (request.speedMps !in 1.0..MAX_SPEED_MPS) {
             errors += "Speed must be between 1 and ${MAX_SPEED_MPS.toInt()} m/s"
@@ -77,7 +104,7 @@ object MissionValidator {
                 errors += "Mission contains an invalid coordinate"
             }
             if (plan.waypoints.any {
-                    !it.heightMeters.isFinite() || it.heightMeters !in 2.0..MAX_ALTITUDE_METERS ||
+                    !it.heightMeters.isFinite() || it.heightMeters !in 2.0..altitudeCeiling ||
                         !it.speedMps.isFinite() || it.speedMps !in 1.0..MAX_SPEED_MPS ||
                         !it.pitchDegrees.isFinite() || it.pitchDegrees !in -90.0..30.0 ||
                         it.hoverSeconds !in 0..3_600
@@ -91,6 +118,23 @@ object MissionValidator {
             }
         }
         return MissionValidation(errors, warnings + (plan?.warnings ?: emptyList()))
+    }
+
+    /**
+     * The extra check an automatic waypoint mission has to pass on top of
+     * [validate]. Called again immediately before an upload and immediately
+     * before a start, never trusted from an earlier moment.
+     */
+    fun validateAutomaticMission(request: MissionRequest, plan: MissionPlan? = null): MissionValidation {
+        val base = validate(request, plan)
+        if (request.altitudeMeters > MAX_ALTITUDE_METERS) {
+            return MissionValidation(
+                errors = base.errors + "Automatic waypoint missions are limited to ${MAX_ALTITUDE_METERS.toInt()} m " +
+                    "in this release. Fly this block with manual guidance, or pick a coarser ground sample distance.",
+                warnings = base.warnings
+            )
+        }
+        return base
     }
 
     private fun checkPositive(value: Double, label: String, errors: MutableList<String>) {

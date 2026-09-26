@@ -16,7 +16,8 @@ enum class MissionTemplate(val key: String, val displayName: String) {
 
 enum class RoutePattern(val key: String, val displayName: String) {
     PARALLEL("parallel", "Líneas paralelas"),
-    GRID("grid", "Malla doble");
+    GRID("grid", "Malla doble"),
+    CROSS("cross", "Cruz oblicua 45°");
 
     companion object {
         fun fromKey(value: String): RoutePattern =
@@ -80,8 +81,18 @@ data class MissionPlan(
     val totalDistanceMeters: Double,
     val estimatedDurationSeconds: Double,
     val warnings: List<String>,
-    val sourceAlgorithmId: String? = null
-)
+    val sourceAlgorithmId: String? = null,
+    val cartography: dji.sampleV5.aircraft.pro.cartography.CartographyProfile? = null,
+    val groundControlPoints: List<dji.sampleV5.aircraft.pro.cartography.GroundControlPoint>? = null
+) {
+    /**
+     * Nullable so a plan written by an older build still deserialises: Gson
+     * leaves an absent field null instead of applying the Kotlin default. Read
+     * control points through here rather than through the field.
+     */
+    fun controlPoints(): List<dji.sampleV5.aircraft.pro.cartography.GroundControlPoint> =
+        groundControlPoints.orEmpty()
+}
 
 data class MissionValidation(
     val errors: List<String>,
@@ -90,10 +101,3 @@ data class MissionValidation(
     val isValid: Boolean
         get() = errors.isEmpty()
 }
-
-data class MissionSummary(
-    val waypointCount: Int,
-    val distanceMeters: Double,
-    val durationSeconds: Double,
-    val photoCount: Int
-)

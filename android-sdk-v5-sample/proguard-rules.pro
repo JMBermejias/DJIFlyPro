@@ -14,6 +14,16 @@
 -keep class dji.sampleV5.aircraft.pro.algorithm.AlgorithmRecipe { *; }
 -keep class dji.sampleV5.aircraft.pro.algorithm.AlgorithmDefaults { *; }
 
+# The cartography profile and its control points travel inside mission.json, so
+# they are part of the same interchange format.
+-keep class dji.sampleV5.aircraft.pro.cartography.CartographyProfile { *; }
+-keep class dji.sampleV5.aircraft.pro.cartography.GroundControlPoint { *; }
+-keep class dji.sampleV5.aircraft.pro.cartography.UtmCoordinate { *; }
+-keep class dji.sampleV5.aircraft.pro.cartography.CartographicSummary { *; }
+-keep enum dji.sampleV5.aircraft.pro.cartography.AltitudeReference { *; }
+-keep enum dji.sampleV5.aircraft.pro.cartography.ControlPointRole { *; }
+-keep enum dji.sampleV5.aircraft.pro.cartography.ControlPointTarget { *; }
+
 # Build-time allowlist entries are serialized from the packaged JSON asset.
 -keep class dji.sampleV5.aircraft.pro.mission.ValidatedWpmlProfile { *; }
 -keep class dji.sampleV5.aircraft.pro.mission.ValidatedWpmlProfileFile { *; }

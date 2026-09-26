@@ -67,5 +67,26 @@ if [ -f "$OUT/apk/debug/sample-debug.apk" ]; then
         "$ROOT_DIR/artifacts/DJIFlyPro-$VERSION_NAME-debug.apk"
 fi
 
+# The hash manifest has to describe exactly the binaries that were just staged.
+# SHA256SUMS.txt is tracked in git while the binaries are not, so nothing
+# regenerates it on an ordinary rebuild and it silently goes stale: a manifest
+# left over from an earlier build ends up next to different files and
+# `sha256sum -c` fails for whoever downloads the release. Writing it here, over
+# the staged artifacts, is what prevents that. Then verify it immediately, so a
+# mistake fails this script instead of the person installing the APK.
+(
+  cd "$ROOT_DIR/artifacts"
+  if ! sha256sum ./*.apk ./*.aab >/dev/null 2>&1; then
+    echo "Error: no artifacts staged to hash" >&2
+    exit 1
+  fi
+  sha256sum ./*.apk ./*.aab | sed 's#\./##' > SHA256SUMS.txt
+  if ! sha256sum -c SHA256SUMS.txt >/dev/null 2>&1; then
+    echo "Error: SHA256SUMS.txt does not match the staged artifacts" >&2
+    exit 1
+  fi
+  cat SHA256SUMS.txt
+)
+
 printf 'Artifacts copied to %s/artifacts (mode: %s)\n' "$ROOT_DIR" "$MODE"
 ls -l "$ROOT_DIR/artifacts" | grep -E '\.apk$|\.aab$' || true

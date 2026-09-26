@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/pro_background">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="18dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Punto de control"
+            style="@style/pro_title" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="Un punto de control se mide en el terreno con precisión conocida. La Exactitud del producto final la limita la de estos puntos, no la del plan de vuelo."
+            style="@style/pro_caption" />
+
+        <EditText
+            android:id="@+id/edit_gcp_code"
+            style="@style/pro_input"
+            android:hint="Código, por ejemplo CP01"
+            android:inputType="textCapCharacters" />
+
+        <EditText
+            android:id="@+id/edit_gcp_latitude"
+            style="@style/pro_input"
+            android:hint="Latitud (WGS84)"
+            android:inputType="numberDecimal|numberSigned" />
+
+        <EditText
+            android:id="@+id/edit_gcp_longitude"
+            style="@style/pro_input"
+            android:hint="Longitud (WGS84)"
+            android:inputType="numberDecimal|numberSigned" />
+
+        <EditText
+            android:id="@+id/edit_gcp_height"
+            style="@style/pro_input"
+            android:hint="Altura (m, opcional)"
+            android:inputType="numberDecimal|numberSigned" />
+
+        <EditText
+            android:id="@+id/edit_gcp_accuracy"
+            style="@style/pro_input"
+            android:hint="Exactitud horizontal medida (mm, opcional)"
+            android:inputType="numberDecimal" />
+
+        <EditText
+            android:id="@+id/edit_gcp_source"
+            style="@style/pro_input"
+            android:hint="Origen de la coordenada"
+            android:inputType="textCapSentences" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Tipo de punto"
+            style="@style/pro_section" />
+
+        <Spinner
+            android:id="@+id/spinner_gcp_target"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:background="@drawable/pro_input_background"
+            android:padding="8dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Uso"
+            style="@style/pro_section" />
+
+        <Spinner
+            android:id="@+id/spinner_gcp_role"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:background="@drawable/pro_input_background"
+            android:padding="8dp" />
+
+        <Button
+            android:id="@+id/button_save_control_point"
+            style="@style/pro_button"
+            android:text="Guardar punto" />
+    </LinearLayout>
+</ScrollView>

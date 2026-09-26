@@ -51,6 +51,13 @@ object MissionGeometry {
             if (points.size > 600) {
                 add("This is a large route. Verify aircraft memory, battery reserve and airspace limits.")
             }
+            if (request.template != MissionTemplate.FACADE) {
+                add("The block is covered by an area route, not by a single survey strip. " +
+                    "Overlapping lines only reconstruct if the aircraft holds a constant height over the terrain.")
+                if (request.routePattern == RoutePattern.CROSS) {
+                    add("The cross pass covers the corners of the block; it costs a second full traversal of the area.")
+                }
+            }
         }
         return MissionPlan(
             id = "DFP-${System.currentTimeMillis()}",
@@ -112,7 +119,7 @@ object MissionGeometry {
         }
         val maxHeight = if (request.template == MissionTemplate.FACADE) 300.0 else 5_000.0
         require(request.heightMeters in 1.0..maxHeight) { "Height is outside the safe range" }
-        require(request.altitudeMeters in 2.0..MissionValidator.MAX_ALTITUDE_METERS) {
+        require(request.altitudeMeters in 2.0..MissionValidator.MAX_GUIDED_ALTITUDE_METERS) {
             "Altitude is outside the safe range"
         }
         require(request.standoffMeters in 0.5..500.0) { "Stand-off is outside the safe range" }
@@ -128,49 +135,81 @@ object MissionGeometry {
 
     private fun areaPoints(request: MissionRequest): List<PlannedWaypoint> {
         val center = GeoPoint(request.centerLatitude, request.centerLongitude)
-        val halfLength = request.lengthMeters / 2.0
-        val halfWidth = request.widthMeters / 2.0
-        val lineCount = lineCount(request.widthMeters, request.lineSpacingMeters)
-        val pointsPerLine = linePoints(request.lengthMeters, request.photoSpacingMeters)
-        if (request.routePattern == RoutePattern.GRID) {
-            val shortLineCount = lineCount(request.lengthMeters, request.lineSpacingMeters)
-            val shortPointsPerLine = linePoints(request.widthMeters, request.photoSpacingMeters)
-            ensureWaypointBudget(lineCount.toLong() * pointsPerLine + shortLineCount.toLong() * shortPointsPerLine)
-        } else {
-            ensureWaypointBudget(lineCount.toLong() * pointsPerLine)
+        val passes = when (request.routePattern) {
+            RoutePattern.PARALLEL -> listOf(0.0)
+            RoutePattern.GRID -> listOf(0.0, 90.0)
+            // Diagonals of the block, not its edges. Two diagonal passes give
+            // the block a different shadow and viewing geometry, which is what
+            // oblique and facade capture needs.
+            RoutePattern.CROSS -> listOf(45.0, -45.0)
         }
+        val extents = passes.map { blockExtents(request.lengthMeters, request.widthMeters, it) }
+        ensureWaypointBudget(extents.sumOf { (along, across) ->
+            lineCount(across, request.lineSpacingMeters).toLong() * linePoints(along, request.photoSpacingMeters)
+        })
+
         val points = mutableListOf<PlannedWaypoint>()
+        passes.forEachIndexed { index, delta ->
+            val (along, across) = extents[index]
+            appendPass(
+                into = points,
+                center = center,
+                bearingDegrees = normalizeBearing(request.bearingDegrees + delta),
+                alongMeters = along,
+                acrossMeters = across,
+                request = request
+            )
+        }
+        return points
+    }
+
+    /**
+     * Extent of a rectangle seen from a direction [deltaDegrees] away from its
+     * own bearing: how far the block reaches along that direction, and how far
+     * across it. Needed because a second pass at 90 or 45 degrees has to cover
+     * the corners of the first one, not the same width.
+     */
+    private fun blockExtents(lengthMeters: Double, widthMeters: Double, deltaDegrees: Double): Pair<Double, Double> {
+        val delta = Math.toRadians(deltaDegrees)
+        val cos = kotlin.math.abs(kotlin.math.cos(delta))
+        val sin = kotlin.math.abs(kotlin.math.sin(delta))
+        return (lengthMeters * cos + widthMeters * sin) to (lengthMeters * sin + widthMeters * cos)
+    }
+
+    /**
+     * Appends one boustrophedon pass over the block. The pass is extended by
+     * one photo spacing past each end of the block so the boundary is covered
+     * by whole photographs instead of by the edge of the first and last one,
+     * and the lines are spread evenly so the outermost line lands on the
+     * boundary rather than leaving a sliver uncovered.
+     */
+    private fun appendPass(
+        into: MutableList<PlannedWaypoint>,
+        center: GeoPoint,
+        bearingDegrees: Double,
+        alongMeters: Double,
+        acrossMeters: Double,
+        request: MissionRequest
+    ) {
+        val halfAlong = alongMeters / 2.0
+        val halfAcross = acrossMeters / 2.0
+        val lineCount = lineCount(acrossMeters, request.lineSpacingMeters)
+        val actualLineSpacing = if (lineCount > 1) acrossMeters / (lineCount - 1.0) else request.lineSpacingMeters
+        val pointsPerLine = linePoints(alongMeters, request.photoSpacingMeters)
+        ensureWaypointBudget(lineCount.toLong() * pointsPerLine)
+        val margin = request.photoSpacingMeters
         var reverse = false
 
         for (line in 0 until lineCount) {
-            val crossOffset = -halfWidth + line * request.lineSpacingMeters
-            val boundedCross = crossOffset.coerceIn(-halfWidth, halfWidth)
-            val start = offsetAlong(center, -halfLength, boundedCross, request.bearingDegrees)
-            val end = offsetAlong(center, halfLength, boundedCross, request.bearingDegrees)
+            val crossOffset = -halfAcross + line * actualLineSpacing
+            val boundedCross = crossOffset.coerceIn(-halfAcross, halfAcross)
+            val start = offsetAlong(center, -halfAlong - margin, boundedCross, bearingDegrees)
+            val end = offsetAlong(center, halfAlong + margin, boundedCross, bearingDegrees)
             val samples = sampleLine(start, end, request.photoSpacingMeters)
             val ordered = if (reverse) samples.asReversed() else samples
-            ordered.forEach { point -> points += waypoint(points.size, point, request) }
+            ordered.forEach { point -> into += waypoint(into.size, point, request) }
             reverse = !reverse
         }
-
-        if (request.routePattern == RoutePattern.GRID && points.size > 2) {
-            // A second pass across the short axis gives a useful inspection grid
-            // for roofs and solar plants while preserving the same safety limits.
-            val halfShort = request.widthMeters / 2.0
-            val shortCount = lineCount(request.lengthMeters, request.lineSpacingMeters)
-            var reverseShort = false
-            for (line in 0 until shortCount) {
-                val alongOffset = -halfLength + line * request.lineSpacingMeters
-                val boundedAlong = alongOffset.coerceIn(-halfLength, halfLength)
-                val start = offsetAlong(center, boundedAlong, -halfShort, request.bearingDegrees)
-                val end = offsetAlong(center, boundedAlong, halfShort, request.bearingDegrees)
-                val samples = sampleLine(start, end, request.photoSpacingMeters)
-                val ordered = if (reverseShort) samples.asReversed() else samples
-                ordered.forEach { point -> points += waypoint(points.size, point, request) }
-                reverseShort = !reverseShort
-            }
-        }
-        return points
     }
 
     private fun facadePoints(request: MissionRequest): List<PlannedWaypoint> {
@@ -193,11 +232,12 @@ object MissionGeometry {
 
         val halfLength = request.lengthMeters / 2.0
         val standoff = request.standoffMeters
+        val margin = request.photoSpacingMeters
         val normalBearing = normalizeBearing(request.bearingDegrees + 90.0)
         val points = mutableListOf<PlannedWaypoint>()
         levels.forEachIndexed { levelIndex, height ->
-            val wallStart = offsetAlong(center, -halfLength, 0.0, request.bearingDegrees)
-            val wallEnd = offsetAlong(center, halfLength, 0.0, request.bearingDegrees)
+            val wallStart = offsetAlong(center, -halfLength - margin, 0.0, request.bearingDegrees)
+            val wallEnd = offsetAlong(center, halfLength + margin, 0.0, request.bearingDegrees)
             val flightStart = destination(wallStart, standoff, normalBearing)
             val flightEnd = destination(wallEnd, standoff, normalBearing)
             val samples = sampleLine(flightStart, flightEnd, request.photoSpacingMeters)
@@ -243,13 +283,21 @@ object MissionGeometry {
         return offset(center, north, east)
     }
 
-    private fun lineCount(width: Double, spacing: Double): Int {
-        val count = floor(width / spacing).toInt() + 1
-        return max(1, count)
-    }
+    /**
+     * Number of flight lines across [widthMeters]. `ceil` keeps the side
+     * overlap at or above the requested value; the lines are then spread
+     * evenly so the outermost one lands exactly on the boundary.
+     */
+    private fun lineCount(widthMeters: Double, spacingMeters: Double): Int =
+        max(1, ceil(widthMeters / spacingMeters).toInt())
 
-    private fun linePoints(lengthMeters: Double, spacingMeters: Double): Int {
-        val segments = max(1, ceil(lengthMeters / spacingMeters).toInt())
+    /**
+     * Photographs on one line, including the margin that extends the line one
+     * photo spacing past each end of the block.
+     */
+    private fun linePoints(alongMeters: Double, photoSpacingMeters: Double): Int {
+        val extended = alongMeters + 2.0 * photoSpacingMeters
+        val segments = max(1, ceil(extended / photoSpacingMeters).toInt())
         return segments + 1
     }
 

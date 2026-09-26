@@ -12,6 +12,7 @@ import java.security.MessageDigest
 class AlgorithmRepository(private val context: Context) {
     companion object {
         const val MAX_RECIPE_BYTES = 1_048_576
+        const val ASSET_DIRECTORY = "algorithms"
         private val ALLOWED_OUTPUTS = setOf("KMZ", "mission.json", "audit.jsonl")
     }
 
@@ -19,18 +20,36 @@ class AlgorithmRepository(private val context: Context) {
     private val importedDirectory = File(context.filesDir, "algorithms").apply { mkdirs() }
     private val audit = AuditLog(context)
 
+    /**
+     * Recipes the app offers, in one list: the ones shipped as assets, then the
+     * ones the operator imported. The assets are the single source of truth, so
+     * a recipe can be reviewed, corrected or extended in the repository without
+     * a recompile; [builtIns] is only the fallback for the case where the assets
+     * cannot be read at all.
+     */
     fun list(): List<AlgorithmRecipe> {
+        val shipped = shippedRecipes()
+        val base = if (shipped.isEmpty()) builtIns() else shipped
         val imported = importedDirectory.listFiles { file ->
             file.isFile && file.extension.equals("json", ignoreCase = true)
         }.orEmpty().mapNotNull { file ->
             if (file.length() > MAX_RECIPE_BYTES) return@mapNotNull null
-            runCatching {
-                val raw = file.readText(Charsets.UTF_8)
-                parseAndValidate(raw)
-            }.getOrNull()
+            runCatching { parseAndValidate(file.readText(Charsets.UTF_8)) }.getOrNull()
         }
-        return (builtIns() + imported).distinctBy { it.id }.sortedBy { it.name }
+        return (base + imported).distinctBy { it.id }.sortedBy { it.name }
     }
+
+    private fun shippedRecipes(): List<AlgorithmRecipe> =
+        runCatching {
+            context.assets.list(ASSET_DIRECTORY).orEmpty()
+                .filter { it.endsWith(".json", ignoreCase = true) }
+                .sorted()
+                .mapNotNull { name ->
+                    runCatching {
+                        parseAndValidate(context.assets.open("$ASSET_DIRECTORY/$name").bufferedReader().use { it.readText() })
+                    }.getOrNull()
+                }
+        }.getOrDefault(emptyList())
 
     fun find(id: String): AlgorithmRecipe? = list().firstOrNull { it.id == id }
 
@@ -72,7 +91,9 @@ class AlgorithmRepository(private val context: Context) {
         require(d.widthMeters in 1.0..5_000.0) { "Algorithm width is outside the allowed range" }
         require(d.heightMeters in 1.0..300.0) { "Algorithm height is outside the allowed range" }
         require(d.bearingDegrees.isFinite()) { "Algorithm bearing is invalid" }
-        require(d.altitudeMeters in 2.0..120.0) { "Algorithm altitude is outside the allowed range" }
+        require(d.altitudeMeters in 2.0..dji.sampleV5.aircraft.pro.mission.MissionValidator.MAX_GUIDED_ALTITUDE_METERS) {
+            "Algorithm altitude is outside the allowed range"
+        }
         require(d.standoffMeters in 0.5..500.0) { "Algorithm stand-off is outside the allowed range" }
         require(d.lineSpacingMeters in 0.5..500.0) { "Algorithm line spacing is outside the allowed range" }
         require(d.photoSpacingMeters in 0.5..100.0) { "Algorithm photo spacing is outside the allowed range" }

@@ -55,10 +55,32 @@ class MissionGeometryTest {
     }
 
     @Test
-    fun validatorRejectsUnsafeAltitude() {
-        val unsafe = request().copy(altitudeMeters = 130.0)
-        val validation = MissionValidator.validate(unsafe)
-        assertTrue(validation.errors.any { it.contains("Altitude") })
+    fun aRouteIsRefusedBeyondTheGuidedCeiling() {
+        val unsafe = request().copy(altitudeMeters = MissionValidator.MAX_GUIDED_ALTITUDE_METERS + 1.0)
+        val error = runCatching { MissionGeometry.plan(unsafe) }.exceptionOrNull()
+        assertTrue(error is IllegalArgumentException)
+        assertTrue(MissionValidator.validate(unsafe).errors.any { it.contains("Altitude") })
+    }
+
+    @Test
+    fun aboveTheAutomaticCeilingTheRouteIsPlannedButNotAutomated() {
+        // Mapping payloads need real height. The route may be planned and flown
+        // by hand; it may never be uploaded as an automatic waypoint mission.
+        val high = request().copy(altitudeMeters = 160.0)
+        val plan = MissionGeometry.plan(high)
+        assertTrue(MissionValidator.validate(high, plan).isValid)
+        assertTrue(MissionValidator.validate(high, plan).warnings.any { it.contains("manual guidance") })
+        val automatic = MissionValidator.validateAutomaticMission(high, plan)
+        assertTrue(!automatic.isValid)
+        assertTrue(automatic.errors.any { it.contains("120 m") })
+        assertTrue(automatic.errors.any { it.contains("manual guidance") })
+    }
+
+    @Test
+    fun insideTheAutomaticCeilingTheRouteMayBeAutomated() {
+        val low = request().copy(altitudeMeters = 100.0)
+        val plan = MissionGeometry.plan(low)
+        assertTrue(MissionValidator.validateAutomaticMission(low, plan).isValid)
     }
 
     @Test

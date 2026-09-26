@@ -18,6 +18,14 @@ import dji.sampleV5.aircraft.R
 import dji.sampleV5.aircraft.models.MSDKManagerVM
 import dji.sampleV5.aircraft.models.globalViewModels
 import dji.sampleV5.aircraft.pro.algorithm.AlgorithmRepository
+import dji.sampleV5.aircraft.pro.cartography.CartographyActivity
+import dji.sampleV5.aircraft.pro.cartography.CartographicSummaryBuilder
+import dji.sampleV5.aircraft.pro.cartography.CartographyTransfer
+import dji.sampleV5.aircraft.pro.cartography.CartographyReportBuilder
+import dji.sampleV5.aircraft.pro.cartography.GeoJsonExporter
+import dji.sampleV5.aircraft.pro.cartography.GroundControlPoint
+import dji.sampleV5.aircraft.pro.cartography.KmlExporter
+import dji.sampleV5.aircraft.pro.map.MissionMapActivity
 import dji.v5.common.callback.CommonCallbacks
 import dji.v5.common.error.IDJIError
 import dji.v5.manager.aircraft.waypoint3.WaypointMissionExecuteStateListener
@@ -38,7 +46,9 @@ class MissionPlannerActivity : AppCompatActivity() {
 
     private lateinit var templateSpinner: Spinner
     private lateinit var routeSpinner: Spinner
+    private lateinit var finishSpinner: Spinner
     private lateinit var summary: TextView
+    private lateinit var cartographicSummary: TextView
     private lateinit var warnings: TextView
     private lateinit var capability: TextView
     private lateinit var progress: ProgressBar
@@ -49,6 +59,10 @@ class MissionPlannerActivity : AppCompatActivity() {
     private lateinit var manualGuidanceButton: Button
     private lateinit var exportJsonButton: Button
     private lateinit var exportKmzButton: Button
+    private lateinit var exportGeoJsonButton: Button
+    private lateinit var exportKmlButton: Button
+    private lateinit var exportReportButton: Button
+    private lateinit var openMapButton: Button
 
     private var currentPlan: MissionPlan? = null
     private var currentKmz: File? = null
@@ -64,6 +78,8 @@ class MissionPlannerActivity : AppCompatActivity() {
     private var missionPaused = false
     private var missionState = WaypointMissionExecuteState.UNKNOWN
     private var selectedAlgorithmId: String? = null
+    private var cartographyProfile: dji.sampleV5.aircraft.pro.cartography.CartographyProfile? = null
+    private var controlPoints: List<GroundControlPoint> = emptyList()
 
     private val missionStateListener = WaypointMissionExecuteStateListener { state ->
         runOnUiThread { handleMissionState(state) }
@@ -81,6 +97,40 @@ class MissionPlannerActivity : AppCompatActivity() {
             pendingValidationReport = null
         }
     private var pendingValidationReport: String? = null
+    private var pendingExport: String? = null
+
+    private val createGeoJson =
+        registerForActivityResult(ActivityResultContracts.CreateDocument("application/geo+json")) { uri ->
+            uri?.let { writeText(it, pendingExport.orEmpty()) }
+            pendingExport = null
+        }
+    private val createKml =
+        registerForActivityResult(ActivityResultContracts.CreateDocument("application/vnd.google-earth.kml+xml")) { uri ->
+            uri?.let { writeText(it, pendingExport.orEmpty()) }
+            pendingExport = null
+        }
+    private val createFlightReport =
+        registerForActivityResult(ActivityResultContracts.CreateDocument("application/json")) { uri ->
+            uri?.let { writeText(it, pendingExport.orEmpty()) }
+            pendingExport = null
+        }
+    private val openCartography =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode != RESULT_OK) return@registerForActivityResult
+            applyCartographyResult(result.data)
+        }
+    private val pickControlPointOnMap =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            val data = result.data ?: return@registerForActivityResult
+            if (result.resultCode != RESULT_OK) return@registerForActivityResult
+            val latitude = data.getDoubleExtra(MissionMapActivity.RESULT_LATITUDE, Double.NaN)
+            val longitude = data.getDoubleExtra(MissionMapActivity.RESULT_LONGITUDE, Double.NaN)
+            if (!latitude.isFinite() || !longitude.isFinite()) {
+                showError("Sin posición", "El mapa no ha devuelto una posición válida.")
+                return@registerForActivityResult
+            }
+            addControlPointFromMap(latitude, longitude)
+        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -131,6 +181,8 @@ class MissionPlannerActivity : AppCompatActivity() {
         templateSpinner = findViewById(R.id.spinner_template)
         routeSpinner = findViewById(R.id.spinner_route_pattern)
         summary = findViewById(R.id.text_plan_summary)
+        cartographicSummary = findViewById(R.id.text_cartographic_summary)
+        finishSpinner = findViewById(R.id.spinner_finish_action)
         warnings = findViewById(R.id.text_plan_warnings)
         capability = findViewById(R.id.text_capability)
         progress = findViewById(R.id.progress_mission)
@@ -141,6 +193,10 @@ class MissionPlannerActivity : AppCompatActivity() {
         manualGuidanceButton = findViewById(R.id.button_manual_guidance)
         exportJsonButton = findViewById(R.id.button_export_json)
         exportKmzButton = findViewById(R.id.button_export_kmz)
+        exportGeoJsonButton = findViewById(R.id.button_export_geojson)
+        exportKmlButton = findViewById(R.id.button_export_kml)
+        exportReportButton = findViewById(R.id.button_export_report)
+        openMapButton = findViewById(R.id.button_open_map)
 
         templateSpinner.adapter = ArrayAdapter(
             this,
@@ -151,6 +207,11 @@ class MissionPlannerActivity : AppCompatActivity() {
             this,
             android.R.layout.simple_spinner_item,
             RoutePattern.entries.map { it.displayName }
+        ).also { it.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item) }
+        finishSpinner.adapter = ArrayAdapter(
+            this,
+            android.R.layout.simple_spinner_item,
+            FinishAction.entries.map { it.displayName }
         ).also { it.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item) }
     }
 
@@ -166,12 +227,23 @@ class MissionPlannerActivity : AppCompatActivity() {
         findViewById<EditText>(R.id.edit_line_spacing).setText("12")
         findViewById<EditText>(R.id.edit_photo_spacing).setText("8")
         findViewById<EditText>(R.id.edit_overlap).setText("70")
+        findViewById<EditText>(R.id.edit_altitude).setText("120")
         findViewById<EditText>(R.id.edit_speed).setText("4")
         findViewById<EditText>(R.id.edit_mission_name).setText("Misión ${SimpleDateFormat("yyyyMMdd-HHmm", Locale.US).format(Date())}")
     }
 
     private fun bindActions() {
         findViewById<Button>(R.id.button_generate_mission).setOnClickListener { generateMission() }
+        findViewById<Button>(R.id.button_cartography).setOnClickListener { openCartography() }
+        openMapButton.setOnClickListener {
+            startActivity(MissionMapActivity.viewIntent(this))
+        }
+        findViewById<Button>(R.id.button_pick_control_point).setOnClickListener {
+            pickControlPointOnMap.launch(MissionMapActivity.pickIntent(this))
+        }
+        exportGeoJsonButton.setOnClickListener { exportCartography(ExportFormat.GEOJSON) }
+        exportKmlButton.setOnClickListener { exportCartography(ExportFormat.KML) }
+        exportReportButton.setOnClickListener { exportCartography(ExportFormat.REPORT) }
         exportJsonButton.setOnClickListener {
             currentPlan?.let { createJson.launch("${it.id}.json") }
         }
@@ -302,7 +374,10 @@ class MissionPlannerActivity : AppCompatActivity() {
         progress.progress = 0
         executor.execute {
             try {
-                val plan = MissionGeometry.plan(request, selectedAlgorithmId)
+                val plan = MissionGeometry.plan(request, selectedAlgorithmId).copy(
+                    cartography = cartographyProfile,
+                    groundControlPoints = controlPoints
+                )
                 val validation = MissionValidator.validate(request, plan)
                 if (!validation.isValid) {
                     runOnUiThread {
@@ -353,7 +428,9 @@ class MissionPlannerActivity : AppCompatActivity() {
             overlapPercent = number(R.id.edit_overlap, "Solape").toInt(),
             speedMps = number(R.id.edit_speed, "Velocidad"),
             routePattern = route,
-            finishAction = FinishAction.RETURN_HOME,
+            finishAction = FinishAction.entries[
+                finishSpinner.selectedItemPosition.coerceIn(0, FinishAction.entries.lastIndex)
+            ],
             gimbalPitchDegrees = if (template == MissionTemplate.FACADE) -45.0 else -90.0
         )
     }
@@ -370,6 +447,35 @@ class MissionPlannerActivity : AppCompatActivity() {
         warnings.text = plan.warnings.joinToString("\n\n") { "• $it" }
         exportJsonButton.isEnabled = true
         exportKmzButton.isEnabled = true
+        exportGeoJsonButton.isEnabled = true
+        exportKmlButton.isEnabled = true
+        exportReportButton.isEnabled = true
+        openMapButton.isEnabled = true
+        renderCartographicSummary(plan)
+    }
+
+    /**
+     * The cartographic panel answers the questions a survey client asks:
+     * how big, at what resolution, with how much overlap, in which reference
+     * system. A waypoint count is not an answer.
+     */
+    private fun renderCartographicSummary(plan: MissionPlan) {
+        val cartography = CartographicSummaryBuilder.build(plan, cartographyProfile, controlPoints)
+        cartographicSummary.text = buildString {
+            append(cartography.format())
+            val automatic = MissionValidator.MAX_ALTITUDE_METERS
+            if (plan.request.altitudeMeters > automatic) {
+                appendLine()
+                append(
+                    "Esta ruta está por encima de ${automatic.toInt()} m: no puede ejecutarse como misión " +
+                        "automática, solo con guía manual."
+                )
+            }
+            if (cartography.notes.isNotEmpty()) {
+                appendLine()
+                cartography.notes.forEach { appendLine("• $it") }
+            }
+        }
     }
 
     private fun exportKmz(onGenerated: ((File) -> Unit)? = null) {
@@ -400,7 +506,7 @@ class MissionPlannerActivity : AppCompatActivity() {
 
     private fun uploadMission() {
         val plan = currentPlan ?: return
-        val validation = MissionValidator.validate(plan.request, plan)
+        val validation = MissionValidator.validateAutomaticMission(plan.request, plan)
         if (!validation.isValid) {
             showError("Misión no válida", validation.errors.joinToString("\n"))
             return
@@ -435,7 +541,7 @@ class MissionPlannerActivity : AppCompatActivity() {
     }
 
     private fun uploadKmz(plan: MissionPlan, file: File) {
-        val validation = MissionValidator.validate(plan.request, plan)
+        val validation = MissionValidator.validateAutomaticMission(plan.request, plan)
         if (!validation.isValid) {
             showError("Misión no válida", validation.errors.joinToString("\n"))
             return
@@ -536,7 +642,7 @@ class MissionPlannerActivity : AppCompatActivity() {
             showError("Misión no disponible", "El aircraft no está en un estado listo para iniciar.")
             return
         }
-        val validation = MissionValidator.validate(plan.request, plan)
+        val validation = MissionValidator.validateAutomaticMission(plan.request, plan)
         if (!validation.isValid) {
             showError("Misión no válida", validation.errors.joinToString("\n"))
             return
@@ -594,11 +700,12 @@ class MissionPlannerActivity : AppCompatActivity() {
             showError("Inicio no permitido", "La conexión, el firmware o el estado de la misión cambiaron.")
             return
         }
-        val validation = MissionValidator.validate(plan.request, plan)
+        val validation = MissionValidator.validateAutomaticMission(plan.request, plan)
         if (!validation.isValid) {
             showError("Misión no válida", validation.errors.joinToString("\n"))
             return
         }
+
         AlertDialog.Builder(this)
             .setTitle("Confirmar inicio de misión")
             .setMessage(
@@ -622,7 +729,7 @@ class MissionPlannerActivity : AppCompatActivity() {
             showError("Inicio no permitido", "La conexión, el firmware o el estado de la misión cambiaron.")
             return
         }
-        val validation = MissionValidator.validate(plan.request, plan)
+        val validation = MissionValidator.validateAutomaticMission(plan.request, plan)
         if (!validation.isValid) {
             showError("Misión no válida", validation.errors.joinToString("\n"))
             return
@@ -786,6 +893,7 @@ class MissionPlannerActivity : AppCompatActivity() {
         findViewById<EditText>(R.id.edit_line_spacing).setText(formatPlain(d.lineSpacingMeters))
         findViewById<EditText>(R.id.edit_photo_spacing).setText(formatPlain(d.photoSpacingMeters))
         findViewById<EditText>(R.id.edit_overlap).setText(d.overlapPercent.toString())
+        finishSpinner.setSelection(FinishAction.entries.indexOf(recipe.defaults.let { FinishAction.RETURN_HOME }).coerceAtLeast(0))
         findViewById<EditText>(R.id.edit_speed).setText(formatPlain(d.speedMps))
     }
 
@@ -833,6 +941,146 @@ class MissionPlannerActivity : AppCompatActivity() {
             )
         )
         createValidationReport.launch("wpml-validation-evidence.txt")
+    }
+
+    private fun openCartography() {
+        audit.append("cartography.opened", currentPlan?.id, mapOf("hasProfile" to (cartographyProfile != null)))
+        openCartography.launch(Intent(this, CartographyActivity::class.java))
+    }
+
+    /**
+     * Takes the cartographic solution back from the cartography screen: the
+     * derived height and spacings go into the fields, the profile is attached
+     * to the plan, and the control points travel with it. A stale plan is
+     * discarded rather than silently re-labelled, because its waypoints were
+     * generated from the old numbers.
+     */
+    private fun applyCartographyResult(data: Intent?) {
+        if (data == null) return
+        val profile = CartographyTransfer.readProfile(data)
+        val altitude = data.getDoubleExtra(CartographyActivity.RESULT_ALTITUDE, Double.NaN)
+        val lineSpacing = data.getDoubleExtra(CartographyActivity.RESULT_LINE_SPACING, Double.NaN)
+        val photoSpacing = data.getDoubleExtra(CartographyActivity.RESULT_PHOTO_SPACING, Double.NaN)
+        if (profile == null || !altitude.isFinite() || !lineSpacing.isFinite() || !photoSpacing.isFinite()) {
+            showError("Datos incompletos", "La pantalla de cartografía no ha devuelto una solución utilizable.")
+            return
+        }
+        cartographyProfile = profile
+        data.getDoubleExtra(CartographyActivity.RESULT_LATITUDE, Double.NaN)
+            .takeIf { it.isFinite() }
+            ?.let { findViewById<EditText>(R.id.edit_latitude).setText(formatPlain(it)) }
+        data.getDoubleExtra(CartographyActivity.RESULT_LONGITUDE, Double.NaN)
+            .takeIf { it.isFinite() }
+            ?.let { findViewById<EditText>(R.id.edit_longitude).setText(formatPlain(it)) }
+        val routeKey = data.getStringExtra(CartographyActivity.RESULT_ROUTE_PATTERN)
+        RoutePattern.fromKey(routeKey ?: RoutePattern.PARALLEL.key).let { pattern ->
+            routeSpinner.setSelection(RoutePattern.entries.indexOf(pattern).coerceAtLeast(0))
+        }
+        findViewById<EditText>(R.id.edit_altitude).setText(formatPlain(altitude))
+        findViewById<EditText>(R.id.edit_line_spacing).setText(formatPlain(lineSpacing))
+        findViewById<EditText>(R.id.edit_photo_spacing).setText(formatPlain(photoSpacing))
+        findViewById<EditText>(R.id.edit_overlap).setText(profile.forwardOverlapPercent.toString())
+        controlPoints = CartographyTransfer.readControlPoints(data)
+        // The stored plan was built from the previous parameters.
+        currentPlan = null
+        currentKmz = null
+        uploadedMissionId = null
+        availableWaylineIds = emptyList()
+        selectedWaylineIds = emptyList()
+        missionState = WaypointMissionExecuteState.UNKNOWN
+        exportJsonButton.isEnabled = false
+        exportKmzButton.isEnabled = false
+        exportGeoJsonButton.isEnabled = false
+        exportKmlButton.isEnabled = false
+        exportReportButton.isEnabled = false
+        openMapButton.isEnabled = false
+        summary.text = "Parámetros cartográficos aplicados. Genera de nuevo la ruta para usarlos."
+        cartographicSummary.text = buildString {
+            appendLine("Cámara: ${profile.camera.displayName}")
+            appendLine("Resolución objetivo: ${profile.targetGsdCentimetersPerPixel} cm/px")
+            appendLine("Altura de vuelo: ${formatPlain(altitude)} m")
+            appendLine("Separación entre líneas: ${formatPlain(lineSpacing)} m")
+            appendLine("Separación entre fotos: ${formatPlain(photoSpacing)} m")
+            appendLine("Solape: ${profile.forwardOverlapPercent}% longitudinal, ${profile.sideOverlapPercent}% transversal")
+            appendLine("Referencia de altura: ${profile.altitudeReference.displayName}")
+            append("Puntos de control: ${controlPoints.size}")
+        }
+        audit.append(
+            "cartography.applied",
+            null,
+            mapOf(
+                "camera" to profile.cameraId,
+                "gsd" to profile.targetGsdCentimetersPerPixel,
+                "altitude" to altitude,
+                "controlPoints" to controlPoints.size
+            )
+        )
+        refreshCapability()
+    }
+
+    private enum class ExportFormat { GEOJSON, KML, REPORT }
+
+    private fun exportCartography(format: ExportFormat) {
+        val plan = currentPlan ?: run {
+            showError("No hay ruta", "Genera primero una ruta para poder exportar.")
+            return
+        }
+        val profile = cartographyProfile ?: dji.sampleV5.aircraft.pro.cartography.CartographyProfile.DEFAULT
+        progress.visibility = View.VISIBLE
+        progress.progress = 0
+        executor.execute {
+            runCatching {
+                when (format) {
+                    ExportFormat.GEOJSON -> GeoJsonExporter.export(plan, profile, controlPoints)
+                    ExportFormat.KML -> KmlExporter.export(plan, profile, controlPoints)
+                    ExportFormat.REPORT -> CartographyReportBuilder.build(plan, profile, controlPoints)
+                }
+            }.onSuccess { text ->
+                runOnUiThread {
+                    progress.visibility = View.GONE
+                    pendingExport = text
+                    audit.append(
+                        "cartography.exported",
+                        plan.id,
+                        mapOf("format" to format.name.lowercase(), "bytes" to text.length)
+                    )
+                    when (format) {
+                        ExportFormat.GEOJSON -> createGeoJson.launch("${plan.id}.geojson")
+                        ExportFormat.KML -> createKml.launch("${plan.id}.kml")
+                        ExportFormat.REPORT -> createFlightReport.launch("${plan.id}-ficha.json")
+                    }
+                }
+            }.onFailure { error ->
+                runOnUiThread {
+                    progress.visibility = View.GONE
+                    showError("No se pudo exportar", error.message ?: "Error de generación")
+                }
+            }
+        }
+    }
+
+    private fun addControlPointFromMap(latitude: Double, longitude: Double) {
+        val code = "CP%02d".format(Locale.US, controlPoints.size + 1)
+        val point = GroundControlPoint(
+            id = "gcp-$code",
+            code = code,
+            latitude = latitude,
+            longitude = longitude,
+            source = "map"
+        )
+        controlPoints = controlPoints + point
+        audit.append(
+            "cartography.control_point_from_map",
+            currentPlan?.id,
+            mapOf("code" to code, "latitude" to latitude, "longitude" to longitude)
+        )
+        currentPlan?.let { renderCartographicSummary(it) }
+            ?: run {
+                cartographicSummary.text = buildString {
+                    appendLine("Punto $code añadido desde el mapa.")
+                    append("Puntos de control: ${controlPoints.size}")
+                }
+            }
     }
 
     private fun showError(title: String, message: String) {

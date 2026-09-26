@@ -129,6 +129,30 @@
             android:background="@drawable/pro_input_background"
             android:padding="8dp" />
 
+        <Spinner
+            android:id="@+id/spinner_finish_action"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginTop="6dp"
+            android:background="@drawable/pro_input_background"
+            android:padding="8dp" />
+
+        <Button
+            android:id="@+id/button_cartography"
+            style="@style/pro_button_secondary"
+            android:text="Cartografía: calcular desde GSD" />
+
+        <Button
+            android:id="@+id/button_open_map"
+            style="@style/pro_button_secondary"
+            android:enabled="false"
+            android:text="Ver en el mapa" />
+
+        <Button
+            android:id="@+id/button_pick_control_point"
+            style="@style/pro_button_secondary"
+            android:text="Añadir control desde el mapa" />
+
         <EditText
             android:id="@+id/edit_mission_name"
             style="@style/pro_input"
@@ -161,6 +185,16 @@
             style="@style/pro_body" />
 
         <TextView
+            android:id="@+id/text_cartographic_summary"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/pro_card_background"
+            android:padding="14dp"
+            android:text="Sin perfil cartográfico. Usa «Cartografía» para definir resolución y solape."
+            style="@style/pro_body" />
+
+        <TextView
             android:id="@+id/text_plan_warnings"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -188,6 +222,24 @@
             style="@style/pro_button_secondary"
             android:enabled="false"
             android:text="Exportar KMZ/WPML" />
+
+        <Button
+            android:id="@+id/button_export_geojson"
+            style="@style/pro_button_secondary"
+            android:enabled="false"
+            android:text="Exportar GeoJSON" />
+
+        <Button
+            android:id="@+id/button_export_kml"
+            style="@style/pro_button_secondary"
+            android:enabled="false"
+            android:text="Exportar KML" />
+
+        <Button
+            android:id="@+id/button_export_report"
+            style="@style/pro_button_secondary"
+            android:enabled="false"
+            android:text="Exportar ficha de vuelo" />
 
         <Button
             android:id="@+id/button_export_validation_report"

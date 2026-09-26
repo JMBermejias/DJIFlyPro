@@ -64,7 +64,7 @@ Verificación reproducible usada en esta entrega:
 ./scripts/build-release.sh --allow-missing-api-key --no-daemon
 ```
 
-Resultados obtenidos: 49 pruebas correctas, `lintDebug` con 0 errores, y release sin advertencias de clase ausente de R8. Las advertencias de "implicit default constructor" que quedan provienen de `proguard-android-optimize.txt` de AGP y de los `proguard.txt` de DJI SDK, Play Services, Room, Lifecycle, Navigation, Glide, OkHttp y JetBrains.
+Resultados obtenidos: 292 pruebas correctas, `lintDebug` con 0 errores, y release sin advertencias de clase ausente de R8. Las advertencias de "implicit default constructor" que quedan provienen de `proguard-android-optimize.txt` de AGP y de los `proguard.txt` de DJI SDK, Play Services, Room, Lifecycle, Navigation, Glide, OkHttp y JetBrains.
 
 `ShippedWpmlAllowlistTest` valida el asset `validated_wpml_profiles.json` real. El asset está declarado como input de la tarea de test, así que un perfil inválido o con marcadores sin rellenar rompe la compilación en lugar de llegar a un dispositivo.
 
@@ -84,8 +84,16 @@ unzip -p artifacts/DJIFlyPro-1.0.0.apk assets/validated_wpml_profiles.json
 ```
 
 Sustituye `1.0.0` por la `versionName` del build. `scripts/build-release.sh`
-ya nombra los binarios y regenera `SHA256SUMS.txt`; el `cd` mantiene el
-manifiesto verificable, porque sus rutas son relativas a `artifacts/`.
+ya nombra los binarios y regenera `SHA256SUMS.txt` sobre los ficheros que acaba
+de copiar, y lo verifica con `sha256sum -c` antes de terminar; si el manifiesto
+no casara con los binarios, el script fallaría ahí y no al instalar. El `cd`
+mantiene el manifiesto verificable, porque sus rutas son relativas a
+`artifacts/`.
+
+Ese paso importa porque `SHA256SUMS.txt` está versionado en git mientras que
+los `.apk` y `.aab` no lo están. Si el manifiesto se regenerara solo al
+publicar, cualquier recompilación local dejaría un manifiesto de la build
+anterior junto a binarios distintos, y `sha256sum -c` fallaría.
 
 La última orden debe mostrar una lista de perfiles vacía mientras no se haya registrado una validación física.
 

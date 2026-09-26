@@ -1,0 +1,28 @@
+{
+  "schema": "djiflypro.algorithm/v1",
+  "id": "cartography.cross.v1",
+  "name": "Bloque cartográfico en cruz oblicua",
+  "version": "1.0.0",
+  "jobType": "cartography",
+  "description": "Dos pasadas diagonales a 45 grados. Cuesta el doble de fotos que una pasada simple y da al bloque dos geometrias de vista, lo que ayuda con las sombras y con la reconstruccion de bordes de fachada.",
+  "template": "FIELD",
+  "routePattern": "CROSS",
+  "defaults": {
+    "lengthMeters": 300.0,
+    "widthMeters": 200.0,
+    "heightMeters": 20.0,
+    "bearingDegrees": 0.0,
+    "altitudeMeters": 120.0,
+    "standoffMeters": 10.0,
+    "lineSpacingMeters": 40.0,
+    "photoSpacingMeters": 30.0,
+    "overlapPercent": 70,
+    "speedMps": 5.0,
+    "gimbalPitchDegrees": -90.0
+  },
+  "outputs": [
+    "KMZ",
+    "mission.json",
+    "audit.jsonl"
+  ]
+}
