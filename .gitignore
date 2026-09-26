@@ -1,0 +1,30 @@
+# Android/Gradle
+**/build/
+**/.gradle/
+**/.kotlin/
+**/.cxx/
+local.properties
+*.iml
+.idea/
+
+# Local SDK and secrets
+tools/android-sdk/
+.local/
+config/*.jks
+config/*.keystore
+config/signing.properties
+config/keystore.properties
+
+# Keystore shipped inside the DJI MSDK V5 sample zip. DJI does not track it
+# in its own repository either, and nothing in this build references it, so it
+# is not published here. See docs/BUILD.md.
+msdkkeystore.jks
+**/msdkkeystore.jks
+
+# Generated output (keep directory, do not commit binaries)
+artifacts/*.apk
+artifacts/*.aab
+artifacts/*.idsig
+
+# Logs
+*.log

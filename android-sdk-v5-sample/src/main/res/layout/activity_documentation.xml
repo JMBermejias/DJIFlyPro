@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/pro_background"
+    android:padding="18dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Compatibilidad y seguridad"
+            style="@style/pro_title" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:text="DJIFlyPro V5 usa DJI Mobile SDK V5.18.0. El registro de la aplicación y la clave DJI son obligatorios para conectar el aircraft."
+            style="@style/pro_body" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:text="Phantom 4 pertenece al SDK V4 heredado. Esta APK V5 no intenta mezclar ambos SDK; consulta la variante Legacy antes de usarla con Phantom 4."
+            style="@style/pro_body" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:text="Mini 3 puede aparecer como producto compatible con telemetría, pero la ejecución de WPML a bordo no se promises en esta primera versión. El planificador permite exportar el plan y evita enviarlo si la capacidad no está verificada."
+            style="@style/pro_body" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:text="Para una operación real: comprueba la versión de firmware, el espacio aéreo, la.Return-to-home, la altura legal, los obstáculos, la autorización de vuelo y la Batteries antes de ejecutar."
+            style="@style/pro_body" />
+
+        <Button
+            android:id="@+id/button_close_documentation"
+            style="@style/pro_button_secondary"
+            android:layout_marginTop="18dp"
+            android:text="Volver" />
+    </LinearLayout>
+</ScrollView>

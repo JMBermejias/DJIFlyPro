@@ -1,0 +1,12 @@
+{
+  "schema": "djiflypro.validated-wpml/v1",
+  "profiles": [
+    {
+      "productName": "DJI_M350_RTK",
+      "remoteControllerName": "DJI_RC_PLUS_2",
+      "aircraftFirmwareVersion": "REPLACE_WITH_EXACT_AIRCRAFT_FIRMWARE",
+      "remoteControllerFirmwareVersion": "REPLACE_WITH_EXACT_RC_FIRMWARE",
+      "validationReference": "physical-test-record-REQUIRED"
+    }
+  ]
+}

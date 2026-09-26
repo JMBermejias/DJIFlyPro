@@ -1,0 +1,24 @@
+{
+  "schema": "djiflypro.algorithm/v1",
+  "id": "facade.vertical.v1",
+  "name": "Fachada vertical",
+  "version": "1.0.0",
+  "jobType": "facade",
+  "description": "Barrido vertical para inspección de fachadas con solape configurable.",
+  "template": "FACADE",
+  "routePattern": "PARALLEL",
+  "defaults": {
+    "lengthMeters": 60.0,
+    "widthMeters": 1.0,
+    "heightMeters": 30.0,
+    "bearingDegrees": 0.0,
+    "altitudeMeters": 8.0,
+    "standoffMeters": 10.0,
+    "lineSpacingMeters": 8.0,
+    "photoSpacingMeters": 6.0,
+    "overlapPercent": 75,
+    "speedMps": 3.0,
+    "gimbalPitchDegrees": -45.0
+  },
+  "outputs": ["KMZ", "mission.json", "audit.jsonl"]
+}

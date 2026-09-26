@@ -1,0 +1,23 @@
+apply from: rootProject.file('dependencies.gradle')
+
+buildscript {
+    repositories {
+        google()
+        mavenCentral()
+        gradlePluginPortal()
+    }
+
+    dependencies {
+        classpath 'com.android.tools.build:gradle:8.7.0'
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$KOTLIN_VERSION"
+    }
+}
+
+allprojects {
+    repositories {
+        google()
+        mavenCentral()
+        maven { url REPO_MAVEN2 }
+        maven { url JITPACK_MAVEN_URL }
+    }
+}

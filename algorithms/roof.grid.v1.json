@@ -1,0 +1,24 @@
+{
+  "schema": "djiflypro.algorithm/v1",
+  "id": "roof.grid.v1",
+  "name": "Cubierta en malla",
+  "version": "1.0.0",
+  "jobType": "roof",
+  "description": "Malla de inspección para cubiertas; comprobar obstáculos y entorno.",
+  "template": "ROOF",
+  "routePattern": "GRID",
+  "defaults": {
+    "lengthMeters": 80.0,
+    "widthMeters": 50.0,
+    "heightMeters": 20.0,
+    "bearingDegrees": 0.0,
+    "altitudeMeters": 35.0,
+    "standoffMeters": 10.0,
+    "lineSpacingMeters": 10.0,
+    "photoSpacingMeters": 7.0,
+    "overlapPercent": 75,
+    "speedMps": 4.0,
+    "gimbalPitchDegrees": -90.0
+  },
+  "outputs": ["KMZ", "mission.json", "audit.jsonl"]
+}

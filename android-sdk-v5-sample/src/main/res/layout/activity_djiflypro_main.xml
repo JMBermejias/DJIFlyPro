@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/pro_background"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="20dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="DJIFlyPro"
+            style="@style/pro_title" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:text="Control y planificación de vuelos DJI"
+            style="@style/pro_caption" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/pro_card_background"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <TextView
+                android:id="@+id/dashboard_connection_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Estado del sistema"
+                style="@style/pro_section" />
+
+            <TextView
+                android:id="@+id/dashboard_connection_status"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="Iniciando DJI Mobile SDK…"
+                style="@style/pro_body" />
+
+            <TextView
+                android:id="@+id/dashboard_product_status"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="Producto: pendiente"
+                style="@style/pro_caption" />
+
+            <ProgressBar
+                android:id="@+id/dashboard_progress"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="4dp"
+                android:layout_marginTop="12dp"
+                android:max="100"
+                android:progress="0" />
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Operaciones"
+            style="@style/pro_section" />
+
+        <Button
+            android:id="@+id/button_control_center"
+            style="@style/pro_button"
+            android:text="Centro de control" />
+
+        <Button
+            android:id="@+id/button_mission_planner"
+            style="@style/pro_button"
+            android:text="Planificar misión" />
+
+        <Button
+            android:id="@+id/button_algorithm_library"
+            style="@style/pro_button"
+            android:text="Algoritmos y recetas" />
+
+        <Button
+            android:id="@+id/button_documentation"
+            style="@style/pro_button_secondary"
+            android:text="Documentación y compatibilidade" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="14dp"
+            android:text="Última misión"
+            style="@style/pro_section" />
+
+        <TextView
+            android:id="@+id/dashboard_last_mission"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/pro_card_background"
+            android:padding="14dp"
+            android:text="No hay misiones guardadas"
+            style="@style/pro_caption" />
+
+        <TextView
+            android:id="@+id/dashboard_safety_notice"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:padding="12dp"
+            android:background="@drawable/pro_warning_background"
+            android:text="DJIFlyPro no sustituye las comprobaciones de vuelo. Verifica espacio aéreo, obstáculos, permisos, batería y mantenimiento antes de despegar."
+            style="@style/pro_caption" />
+    </LinearLayout>
+</ScrollView>

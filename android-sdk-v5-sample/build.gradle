@@ -1,0 +1,221 @@
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
+
+def configuredSecret = { name ->
+    def value = project.findProperty(name)
+    value == null || value.toString().isBlank() ? System.getenv(name) : value
+}
+def configuredRuntimeValue = { name ->
+    def value = System.getenv(name)
+    value == null || value.toString().isBlank() ? project.findProperty(name) : value
+}
+def releaseStoreFile = configuredSecret('STORE_FILE')
+def releaseStorePassword = configuredSecret('STORE_PASSWORD')
+def releaseKeyAlias = configuredSecret('KEY_ALIAS')
+def releaseKeyPassword = configuredSecret('KEY_PASSWORD')
+def hasReleaseSigning = [releaseStoreFile, releaseStorePassword, releaseKeyAlias, releaseKeyPassword]
+        .every { value -> value != null && !value.toString().isBlank() }
+def aircraftApiKey = configuredRuntimeValue('AIRCRAFT_API_KEY')
+def hasAircraftApiKey = aircraftApiKey != null && !aircraftApiKey.toString().isBlank()
+
+/**
+ * A release artifact without a DJI App Key can never register with the SDK, so
+ * it is not a distributable build even though it compiles and signs. Failing
+ * here prevents shipping an APK that looks releasable but cannot connect to
+ * any aircraft.
+ */
+def allowMissingApiKey = System.getenv("DJIFLYPRO_ALLOW_MISSING_API_KEY") == "1"
+def assertReleasePreflight = {
+    if (!hasAircraftApiKey) {
+        if (allowMissingApiKey) {
+            logger.warn(
+                    "\n*** DJIFlyPro: building a release WITHOUT a DJI App Key because\n" +
+                    "*** DJIFLYPRO_ALLOW_MISSING_API_KEY=1 is set. The resulting APK and AAB\n" +
+                    "*** CANNOT register with DJI and are NOT distributable. Local verification only.\n")
+        } else {
+            throw new GradleException(
+                    "\nDJIFlyPro release preflight failed: AIRCRAFT_API_KEY is empty.\n" +
+                    "Register the applicationId 'com.djiflypro.app' in the DJI Developer console and\n" +
+                    "set AIRCRAFT_API_KEY in gradle.properties or as an environment variable.\n" +
+                    "See docs/BUILD.md. A signed APK without this key cannot register with DJI.\n" +
+                    "For a local pipeline check only, set DJIFLYPRO_ALLOW_MISSING_API_KEY=1.\n")
+        }
+    }
+    if (!hasReleaseSigning) {
+        throw new GradleException(
+                "\nDJIFlyPro release preflight failed: signing configuration is incomplete.\n" +
+                "Set STORE_FILE, STORE_PASSWORD, KEY_ALIAS and KEY_PASSWORD outside the repository.\n" +
+                "See config/README.md. Do not use the local test keystore for distribution.\n")
+    }
+}
+
+android {
+    namespace "dji.sampleV5.aircraft"
+    compileSdkVersion Integer.parseInt(project.ANDROID_COMPILE_SDK_VERSION)
+
+    defaultConfig {
+        applicationId "com.djiflypro.app"
+        minSdkVersion Integer.parseInt(project.ANDROID_MIN_SDK_VERSION)
+        targetSdkVersion Integer.parseInt(project.ANDROID_TARGET_SDK_VERSION)
+        versionCode 1
+        versionName "1.0.0"
+        manifestPlaceholders["API_KEY"] = aircraftApiKey ?: ''
+        manifestPlaceholders["GMAP_API_KEY"] = configuredRuntimeValue('GMAP_API_KEY') ?: ''
+        manifestPlaceholders["MAPLIBRE_TOKEN"] = configuredRuntimeValue('MAPLIBRE_TOKEN') ?: ''
+        ndk {
+            //noinspection ChromeOsAbiSupport
+            abiFilters 'arm64-v8a'
+        }
+    }
+
+    sourceSets {
+        release {
+            assets.exclude 'apk/app-debug.apk'
+        }
+    }
+
+    signingConfigs {
+        if (hasReleaseSigning) {
+            release {
+                storeFile file(releaseStoreFile)
+                storePassword releaseStorePassword
+                keyAlias releaseKeyAlias
+                keyPassword releaseKeyPassword
+            }
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            if (hasReleaseSigning) {
+                signingConfig signingConfigs.release
+            }
+        }
+        debug {
+            minifyEnabled false
+            shrinkResources false
+        }
+    }
+
+    packagingOptions {
+        // 因为mrtc库内部使用了NDK的c++_shared的编译参数
+        // 与其他库重复引用了，因此选其中一个即可
+        pickFirst 'lib/arm64-v8a/libc++_shared.so'
+        pickFirst 'lib/armeabi-v7a/libc++_shared.so'
+        jniLibs {
+            useLegacyPackaging true
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_17
+        freeCompilerArgs += ["-Xjvm-default=all"]
+    }
+
+    lint {
+        checkReleaseBuilds true
+        abortOnError true
+    }
+
+    packagingOptions {
+        doNotStrip "*/*/libconstants.so"
+        doNotStrip "*/*/libdji_innertools.so"
+        doNotStrip "*/*/libdjibase.so"
+        doNotStrip "*/*/libDJICSDKCommon.so"
+        doNotStrip "*/*/libDJIFlySafeCore-CSDK.so"
+        doNotStrip "*/*/libdjifs_jni-CSDK.so"
+        doNotStrip "*/*/libDJIRegister.so"
+        doNotStrip "*/*/libdjisdk_jni.so"
+        doNotStrip "*/*/libDJIUpgradeCore.so"
+        doNotStrip "*/*/libDJIUpgradeJNI.so"
+        doNotStrip "*/*/libDJIWaypointV2Core-CSDK.so"
+        doNotStrip "*/*/libdjiwpv2-CSDK.so"
+        doNotStrip "*/*/libFlightRecordEngine.so"
+        doNotStrip "*/*/libvideo-framing.so"
+        doNotStrip "*/*/libwaes.so"
+        doNotStrip "*/*/libagora-rtsa-sdk.so"
+        doNotStrip "*/*/libc++.so"
+        doNotStrip "*/*/libc++_shared.so"
+        doNotStrip "*/*/libmrtc_28181.so"
+        doNotStrip "*/*/libmrtc_agora.so"
+        doNotStrip "*/*/libmrtc_core.so"
+        doNotStrip "*/*/libmrtc_core_jni.so"
+        doNotStrip "*/*/libmrtc_data.so"
+        doNotStrip "*/*/libmrtc_log.so"
+        doNotStrip "*/*/libmrtc_onvif.so"
+        doNotStrip "*/*/libmrtc_rtmp.so"
+        doNotStrip "*/*/libmrtc_rtsp.so"
+    }
+
+    buildFeatures {
+        viewBinding true
+    }
+}
+
+/**
+ * Guard the release packaging tasks. Checked against the task graph so it
+ * catches every entry point (assembleRelease, bundleRelease, or a task that
+ * depends on them) without affecting debug builds.
+ */
+gradle.taskGraph.whenReady { graph ->
+    def releaseRequested = graph.allTasks.any { task ->
+        task.project == project && task.name ==~ /^(package|bundle|sign|assemble)Release$/
+    }
+    if (releaseRequested) {
+        assertReleasePreflight()
+    }
+}
+
+/**
+ * The shipped WPML allowlist is validated by ShippedWpmlAllowlistTest. Declaring
+ * it as an input makes the unit-test task re-run when the allowlist changes, so
+ * an invalid or placeholder-filled entry fails the build instead of reaching a
+ * device.
+ */
+tasks.withType(Test).configureEach {
+    inputs.file(file("src/main/assets/validated_wpml_profiles.json"))
+        .withPropertyName("validatedWpmlProfiles")
+        .withPathSensitivity(PathSensitivity.RELATIVE)
+}
+
+dependencies {
+    /** <-----------------依赖MSDK--------------------> **/
+    compileOnly deps.aircraftProvided
+    implementation deps.aircraft
+    runtimeOnly deps.networkImp
+
+    /** <-----------------sample所需--------------------> **/
+    implementation project(':uxsdk')
+    implementation deps.appcompat
+    implementation deps.gson
+    implementation deps.constraintLayout
+    implementation deps.aacCommon
+    implementation deps.aacRuntime
+    implementation deps.kotlinLib
+    implementation deps.ktxCore
+    implementation deps.ktxFrag
+    implementation deps.ktxNavigation
+    implementation deps.ktxNavigationUi
+    implementation deps.recyclerview
+    implementation deps.legacySupport
+    implementation deps.lifecycleViewModel
+    implementation deps.lifecycleLiveData
+    debugImplementation deps.leakcanary
+    implementation deps.glide
+    implementation deps.dynamicanimation
+    implementation deps.expandedit
+    implementation deps.rx3Kt
+    implementation deps.dom
+    kapt deps.glidecompiler
+    implementation deps.lynx
+    testImplementation deps.junit4
+}

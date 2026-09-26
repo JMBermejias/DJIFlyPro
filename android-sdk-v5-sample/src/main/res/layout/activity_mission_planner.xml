@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/pro_background"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="18dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Planificador de misiones"
+            style="@style/pro_title" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="Genera una ruta validada y expórtala como JSON o KMZ. La ejecución se habilita solo cuando el modelo y el firmware lo permiten."
+            style="@style/pro_caption" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Tipo de trabajo"
+            style="@style/pro_section" />
+
+        <Spinner
+            android:id="@+id/spinner_template"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:background="@drawable/pro_input_background"
+            android:padding="8dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Centro de la parcela (WGS84)"
+            style="@style/pro_section" />
+
+        <EditText
+            android:id="@+id/edit_latitude"
+            style="@style/pro_input"
+            android:hint="Latitud, por ejemplo 40.4168"
+            android:inputType="numberDecimal|numberSigned" />
+
+        <EditText
+            android:id="@+id/edit_longitude"
+            style="@style/pro_input"
+            android:hint="Longitud, por ejemplo -3.7038"
+            android:inputType="numberDecimal|numberSigned" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Geometría y captura"
+            style="@style/pro_section" />
+
+        <EditText
+            android:id="@+id/edit_length"
+            style="@style/pro_input"
+            android:hint="Longitud de la parcela / fachada (m)"
+            android:inputType="numberDecimal" />
+
+        <EditText
+            android:id="@+id/edit_width"
+            style="@style/pro_input"
+            android:hint="Ancho de la parcela (m)"
+            android:inputType="numberDecimal" />
+
+        <EditText
+            android:id="@+id/edit_height"
+            style="@style/pro_input"
+            android:hint="Altura de fachada / zona (m)"
+            android:inputType="numberDecimal" />
+
+        <EditText
+            android:id="@+id/edit_bearing"
+            style="@style/pro_input"
+            android:hint="Rumbo de la línea (grados, 0 = norte)"
+            android:inputType="numberDecimal|numberSigned" />
+
+        <EditText
+            android:id="@+id/edit_altitude"
+            style="@style/pro_input"
+            android:hint="Altura de vuelo (m)"
+            android:inputType="numberDecimal" />
+
+        <EditText
+            android:id="@+id/edit_standoff"
+            style="@style/pro_input"
+            android:hint="Distancia de seguridad a la fachada (m)"
+            android:inputType="numberDecimal" />
+
+        <EditText
+            android:id="@+id/edit_line_spacing"
+            style="@style/pro_input"
+            android:hint="Separación entre líneas / alturas (m)"
+            android:inputType="numberDecimal" />
+
+        <EditText
+            android:id="@+id/edit_photo_spacing"
+            style="@style/pro_input"
+            android:hint="Separación entre fotos (m)"
+            android:inputType="numberDecimal" />
+
+        <EditText
+            android:id="@+id/edit_overlap"
+            style="@style/pro_input"
+            android:hint="Solape longitudinal (%)"
+            android:inputType="number" />
+
+        <EditText
+            android:id="@+id/edit_speed"
+            style="@style/pro_input"
+            android:hint="Velocidad (m/s)"
+            android:inputType="numberDecimal" />
+
+        <Spinner
+            android:id="@+id/spinner_route_pattern"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginTop="6dp"
+            android:background="@drawable/pro_input_background"
+            android:padding="8dp" />
+
+        <EditText
+            android:id="@+id/edit_mission_name"
+            style="@style/pro_input"
+            android:hint="Nombre de la misión"
+            android:inputType="textCapSentences" />
+
+        <Button
+            android:id="@+id/button_generate_mission"
+            style="@style/pro_button"
+            android:text="Generar y validar misión" />
+
+        <TextView
+            android:id="@+id/text_capability"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:background="@drawable/pro_warning_background"
+            android:padding="12dp"
+            android:text="Comprobando compatibilidad del aircraft…"
+            style="@style/pro_caption" />
+
+        <TextView
+            android:id="@+id/text_plan_summary"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:background="@drawable/pro_card_background"
+            android:padding="14dp"
+            android:text="Todavía no hay una ruta generada."
+            style="@style/pro_body" />
+
+        <TextView
+            android:id="@+id/text_plan_warnings"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text=""
+            style="@style/pro_caption" />
+
+        <ProgressBar
+            android:id="@+id/progress_mission"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="4dp"
+            android:layout_marginTop="8dp"
+            android:max="100"
+            android:visibility="gone" />
+
+        <Button
+            android:id="@+id/button_export_json"
+            style="@style/pro_button_secondary"
+            android:enabled="false"
+            android:text="Exportar mission.json" />
+
+        <Button
+            android:id="@+id/button_export_kmz"
+            style="@style/pro_button_secondary"
+            android:enabled="false"
+            android:text="Exportar KMZ/WPML" />
+
+        <Button
+            android:id="@+id/button_export_validation_report"
+            style="@style/pro_button_secondary"
+            android:text="Exportar informe de validación" />
+
+        <Button
+            android:id="@+id/button_upload_mission"
+            style="@style/pro_button"
+            android:enabled="false"
+            android:text="Subir al aircraft" />
+
+        <Button
+            android:id="@+id/button_start_mission"
+            style="@style/pro_button"
+            android:enabled="false"
+            android:text="Iniciar misión" />
+
+        <Button
+            android:id="@+id/button_pause_mission"
+            style="@style/pro_button_secondary"
+            android:enabled="false"
+            android:text="Pausar / reanudar" />
+
+        <Button
+            android:id="@+id/button_stop_mission"
+            style="@style/pro_button_secondary"
+            android:enabled="false"
+            android:text="Detener misión" />
+    </LinearLayout>
+</ScrollView>

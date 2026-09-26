@@ -1,0 +1,24 @@
+{
+  "schema": "djiflypro.algorithm/v1",
+  "id": "field.parallel.v1",
+  "name": "Campo en líneas",
+  "version": "1.0.0",
+  "jobType": "field",
+  "description": "Barrido de campo con líneas paralelas y captura de imágenes.",
+  "template": "FIELD",
+  "routePattern": "PARALLEL",
+  "defaults": {
+    "lengthMeters": 250.0,
+    "widthMeters": 150.0,
+    "heightMeters": 10.0,
+    "bearingDegrees": 0.0,
+    "altitudeMeters": 60.0,
+    "standoffMeters": 10.0,
+    "lineSpacingMeters": 18.0,
+    "photoSpacingMeters": 12.0,
+    "overlapPercent": 65,
+    "speedMps": 6.0,
+    "gimbalPitchDegrees": -90.0
+  },
+  "outputs": ["KMZ", "mission.json", "audit.jsonl"]
+}

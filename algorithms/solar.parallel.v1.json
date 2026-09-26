@@ -1,0 +1,24 @@
+{
+  "schema": "djiflypro.algorithm/v1",
+  "id": "solar.parallel.v1",
+  "name": "Planta solar paralela",
+  "version": "1.0.0",
+  "jobType": "solar",
+  "description": "Cobertura de líneas paralelas para revisión visual de una planta solar.",
+  "template": "SOLAR",
+  "routePattern": "PARALLEL",
+  "defaults": {
+    "lengthMeters": 180.0,
+    "widthMeters": 100.0,
+    "heightMeters": 10.0,
+    "bearingDegrees": 0.0,
+    "altitudeMeters": 45.0,
+    "standoffMeters": 10.0,
+    "lineSpacingMeters": 12.0,
+    "photoSpacingMeters": 8.0,
+    "overlapPercent": 75,
+    "speedMps": 4.0,
+    "gimbalPitchDegrees": -90.0
+  },
+  "outputs": ["KMZ", "mission.json", "audit.jsonl"]
+}
