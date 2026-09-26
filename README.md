@@ -13,10 +13,11 @@ de la cadena cartográfica.
 
 ## Releases
 
+- [v1.1.0-alpha.1](https://github.com/JMBermejias/DJIFlyPro/releases/tag/v1.1.0-alpha.1) — cartografía por resolución, control terrestre, GeoJSON/KML/ficha de vuelo y revisión en el mapa.
 - [v0.1.0-alpha.1](https://github.com/JMBermejias/DJIFlyPro/releases/tag/v0.1.0-alpha.1) — base de planificación de rutas.
 
-La versión actual está en la pestaña **Releases** de este repositorio.
-Instalación y estado: `artifacts/release-notes.md`.
+Ambas son prereleases y ninguna puede volar todavía. Instalación y estado:
+`artifacts/release-notes.md`.
 
 ## Qué hace
 

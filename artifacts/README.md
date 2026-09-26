@@ -58,11 +58,18 @@ como evidencia.
 
 ## Release en GitHub
 
-Estos binarios se publican como assets del release, junto con
-`SHA256SUMS.txt` y las notas de `artifacts/release-notes.md`.
+Estos tres binarios están publicados como assets del release
+[`v1.1.0-alpha.1`](https://github.com/JMBermejias/DJIFlyPro/releases/tag/v1.1.0-alpha.1),
+junto con `SHA256SUMS.txt` y las notas de `artifacts/release-notes.md`.
 
 El manifiesto de hashes usa nombres de fichero sin ruta, para que
 `sha256sum -c SHA256SUMS.txt` funcione sobre los ficheros descargados juntos.
+
+Comprobado tras la publicación, descargando el asset desde el release:
+`apksigner verify` correcto con esquema v2, firmante `CN=DJIFlyPro Local Test`,
+SHA-256 del certificado `8a3aac2e456093f76dc0a2ccd717538b1732da3cecf470231feb48de187def43`,
+identidad `com.djiflypro.app` 1.1.0 versionCode 2, y `sha256sum -c`
+coincidiendo con el hash publicado.
 
 Para publicar una versión nueva: `scripts/publish-release.sh <version>`.
 
