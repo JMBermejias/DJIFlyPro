@@ -6,7 +6,7 @@ DJIFlyPro es una base Android nativa para control y planificación de vuelos con
 
 ## Releases
 
-[v0.1.0-alpha.1](https://github.com/JMBermejias/DJIFlyPro/releases/tag/v0.1.0-alpha.1) — prerelease con `sample-release.apk`, `sample-release.aab`, `sample-debug.apk` y `SHA256SUMS.txt`.
+[v0.1.0-alpha.1](https://github.com/JMBermejias/DJIFlyPro/releases/tag/v0.1.0-alpha.1) — prerelease con `DJIFlyPro-1.0.0.apk`, `DJIFlyPro-1.0.0.aab`, `DJIFlyPro-1.0.0-debug.apk` y `SHA256SUMS.txt`.
 
 Instalación y estado: `artifacts/release-notes.md`.
 

@@ -12,14 +12,19 @@ La compilación release incluye R8 y lint vital.
 
 | Archivo | Tamaño | SHA-256 |
 |---|---:|---|
-| `sample-release.apk` | 204,907,868 bytes | `fc9d8a6d4d1ca9c34ea72400284eb6dde0f122405cc5f8a3ceeee11f8e357c78` |
-| `sample-release.aab` | 198,792,847 bytes | `3b29bbc311904c8823a93fb162a3b94261974a71b908be9a23d0e44fc4e87510` |
-| `sample-debug.apk` | 238,406,510 bytes | `fde8189914b6e1e6448d89b93583f653c7dc94caeae5af36238cc6c1b2c279ad` |
+| `DJIFlyPro-1.0.0.apk` | 204,907,868 bytes | `fc9d8a6d4d1ca9c34ea72400284eb6dde0f122405cc5f8a3ceeee11f8e357c78` |
+| `DJIFlyPro-1.0.0.aab` | 198,792,847 bytes | `3b29bbc311904c8823a93fb162a3b94261974a71b908be9a23d0e44fc4e87510` |
+| `DJIFlyPro-1.0.0-debug.apk` | 238,406,510 bytes | `fde8189914b6e1e6448d89b93583f653c7dc94caeae5af36238cc6c1b2c279ad` |
+
+`scripts/build-release.sh` nombra los binarios a partir de la `versionName` que
+declara el propio build, no de un literal escrito a mano. Así el fichero
+descargado se identifica con el producto y su versión en vez de llamarse
+`sample-release.apk`, y el nombre no puede desincronizarse del binario.
 
 ## Verificaciones realizadas
 
-- `sample-release.apk`: `apksigner verify --verbose` correcto; APK Signature Scheme v2, un firmante, RSA 2048.
-- `sample-release.aab`: `jarsigner -verify` terminó con código 0.
+- `DJIFlyPro-1.0.0.apk`: `apksigner verify --verbose` correcto; APK Signature Scheme v2, un firmante, RSA 2048.
+- `DJIFlyPro-1.0.0.aab`: `jarsigner -verify` terminó con código 0.
 - Identidad del APK: `com.djiflypro.app`, versión `1.0.0`, `versionCode 1`, `minSdk 24`, `targetSdk 35`, `compileSdk 35`.
 - El APK y el manifiesto merged no declaran `MANAGE_EXTERNAL_STORAGE`.
 - El asset `assets/validated_wpml_profiles.json` está empaquetado y contiene una lista de perfiles vacía, por lo que la subida y la ejecución automática de misiones WPML están bloqueadas.

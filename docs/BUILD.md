@@ -75,13 +75,17 @@ Los artefactos aparecerán en `android-sdk-v5-sample/build/outputs/`. Copia los 
 ## Verificación de artefactos
 
 ```bash
-$SDK/build-tools/35.0.0/apksigner verify --verbose --print-certs artifacts/sample-release.apk
-$SDK/build-tools/35.0.0/aapt dump badging artifacts/sample-release.apk
-$SDK/build-tools/35.0.0/aapt dump permissions artifacts/sample-release.apk
-jarsigner -verify artifacts/sample-release.aab
-sha256sum artifacts/*.apk artifacts/*.aab
-unzip -p artifacts/sample-release.apk assets/validated_wpml_profiles.json
+$SDK/build-tools/35.0.0/apksigner verify --verbose --print-certs artifacts/DJIFlyPro-1.0.0.apk
+$SDK/build-tools/35.0.0/aapt dump badging artifacts/DJIFlyPro-1.0.0.apk
+$SDK/build-tools/35.0.0/aapt dump permissions artifacts/DJIFlyPro-1.0.0.apk
+jarsigner -verify artifacts/DJIFlyPro-1.0.0.aab
+( cd artifacts && sha256sum -c SHA256SUMS.txt )
+unzip -p artifacts/DJIFlyPro-1.0.0.apk assets/validated_wpml_profiles.json
 ```
+
+Sustituye `1.0.0` por la `versionName` del build. `scripts/build-release.sh`
+ya nombra los binarios y regenera `SHA256SUMS.txt`; el `cd` mantiene el
+manifiesto verificable, porque sus rutas son relativas a `artifacts/`.
 
 La última orden debe mostrar una lista de perfiles vacía mientras no se haya registrado una validación física.
 

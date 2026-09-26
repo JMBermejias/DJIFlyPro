@@ -55,10 +55,15 @@ física registrada.
 
 | Archivo | Descripción |
 |---|---|
-| `sample-release.apk` | APK release, R8 aplicado, firmado con clave de pruebas local |
-| `sample-release.aab` | Android App Bundle para Play, misma base de código |
-| `sample-debug.apk` | APK debug, con símbolos, para diagnóstico |
+| `DJIFlyPro-1.0.0.apk` | APK release, R8 aplicado, firmado con clave de pruebas local |
+| `DJIFlyPro-1.0.0.aab` | Android App Bundle para Play, misma base de código |
+| `DJIFlyPro-1.0.0-debug.apk` | APK debug, con símbolos, para diagnóstico |
 | `SHA256SUMS.txt` | Hashes SHA-256 de los tres binarios |
+
+El nombre de los ficheros lleva la `versionName` que declara la propia
+aplicación (`1.0.0`). La etiqueta del release es `v0.1.0-alpha.1`, que refleja
+que esto es una prerelease sin App Key, no la versión de la app. Son dos cosas
+distintas a propósito.
 
 No se adjunta `.deb`: Android no usa ese formato. Las dependencias van
 incluidas dentro de los APK y el Bundle, no se instalan aparte.
@@ -69,7 +74,7 @@ El APK se instala directamente:
 
 ```bash
 sha256sum -c SHA256SUMS.txt
-adb install -r sample-release.apk
+adb install -r DJIFlyPro-1.0.0.apk
 ```
 
 O cópialo al dispositivo y ábrelo, habilitando "instalar apps de orígenes
