@@ -2,6 +2,14 @@
 
 DJIFlyPro es una base Android nativa para control y planificación de vuelos con DJI Mobile SDK V5.18.0.
 
+> **Estado: prerelease no funcional para volar.** Sin la App Key de DJI registrada para `com.djiflypro.app` la aplicación no puede conectarse a ningún aircraft, y la ejecución automática de misiones WPML está bloqueada. Compila, pasa 49 pruebas y no tiene errores de lint, pero la validación física de vuelo no está realizada. Ver `docs/SAFETY.md`.
+
+## Releases
+
+[v0.1.0-alpha.1](https://github.com/JMBermejias/DJIFlyPro/releases/tag/v0.1.0-alpha.1) — prerelease con `sample-release.apk`, `sample-release.aab`, `sample-debug.apk` y `SHA256SUMS.txt`.
+
+Instalación y estado: `artifacts/release-notes.md`.
+
 ## Qué incluye esta entrega
 
 - Panel de estado del SDK y telemetría.
@@ -23,7 +31,7 @@ DJIFlyPro es una base Android nativa para control y planificación de vuelos con
 - `algorithms/`: recetas JSON de ejemplo.
 - `legacy/`: variante MSDK V4 para Phantom 4, con `preflight.sh` y registro de hardware.
 - `docs/`: compatibilidad, seguridad y configuración.
-- `artifacts/`: APK/AAB generados, cuando se hayan construido.
+- `artifacts/`: APK/AAB generados, notas de release y manifiesto de hashes. Los binarios no se versionan; se publican como assets del release.
 - `config/`: configuración local de firma (no publicar claves privadas).
 
 ## Compilar

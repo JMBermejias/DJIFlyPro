@@ -33,3 +33,25 @@ La compilación release incluye R8 y lint vital.
 El firmante de estas compilaciones es `CN=DJIFlyPro Local Test`, una keystore de desarrollo creada en `.local/djiflypro-test.jks`. No es una clave de producción y no debe usarse para publicar en Google Play.
 
 Antes de distribución hay que: (1) registrar `com.djiflypro.app` en DJI Developer y proporcionar `AIRCRAFT_API_KEY`; (2) generar una clave privada de producción fuera del repositorio; (3) recompilar sin `--allow-missing-api-key`; (4) recalcular los hashes y conservar la salida de `apksigner` y `jarsigner` como evidencia.
+
+## Release en GitHub
+
+Estos tres binarios están publicados como assets del release
+[`v0.1.0-alpha.1`](https://github.com/JMBermejias/DJIFlyPro/releases/tag/v0.1.0-alpha.1),
+junto con `SHA256SUMS.txt` y las notas de `artifacts/release-notes.md`.
+
+El manifiesto de hashes usa nombres de fichero sin ruta, para que
+`sha256sum -c SHA256SUMS.txt` funcione sobre los ficheros descargados juntos.
+
+Comprobado tras la publicación, descargando el asset desde el release:
+`apksigner verify` correcto con esquema v2, firmante `CN=DJIFlyPro Local Test`,
+SHA-256 del certificado `8a3aac2e456093f76dc0a2ccd717538b1732da3cecf470231feb48de187def43`,
+y `sha256sum -c` coincidiendo con el hash publicado.
+
+Para publicar una versión nueva: `scripts/publish-release.sh <version>`.
+
+## Nota sobre `.deb`
+
+Android no usa paquetes `.deb`. Los binarios publicados son `.apk` (instalable
+directamente) y `.aab` (formato de subida para Google Play). Las dependencias
+van incluidas dentro de los binarios, no se instalan por separado.

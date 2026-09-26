@@ -1,5 +1,23 @@
 # Build y artefactos
 
+## Publicar en GitHub
+
+`scripts/publish-release.sh` compila, registra los hashes, hace commit y push, etiqueta y crea el release en una sola pasada:
+
+```bash
+GH_TOKEN=<token con scope repo> scripts/publish-release.sh v0.1.0-alpha.2 --prerelease
+```
+
+Requisitos y guardas:
+
+- El token se lee de `GH_TOKEN` o `GITHUB_TOKEN`. Nunca se escribe en el repositorio ni en la URL remota.
+- Aborta si hay cambios sin commitear, para que la etiqueta corresponda al código que dice publicar.
+- Aborta si hay un keystore o fichero tipo secreto versionado.
+- Exige `artifacts/release-notes.md`. Conviene revisarlas como parte del código: son la afirmación pública sobre qué funciona.
+- Con `--allow-missing-api-key` fuerza `prerelease` y avisa de que los binarios no pueden registrarse con DJI.
+
+Publicar un artefacto que no venga del commit actual dejaría la historia de etiquetas mintiendo, así que el script no reconstruye: usa lo que dejó `scripts/build-release.sh`.
+
 ## Keystore del sample de DJI
 
 El zip del sample oficial de MSDK V5 incluye `msdkkeystore.jks`. DJI tampoco lo versiona en su propio repositorio, y nada en esta compilación lo referencia, así que aquí está excluido por `.gitignore`. Si lo necesitas, conséguelo del zip del sample; no hay que sustituirlo para compilar.
