@@ -31,7 +31,7 @@ object GroundSampleDistance {
     /** GSD in centimetres per pixel for a nadir capture at [heightMeters]. */
     fun gsdCentimetersPerPixel(heightMeters: Double, camera: SurveyCamera): Double {
         requireUsableCamera(camera)
-        require(heightMeters.isFinite() && heightMeters > 0.0) { "Flight height must be greater than 0 m" }
+        require(heightMeters.isFinite() && heightMeters > 0.0) { "La altura de vuelo debe ser mayor que 0 m" }
         return heightMeters * camera.sensorWidthMillimeters /
             (camera.focalLengthMillimeters * camera.imageWidthPixels) * 100.0
     }
@@ -40,7 +40,7 @@ object GroundSampleDistance {
     fun heightForGsd(gsdCentimetersPerPixel: Double, camera: SurveyCamera): Double {
         requireUsableCamera(camera)
         require(gsdCentimetersPerPixel.isFinite() && gsdCentimetersPerPixel > 0.0) {
-            "GSD must be greater than 0 cm/px"
+            "La resolución debe ser mayor que 0 cm/px"
         }
         return gsdCentimetersPerPixel / 100.0 * camera.focalLengthMillimeters *
             camera.imageWidthPixels / camera.sensorWidthMillimeters
@@ -49,14 +49,14 @@ object GroundSampleDistance {
     /** Ground footprint width in metres, measured across the flight direction. */
     fun footprintWidthMeters(heightMeters: Double, camera: SurveyCamera): Double {
         requireUsableCamera(camera)
-        require(heightMeters.isFinite() && heightMeters > 0.0) { "Flight height must be greater than 0 m" }
+        require(heightMeters.isFinite() && heightMeters > 0.0) { "La altura de vuelo debe ser mayor que 0 m" }
         return heightMeters * camera.sensorWidthMillimeters / camera.focalLengthMillimeters
     }
 
     /** Ground footprint height in metres, measured along the flight direction. */
     fun footprintDepthMeters(heightMeters: Double, camera: SurveyCamera): Double {
         requireUsableCamera(camera)
-        require(heightMeters.isFinite() && heightMeters > 0.0) { "Flight height must be greater than 0 m" }
+        require(heightMeters.isFinite() && heightMeters > 0.0) { "La altura de vuelo debe ser mayor que 0 m" }
         return heightMeters * camera.sensorHeightMillimeters / camera.focalLengthMillimeters
     }
 
@@ -69,7 +69,7 @@ object GroundSampleDistance {
         camera: SurveyCamera,
         forwardOverlapPercent: Int
     ): Double {
-        val overlap = requireOverlapFraction(forwardOverlapPercent, "forward")
+        val overlap = requireOverlapFraction(forwardOverlapPercent, "longitudinal")
         return footprintWidthMeters(heightMeters, camera) * (1.0 - overlap)
     }
 
@@ -82,7 +82,7 @@ object GroundSampleDistance {
         camera: SurveyCamera,
         sideOverlapPercent: Int
     ): Double {
-        val overlap = requireOverlapFraction(sideOverlapPercent, "side")
+        val overlap = requireOverlapFraction(sideOverlapPercent, "transversal")
         return footprintWidthMeters(heightMeters, camera) * (1.0 - overlap)
     }
 
@@ -108,11 +108,11 @@ object GroundSampleDistance {
         forwardOverlapPercent: Int,
         sideOverlapPercent: Int
     ): Int {
-        require(areaSquareMeters.isFinite() && areaSquareMeters > 0.0) { "Area must be greater than 0 m2" }
+        require(areaSquareMeters.isFinite() && areaSquareMeters > 0.0) { "La superficie debe ser mayor que 0 m²" }
         val coverage = photoCoverageSquareMeters(heightMeters, camera)
-        require(coverage > 0.0) { "The camera covers no ground at this height" }
+        require(coverage > 0.0) { "La cámara no cubre suelo a esta altura" }
         val advance = (1.0 - forwardOverlapPercent / 100.0) * (1.0 - sideOverlapPercent / 100.0)
-        require(advance > 0.0) { "The overlaps leave no usable ground advance" }
+        require(advance > 0.0) { "Los solapes no dejan ningún avance de suelo utilizable" }
         return max(1, ceil(areaSquareMeters / (coverage * advance)).toInt())
     }
 
@@ -128,7 +128,7 @@ object GroundSampleDistance {
         forwardOverlapPercent: Int,
         sideOverlapPercent: Int
     ): Double {
-        require(areaSquareMeters.isFinite() && areaSquareMeters > 0.0) { "Area must be greater than 0 m2" }
+        require(areaSquareMeters.isFinite() && areaSquareMeters > 0.0) { "La superficie debe ser mayor que 0 m²" }
         val photos = requiredPhotoCount(
             areaSquareMeters = areaSquareMeters,
             heightMeters = heightMeters,
@@ -153,49 +153,49 @@ object GroundSampleDistance {
         val notes = mutableListOf<String>()
         var reliable = true
         if (gsdCentimetersPerPixel < 1.0) {
-            notes += "GSD is finer than 1 cm/px. Expect large files, long processing times and a real need for RTK/PPK."
+            notes += "La resolución es más fina que 1 cm/px. Espera archivos grandes, tiempos de proceso largos y una necesidad real de RTK/PPK."
             reliable = false
         }
         if (gsdCentimetersPerPixel > 5.0) {
-            notes += "GSD is coarser than 5 cm/px. Fine detail, vegetation and thin structures will not resolve."
+            notes += "La resolución es más gruesa que 5 cm/px. El detalle fino, la vegetación y las estructuras delgadas no se resolverán."
             reliable = false
         }
         if (forwardOverlapPercent < 60) {
-            notes += "Forward overlap below 60% rarely reconstructs well on complex terrain. 75-85% is the common range."
+            notes += "Un solape longitudinal por debajo del 60 % reconstruye mal en terreno complejo. Lo habitual es 75-85 %."
         }
         if (sideOverlapPercent < 50) {
-            notes += "Side overlap below 50% leaves gaps between flight lines. 60-70% is the common range."
+            notes += "Un solape transversal por debajo del 50 % deja huecos entre líneas de vuelo. Lo habitual es 60-70 %."
         }
         if (sideOverlapPercent < forwardOverlapPercent) {
-            notes += "Side overlap is lower than forward overlap; for a nadir block the usual case is the opposite."
+            notes += "El solape transversal es menor que el longitudinal; en un bloque en nadir lo normal es lo contrario."
         }
         if (heightMeters > 120.0) {
-            notes += "Flight height above 120 m increases the effect of terrain relief, wind and lens distortion."
+            notes += "Volar por encima de 120 m aumenta el efecto del relieve, el viento y la distorsión de la lente."
         }
         if (!camera.isMechanicalOrFixedLens) {
-            notes += "This camera has a variable lens. Confirm the focal length is the one actually in use before flying."
+            notes += "Esta cámara tiene objetivo variable. Confirma la focalidad realmente montada antes de volar."
         }
         // The reassuring line is about the resolution and the overlap, so it
         // is stated whenever those are inside the usual range, even if another
         // advisory note came first.
         if (reliable) {
-            notes += "Resolution and overlap are inside the usual mapping range. Validate the result on a test flight."
+            notes += "La resolución y el solape están dentro del rango habitual de levantamiento. Valida el resultado en un vuelo de prueba."
         }
-        if (notes.isEmpty()) notes += "Review this configuration before flying."
+        if (notes.isEmpty()) notes += "Revisa esta configuración antes de volar."
         return GsdAssessment(reliable, notes)
     }
 
-    /** Returns the overlap as a fraction, after checking the percentage range. */
+    /** Devuelve el solape como fracción, después de comprobar el rango. */
     private fun requireOverlapFraction(percent: Int, kind: String): Double {
         require(percent in MIN_OVERLAP_PERCENT..MAX_OVERLAP_PERCENT) {
-            "The $kind overlap must be between $MIN_OVERLAP_PERCENT% and $MAX_OVERLAP_PERCENT%"
+            "El solape $kind debe estar entre $MIN_OVERLAP_PERCENT % y $MAX_OVERLAP_PERCENT %"
         }
         return percent / 100.0
     }
 
     private fun requireUsableCamera(camera: SurveyCamera) {
         val validation = camera.validate()
-        require(validation.isValid) { "The camera is not usable: ${validation.errors.joinToString("; ")}" }
+        require(validation.isValid) { "La cámara no es utilizable: ${validation.errors.joinToString("; ")}" }
     }
 }
 

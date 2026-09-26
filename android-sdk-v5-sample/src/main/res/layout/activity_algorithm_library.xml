@@ -9,27 +9,27 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Algoritmos y recetas"
+        android:text="@string/algorithm_title"
         style="@style/pro_title" />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
-        android:text="Importa recetas JSON declarativas y auditables. No se ejecuta código arbitrario descargado."
+        android:text="@string/algorithm_subtitle"
         style="@style/pro_caption" />
 
     <Button
         android:id="@+id/button_import_algorithm"
         style="@style/pro_button"
-        android:text="Importar receta JSON" />
+        android:text="@string/algorithm_import" />
 
     <TextView
         android:id="@+id/text_algorithm_status"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:text="Cargando recetas…"
+        android:text="@string/algorithm_loading"
         style="@style/pro_caption" />
 
     <ScrollView

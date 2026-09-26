@@ -14,13 +14,13 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Guía de vuelo manual"
+            android:text="@string/guidance_title"
             style="@style/pro_title" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="La app no vuela el aircraft. Tú pilotas con el mando y la app te indica hacia dónde y a qué altura. Esta guía sustituye a las misiones WPML en aircraft cuyo firmware no las soporta."
+            android:text="@string/guidance_subtitle"
             style="@style/pro_body" />
 
         <TextView
@@ -67,21 +67,21 @@
         <Button
             android:id="@+id/button_guidance_reached"
             style="@style/pro_button"
-            android:text="Marcar como alcanzado" />
+            android:text="@string/guidance_mark_reached" />
 
         <Button
             android:id="@+id/button_guidance_previous"
             style="@style/pro_button_secondary"
-            android:text="Punto anterior" />
+            android:text="@string/guidance_previous" />
 
         <Button
             android:id="@+id/button_guidance_skip"
             style="@style/pro_button_secondary"
-            android:text="Saltar punto" />
+            android:text="@string/guidance_skip" />
 
         <Button
             android:id="@+id/button_guidance_restart"
             style="@style/pro_button_secondary"
-            android:text="Reiniciar guía" />
+            android:text="@string/guidance_restart" />
     </LinearLayout>
 </ScrollView>

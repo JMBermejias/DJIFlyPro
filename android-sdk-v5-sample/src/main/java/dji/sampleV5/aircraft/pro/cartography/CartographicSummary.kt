@@ -41,7 +41,7 @@ data class CartographicSummary(
     /** Expected image data volume, in gigabytes, for RAW or JPEG. */
     fun estimatedStorageGigabytes(megabytesPerPhoto: Double): Double {
         require(megabytesPerPhoto.isFinite() && megabytesPerPhoto > 0.0) {
-            "The photo size must be greater than 0 MB"
+            "El tamaño de la foto debe ser mayor que 0 MB"
         }
         return photoCount * megabytesPerPhoto / 1024.0
     }
@@ -49,7 +49,7 @@ data class CartographicSummary(
     /** Flight time including a battery reserve, in minutes. */
     fun estimatedDurationMinutes(reserveFraction: Double): Double {
         require(reserveFraction.isFinite() && reserveFraction in 0.0..0.9) {
-            "The reserve must be between 0 and 0.9"
+            "La reserva debe estar entre 0 y 0,9"
         }
         return estimatedDurationSeconds * (1.0 + reserveFraction) / 60.0
     }
@@ -118,23 +118,23 @@ object CartographicSummaryBuilder {
             if (profile != null) {
                 val expectedGsd = profile.targetGsdCentimetersPerPixel
                 if (kotlin.math.abs(expectedGsd - gsd) > 0.05) {
-                    add("The route altitude gives ${round2(gsd)} cm/px but the profile asked for ${round2(expectedGsd)} cm/px. " +
-                        "The route was built from the spacing fields, not from the GSD.")
+                    add("La altura de la ruta da ${round2(gsd)} cm/px pero el perfil pedía ${round2(expectedGsd)} cm/px. " +
+                        "La ruta se construyó con los campos de separación, no con la resolución.")
                 }
                 GroundSampleDistance.assess(gsd, altitude, camera, forwardOverlap, sideOverlap)
                     .notes
                     .forEach { add(it) }
             } else {
-                add("This plan has no cartography profile. The resolution figures use the default payload " +
-                    "(${camera.displayName}); the route was built from the spacing fields.")
+                add("Este plan no tiene perfil cartográfico. Las cifras de resolución usan el payload por defecto " +
+                    "(${camera.displayName}); la ruta se construyó con los campos de separación.")
             }
-            if (photoCount == 0) add("The plan takes no photographs, so it produces no cartographic product.")
-            if (lineCount < 2) add("A single flight line cannot satisfy a side overlap. Widen the block or lower the overlap.")
+            if (photoCount == 0) add("El plan no hace ninguna foto, así que no produce ningún producto cartográfico.")
+            if (lineCount < 2) add("Una sola línea de vuelo no puede cumplir un solape transversal. Amplía el bloque o baja el solape.")
             if (plan.waypoints.isNotEmpty()) {
                 val minimumSpacing = request.photoSpacingMeters
                 if (minimumSpacing > footprintWidth) {
-                    add("The photo spacing of ${round1(minimumSpacing)} m exceeds the ${round1(footprintWidth)} m " +
-                        "footprint; the block will have gaps along the flight lines.")
+                    add("La separación entre fotos de ${round1(minimumSpacing)} m supera la huella de ${round1(footprintWidth)} m; " +
+                        "el bloque tendrá huecos a lo largo de las líneas de vuelo.")
                 }
             }
             if (controlPoints.isNotEmpty()) {
@@ -150,7 +150,7 @@ object CartographicSummaryBuilder {
             if (area > 0.0 && photoCount > 0) {
                 val averageFootprint = area * redundancy / photoCount
                 if (averageFootprint > 100_000_000.0) {
-                    add("This block needs more than ${photoCount} photographs. Check aircraft storage and flight time.")
+                    add("Este bloque necesita más de ${photoCount} fotos. Revisa el almacenamiento del aircraft y el tiempo de vuelo.")
                 }
             }
         }

@@ -65,7 +65,7 @@ class CartographySolutionTest {
         val double = CartographySolution.solve(profile(crossTrack = true), 300.0, 200.0)
         assertEquals(single.estimatedPhotoCount * 2, double.estimatedPhotoCount)
         assertEquals(single.altitudeMeters, double.altitudeMeters, 1e-9)
-        assertTrue(double.notes.any { it.contains("Cross-track") })
+        assertTrue(double.notes.any { it.contains("Pasada cruzada") })
     }
 
     @Test
@@ -87,22 +87,22 @@ class CartographySolutionTest {
     fun aNarrowBlockIsToldItCannotMeetTheSideOverlap() {
         val result = CartographySolution.solve(profile(side = 70), 400.0, 20.0)
         assertEquals(1, result.lineCount)
-        assertTrue(result.notes.any { it.contains("single flight line") })
+        assertTrue(result.notes.any { it.contains("Una sola línea de vuelo") })
     }
 
     @Test
     fun anAltitudeReferenceIsAlwaysStated() {
         assertTrue(
             CartographySolution.solve(profile(reference = AltitudeReference.RELATIVE_TO_TAKEOFF), 200.0, 200.0)
-                .notes.any { it.contains("take-off") }
+                .notes.any { it.contains("despegue") }
         )
         assertTrue(
             CartographySolution.solve(profile(reference = AltitudeReference.AMSL), 200.0, 200.0)
-                .notes.any { it.contains("ellipsoid") }
+                .notes.any { it.contains("elipsoide") }
         )
         assertTrue(
             CartographySolution.solve(profile(reference = AltitudeReference.ABOVE_GROUND), 200.0, 200.0)
-                .notes.none { it.contains("take-off") || it.contains("ellipsoid") }
+                .notes.none { it.contains("despegue") || it.contains("elipsoide") }
         )
     }
 
@@ -128,13 +128,13 @@ class CartographySolutionTest {
         // 2 cm/px on a P1 needs 160 m: plannable, but not automatic.
         val result = CartographySolution.solve(profile(gsd = 2.0), 200.0, 200.0)
         assertTrue(!result.isFlyableAutomatically)
-        assertTrue(result.notes.any { it.contains("120 m ceiling") })
-        assertTrue(result.notes.any { it.contains("manual guidance") })
+        assertTrue(result.notes.any { it.contains("120 m de una misión") })
+        assertTrue(result.notes.any { it.contains("guía manual") })
 
         // 1.5 cm/px on a P1 is 120 m, right at the automatic ceiling.
         val coarse = CartographySolution.solve(profile(gsd = 1.5), 200.0, 200.0)
         assertTrue(coarse.isFlyableAutomatically)
-        assertTrue(!coarse.notes.any { it.contains("120 m ceiling") })
+        assertTrue(!coarse.notes.any { it.contains("120 m de una misión") })
     }
 
     @Test
@@ -151,7 +151,7 @@ class CartographySolutionTest {
             CartographySolution.solve(profile(gsd = 0.0), 200.0, 200.0)
         }.exceptionOrNull()
         assertTrue(error is IllegalArgumentException)
-        assertTrue(error?.message?.contains("GSD") == true)
+        assertTrue(error?.message?.contains("cm/px") == true)
     }
 
     @Test
@@ -177,7 +177,7 @@ class CartographySolutionTest {
         assertTrue(!profile(forward = 5).validate().isValid)
         assertTrue(!profile(gsd = 200.0).validate().isValid)
         assertTrue(!CartographyProfile(obliqueDegrees = 90).validate().isValid)
-        assertTrue(CartographyProfile(schema = "nope").validate().errors.any { it.contains("schema") })
+        assertTrue(CartographyProfile(schema = "nope").validate().errors.any { it.contains("Esquema") })
     }
 
     @Test

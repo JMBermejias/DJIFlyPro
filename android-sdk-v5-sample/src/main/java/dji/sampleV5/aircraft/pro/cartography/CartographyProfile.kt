@@ -45,23 +45,23 @@ data class CartographyProfile(
 
     fun validate(): CartographyValidation {
         val errors = mutableListOf<String>()
-        if (schema != SCHEMA) errors += "Unknown cartography schema: $schema"
+        if (schema != SCHEMA) errors += "Esquema cartográfico desconocido: $schema"
         if (targetGsdCentimetersPerPixel.isFinite().not() ||
             targetGsdCentimetersPerPixel < GroundSampleDistance.MIN_GSD_CM_PER_PIXEL ||
             targetGsdCentimetersPerPixel > GroundSampleDistance.MAX_GSD_CM_PER_PIXEL
         ) {
-            errors += "GSD must be between ${GroundSampleDistance.MIN_GSD_CM_PER_PIXEL} and " +
+            errors += "La resolución debe estar entre ${GroundSampleDistance.MIN_GSD_CM_PER_PIXEL} y " +
                 "${GroundSampleDistance.MAX_GSD_CM_PER_PIXEL} cm/px"
         }
         if (forwardOverlapPercent !in GroundSampleDistance.MIN_OVERLAP_PERCENT..GroundSampleDistance.MAX_OVERLAP_PERCENT) {
-            errors += "Forward overlap must be between ${GroundSampleDistance.MIN_OVERLAP_PERCENT}% and " +
-                "${GroundSampleDistance.MAX_OVERLAP_PERCENT}%"
+            errors += "El solape longitudinal debe estar entre ${GroundSampleDistance.MIN_OVERLAP_PERCENT} % y " +
+                "${GroundSampleDistance.MAX_OVERLAP_PERCENT} %"
         }
         if (sideOverlapPercent !in GroundSampleDistance.MIN_OVERLAP_PERCENT..GroundSampleDistance.MAX_OVERLAP_PERCENT) {
-            errors += "Side overlap must be between ${GroundSampleDistance.MIN_OVERLAP_PERCENT}% and " +
-                "${GroundSampleDistance.MAX_OVERLAP_PERCENT}%"
+            errors += "El solape transversal debe estar entre ${GroundSampleDistance.MIN_OVERLAP_PERCENT} % y " +
+                "${GroundSampleDistance.MAX_OVERLAP_PERCENT} %"
         }
-        if (obliqueDegrees !in 0..45) errors += "The oblique angle must be between 0 and 45 degrees"
+        if (obliqueDegrees !in 0..45) errors += "El ángulo oblicuo debe estar entre 0 y 45 grados"
         val cameraValidation = camera.validate()
         if (!cameraValidation.isValid) {
             errors += cameraValidation.errors

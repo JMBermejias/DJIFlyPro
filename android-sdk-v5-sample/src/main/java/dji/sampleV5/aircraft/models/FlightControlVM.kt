@@ -105,7 +105,7 @@ class FlightControlVM : DJIViewModel() {
         }
         action(object : CommonCallbacks.CompletionCallbackWithParam<EmptyMsg> {
             override fun onSuccess(t: EmptyMsg?) {
-                callback(true, "Command accepted")
+                callback(true, "Orden aceptada")
             }
 
             override fun onFailure(error: IDJIError) {

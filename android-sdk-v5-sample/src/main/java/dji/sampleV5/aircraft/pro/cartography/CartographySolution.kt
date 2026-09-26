@@ -26,9 +26,9 @@ object CartographySolution {
         areaWidthMeters: Double
     ): CartographySolutionResult {
         val validation = profile.validate()
-        require(validation.isValid) { "The cartography profile is not valid: ${validation.errors.joinToString("; ")}" }
-        require(areaLengthMeters.isFinite() && areaLengthMeters > 0.0) { "The length must be greater than 0 m" }
-        require(areaWidthMeters.isFinite() && areaWidthMeters > 0.0) { "The width must be greater than 0 m" }
+        require(validation.isValid) { "El perfil cartográfico no es válido: ${validation.errors.joinToString("; ")}" }
+        require(areaLengthMeters.isFinite() && areaLengthMeters > 0.0) { "La longitud debe ser mayor que 0 m" }
+        require(areaWidthMeters.isFinite() && areaWidthMeters > 0.0) { "El ancho debe ser mayor que 0 m" }
 
         val camera = profile.camera
         val heightMeters = GroundSampleDistance.heightForGsd(profile.targetGsdCentimetersPerPixel, camera)
@@ -69,27 +69,27 @@ object CartographySolution {
         val notes = buildList {
             addAll(assessment.notes)
             if (lineCount < 2) {
-                add("A single flight line cannot satisfy a ${profile.sideOverlapPercent}% side overlap. " +
-                    "Widen the area or accept a lower overlap.")
+                add("Una sola línea de vuelo no puede cumplir un solape transversal del ${profile.sideOverlapPercent} %. " +
+                    "Amplía el área o acepta un solape menor.")
             }
             if (heightMeters > CartographyLimits.MAX_SURVEY_HEIGHT_METERS) {
-                add("This GSD needs ${heightMeters.toInt()} m, past the ${CartographyLimits.MAX_SURVEY_HEIGHT_METERS} m " +
-                    "the planner will build. The resolution you asked for and the height you can reach do not agree.")
+                add("Esta resolución necesita ${heightMeters.toInt()} m, por encima de los ${CartographyLimits.MAX_SURVEY_HEIGHT_METERS} m " +
+                    "que construye el planificador. La resolución pedida y la altura alcanzable no coinciden.")
             }
             if (heightMeters > dji.sampleV5.aircraft.pro.mission.MissionValidator.MAX_ALTITUDE_METERS) {
-                add("At ${heightMeters.toInt()} m this block is above the " +
-                    "${dji.sampleV5.aircraft.pro.mission.MissionValidator.MAX_ALTITUDE_METERS.toInt()} m ceiling of an " +
-                    "automatic waypoint mission. It can be planned and flown with manual guidance, " +
-                    "or flown automatically at a coarser resolution.")
+                add("A ${heightMeters.toInt()} m este bloque supera el techo de " +
+                    "${dji.sampleV5.aircraft.pro.mission.MissionValidator.MAX_ALTITUDE_METERS.toInt()} m de una misión " +
+                    "wayline automática. Se puede planificar y volar con guía manual, o volar de forma " +
+                    "automática con una resolución más gruesa.")
             }
             if (profile.altitudeReference == AltitudeReference.RELATIVE_TO_TAKEOFF) {
-                add("Heights are measured from the take-off point. On sloping ground the effective GSD will drift.")
+                add("Las alturas se miden desde el punto de despegue. En terreno en pendiente la resolución efectiva se desviará.")
             }
             if (profile.altitudeReference == AltitudeReference.AMSL) {
-                add("Heights are over the ellipsoid. A geoid model is needed to relate them to the terrain.")
+                add("Las alturas están sobre el elipsoide. Hace falta un modelo de geoide para relacionarlas con el terreno.")
             }
             if (profile.crossTrack) {
-                add("Cross-track pass enabled: the block is flown twice, in perpendicular directions.")
+                add("Pasada cruzada activada: el bloque se vuela dos veces, en direcciones perpendiculares.")
             }
         }
 

@@ -13,56 +13,56 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Punto de control"
+            android:text="@string/gcp_dialog_title"
             style="@style/pro_title" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
-            android:text="Un punto de control se mide en el terreno con precisión conocida. La Exactitud del producto final la limita la de estos puntos, no la del plan de vuelo."
+            android:text="@string/gcp_dialog_subtitle"
             style="@style/pro_caption" />
 
         <EditText
             android:id="@+id/edit_gcp_code"
             style="@style/pro_input"
-            android:hint="Código, por ejemplo CP01"
+            android:hint="@string/gcp_hint_code"
             android:inputType="textCapCharacters" />
 
         <EditText
             android:id="@+id/edit_gcp_latitude"
             style="@style/pro_input"
-            android:hint="Latitud (WGS84)"
+            android:hint="@string/gcp_hint_latitude"
             android:inputType="numberDecimal|numberSigned" />
 
         <EditText
             android:id="@+id/edit_gcp_longitude"
             style="@style/pro_input"
-            android:hint="Longitud (WGS84)"
+            android:hint="@string/gcp_hint_longitude"
             android:inputType="numberDecimal|numberSigned" />
 
         <EditText
             android:id="@+id/edit_gcp_height"
             style="@style/pro_input"
-            android:hint="Altura (m, opcional)"
+            android:hint="@string/gcp_hint_height"
             android:inputType="numberDecimal|numberSigned" />
 
         <EditText
             android:id="@+id/edit_gcp_accuracy"
             style="@style/pro_input"
-            android:hint="Exactitud horizontal medida (mm, opcional)"
+            android:hint="@string/gcp_hint_accuracy"
             android:inputType="numberDecimal" />
 
         <EditText
             android:id="@+id/edit_gcp_source"
             style="@style/pro_input"
-            android:hint="Origen de la coordenada"
+            android:hint="@string/gcp_hint_source"
             android:inputType="textCapSentences" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Tipo de punto"
+            android:text="@string/gcp_target_type"
             style="@style/pro_section" />
 
         <Spinner
@@ -75,7 +75,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Uso"
+            android:text="@string/gcp_role"
             style="@style/pro_section" />
 
         <Spinner
@@ -88,6 +88,6 @@
         <Button
             android:id="@+id/button_save_control_point"
             style="@style/pro_button"
-            android:text="Guardar punto" />
+            android:text="@string/gcp_save" />
     </LinearLayout>
 </ScrollView>

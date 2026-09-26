@@ -35,8 +35,8 @@ class GroundControlPointTest {
     @Test
     fun identityIsRequired() {
         val validation = point(id = " ", code = "").validate()
-        assertTrue(validation.errors.any { it.contains("id") })
-        assertTrue(validation.errors.any { it.contains("code") })
+        assertTrue(validation.errors.any { it.contains("identificador") })
+        assertTrue(validation.errors.any { it.contains("código") })
     }
 
     @Test
@@ -57,10 +57,10 @@ class GroundControlPointTest {
     @Test
     fun aTerrainFeatureCannotBeControl() {
         val validation = point(target = ControlPointTarget.FEATURE).validate()
-        assertTrue(validation.errors.any { it.contains("check point") })
+        assertTrue(validation.errors.any { it.contains("verificación") })
         // As a check point it is allowed, with a warning about precision.
         val asCheck = point(target = ControlPointTarget.FEATURE, role = ControlPointRole.CHECK).validate()
-        assertTrue(asCheck.errors.any { it.contains("cannot be measured") })
+        assertTrue(asCheck.errors.any { it.contains("no se puede medir con precisión") })
     }
 
     @Test
@@ -92,7 +92,7 @@ class GroundControlPointTest {
     fun aBlockWithNoControlIsNotGeoreferenceable() {
         val assessment = ControlNetwork.assess(emptyList(), 40.0, -3.0)
         assertTrue(!assessment.isValid)
-        assertTrue(assessment.errors.any { it.contains("no usable ground control") })
+        assertTrue(assessment.errors.any { it.contains("no tiene control terrestre utilizable") })
     }
 
     @Test
@@ -121,7 +121,7 @@ class GroundControlPointTest {
             -3.7038
         )
         assertTrue(!assessment.isValid)
-        assertTrue(assessment.errors.any { it.contains("At least 4") })
+        assertTrue(assessment.errors.any { it.contains("Hacen falta al menos 4") })
     }
 
     @Test
@@ -134,7 +134,7 @@ class GroundControlPointTest {
         )
         val assessment = ControlNetwork.assess(network, 40.4168, -3.7038)
         assertTrue(assessment.isValid)
-        assertTrue(assessment.warnings.any { it.contains("independent check point") })
+        assertTrue(assessment.warnings.any { it.contains("verificación independiente") })
     }
 
     @Test
@@ -151,8 +151,8 @@ class GroundControlPointTest {
             blockCenterLongitude = -3.7038,
             blockRadiusMeters = ControlNetwork.blockRadiusMeters(200.0, 120.0)
         )
-        assertTrue(assessment.warnings.any { it.contains("less than 5 m apart") })
-        assertTrue(assessment.warnings.any { it.contains("% of the block radius") })
+        assertTrue(assessment.warnings.any { it.contains("5 m") })
+        assertTrue(assessment.warnings.any { it.contains("del radio del bloque") })
         assertTrue(assessment.metrics.blockCoverageRatio < ControlNetwork.MIN_BLOCK_COVERAGE)
     }
 
@@ -172,7 +172,7 @@ class GroundControlPointTest {
             blockCenterLongitude = -3.7038,
             blockRadiusMeters = ControlNetwork.blockRadiusMeters(200.0, 120.0)
         )
-        assertTrue(assessment.warnings.any { it.contains("one line") })
+        assertTrue(assessment.warnings.any { it.contains("una línea") })
     }
 
     @Test
@@ -190,7 +190,7 @@ class GroundControlPointTest {
             blockRadiusMeters = ControlNetwork.blockRadiusMeters(200.0, 120.0)
         )
         assertTrue(assessment.isValid)
-        assertTrue(assessment.warnings.none { it.contains("one line") })
+        assertTrue(assessment.warnings.none { it.contains("una línea") })
         assertTrue(assessment.warnings.none { it.contains("block radius") })
         assertTrue(assessment.metrics.blockCoverageRatio >= ControlNetwork.MIN_BLOCK_COVERAGE)
         assertEquals(5, assessment.metrics.totalCount)
@@ -207,7 +207,7 @@ class GroundControlPointTest {
             point(id = "4", code = "D", latitude = 40.430, longitude = -3.715, height = null)
         )
         val assessment = ControlNetwork.assess(network, 40.4168, -3.7038)
-        assertTrue(assessment.warnings.any { it.contains("only be georeferenced in 2D") })
+        assertTrue(assessment.warnings.any { it.contains("georreferenciar en 2D") })
     }
 
     @Test
@@ -219,7 +219,7 @@ class GroundControlPointTest {
             point(id = "4", code = "D", latitude = 40.430, longitude = -3.715, accuracy = 120.0)
         )
         val assessment = ControlNetwork.assess(network, 40.4168, -3.7038)
-        assertTrue(assessment.warnings.any { it.contains("cannot be more accurate than its control") })
+        assertTrue(assessment.warnings.any { it.contains("más exacto que su control") })
     }
 
     @Test
@@ -232,7 +232,7 @@ class GroundControlPointTest {
             point(id = "5", code = "E", latitude = 999.0, longitude = -3.715)
         )
         val assessment = ControlNetwork.assess(network, 40.4168, -3.7038)
-        assertTrue(assessment.errors.any { it.contains("1 control point(s) are not usable") })
+        assertTrue(assessment.errors.any { it.contains("no son utilizables") })
         assertEquals(4, assessment.metrics.totalCount)
     }
 

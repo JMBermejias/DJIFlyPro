@@ -1,11 +1,11 @@
-# DJIFlyPro v1.1.0-alpha.3
+# DJIFlyPro v1.1.0-alpha.4
 
 **La App Key de DJI ya está en el binario.** Esta prerelease sí puede registrarse
 con el SDK. Es un cambio respecto a `v1.1.0-alpha.1`, cuyos binarios se
 compilaron sin key y no podían conectarse a ningún aircraft.
 
 `applicationId com.djiflypro.app`, DJI Mobile SDK V5.18.0,
-`versionName 1.1.0-alpha.3`, `versionCode 4`.
+`versionName 1.1.0-alpha.4`, `versionCode 5`.
 
 ## Qué sigue sin estar hecho
 
@@ -20,6 +20,38 @@ compilaron sin key y no podían conectarse a ningún aircraft.
 - La firma es la keystore de desarrollo local. No publicable en Google Play.
 - El mapa abre sin teselas: `GMAP_API_KEY` y `MAPLIBRE_TOKEN` siguen vacías.
   El resto de la cartografía no depende del mapa.
+
+## Novedad de esta versión: toda la aplicación en español
+
+La aplicación se entrega **en español**, y el español es el idioma por defecto,
+no una traducción: se ve en español aunque el dispositivo esté en otro idioma.
+
+- **112 textos de los layouts** extraídos a recursos y traducidos. Ya estaban en
+  español, pero escritos a mano dentro de los XML, así que no eran localizables.
+  Ahora no queda ni un `HardcodedText` en los layouts de DJIFlyPro.
+- **Las 23 cadenas de la interfaz de control** estaban en inglés: el centro de
+  control era la única pantalla de la aplicación en inglés. Traducidas.
+- **La capa de dominio** escribía sus mensajes en inglés y llegaban a pantalla
+  por `error.message`: la barrera de ejecución WPML, los validadores de misión,
+  los avisos de la geometría de ruta, el motor de GSD, el control terrestre y
+  las notas de la solución cartográfica. Todo en español.
+- **Las fichas de entrega** —informe de validación, ficha de vuelo— salían con
+  los textos en inglés. En español.
+- **`res/values-zh-rCN/` eliminado.** Traducía 23 claves de DJIFlyPro al chino
+  entre ellas `app_name_aircraft`, que llegaba a decir "MSDK飞机功能" en vez de
+  "DJIFlyPro". Y era una traducción a medias: de sus 406 cadenas, 383 eran del
+  sample de DJI, lo que producía una aplicación medio china y medio español.
+  Ninguna pantalla alcanzable usaba ninguna de ellas.
+- **`localeConfig`** declarado, para que Android 13 y posteriores ofrezcan el
+  ajuste de idioma por aplicación.
+- **Corregido español roto** en la pantalla de documentación: "no se promises en
+  esta versión", "la.Return-to-home" y "la Batteries antes de ejecutar". Y
+  "Calcular parameters", que estaba en inglés dentro de un layout en español.
+- **Las 292 pruebas** fijan ahora el texto español. Si alguien cambia un mensaje
+  de cara al usuario sin querer, la prueba falla.
+
+Ver `docs/IDIOMA.md`, que explica por qué los mensajes del dominio están en el
+código y no en `strings.xml`.
 
 ## Novedad de esta versión: cartografía
 
@@ -130,7 +162,7 @@ nada, y lo dice en pantalla.
 
 ## Qué instalar
 
-Solo hay un APK: `DJIFlyPro-1.1.0-alpha.3.apk`. Si ya tienes una versión
+Solo hay un APK: `DJIFlyPro-1.1.0-alpha.4.apk`. Si ya tienes una versión
 anterior de DJIFlyPro instalada, no la desinstales: todas las releases
 comparten certificado, así que se actualiza encima. Si en algún momento
 tuviste instalada una build depurable, esa sí hay que desinstalarla antes,
@@ -164,8 +196,8 @@ rellenar. Ver `docs/COMPATIBILITY.md` y `docs/SAFETY.md`.
 
 | Archivo | Tamaño | SHA-256 |
 |---|---:|---|
-| `DJIFlyPro-1.1.0-alpha.3.apk` | 205,002,230 bytes | `df27ec9dbdbd9d7193a4401edf22e7b7ee12cd4b36251b617e06d143bb4b0c34` |
-| `DJIFlyPro-1.1.0-alpha.3.aab` | 198,917,596 bytes | `a089cd197832ca75bd6d757b13d61c51d922ab5a000719b3c7ae446d0ae72ee7` |
+| `DJIFlyPro-1.1.0-alpha.4.apk` | 205,113,194 bytes | `4f95403da5aca91af9dcaa1ae45ec671912e441e7b395938eed7ad48c1a860cd` |
+| `DJIFlyPro-1.1.0-alpha.4.aab` | 198,923,664 bytes | `c6734bde078f232378d7cd320af65149c4fbc92294c2d0a57f86608a268963fe` |
 
 El `.aab` es para subir a Google Play, no para instalar a mano.
 
@@ -177,6 +209,8 @@ sha256sum -c SHA256SUMS.txt
 
 ## Documentación
 
+- `docs/IDIOMA.md`: por qué la aplicación es solo en español y dónde vive cada
+  cadena.
 - `docs/CARTOGRAFIA.md`: el modelo cartográfico completo, las matemáticas y las
   decisiones que tiene que tomar el operador.
 - `docs/SAFETY.md`: límites y lo que la aplicación no comprueba.

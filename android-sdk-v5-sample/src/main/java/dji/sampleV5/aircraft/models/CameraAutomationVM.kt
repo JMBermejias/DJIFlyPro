@@ -40,8 +40,8 @@ class CameraAutomationVM : DJIViewModel() {
                 createKey(CameraKey.KeyStartShootPhoto, cameraIndex)
             )
         ).subscribe(
-            { callback(true, "Photo command accepted") },
-            { callback(false, it.message ?: "Photo command failed") }
+            { callback(true, "Orden de foto aceptada") },
+            { callback(false, it.message ?: "La orden de foto falló") }
         ).also { disposables.add(it) }
     }
 
@@ -57,9 +57,9 @@ class CameraAutomationVM : DJIViewModel() {
             {
                 recording = true
                 _state.postValue(CameraAutomationState.RECORDING)
-                callback(true, "Recording started")
+                callback(true, "Grabación iniciada")
             },
-            { callback(false, it.message ?: "Recording could not start") }
+            { callback(false, it.message ?: "No se pudo iniciar la grabación") }
         ).also { disposables.add(it) }
     }
 
@@ -70,9 +70,9 @@ class CameraAutomationVM : DJIViewModel() {
             {
                 recording = false
                 _state.postValue(CameraAutomationState.IDLE)
-                callback(true, "Recording stopped")
+                callback(true, "Grabación detenida")
             },
-            { callback(false, it.message ?: "Recording could not stop") }
+            { callback(false, it.message ?: "No se pudo detener la grabación") }
         ).also { disposables.add(it) }
     }
 
@@ -84,15 +84,15 @@ class CameraAutomationVM : DJIViewModel() {
         val plan = try {
             CameraAutomationPlanner.createCapturePlan(photoCount, intervalSeconds)
         } catch (error: IllegalArgumentException) {
-            callback(false, error.message ?: "Invalid capture plan")
+            callback(false, error.message ?: "Plan de captura no válido")
             return
         }
         stopScheduledWork()
         remainingPhotos = plan.photoCount
         intervalMillis = plan.intervalSeconds * 1000L
         _state.postValue(CameraAutomationState.CAPTURING)
-        _status.postValue("Capturing $remainingPhotos photos")
-        callback(true, "Timed capture started")
+        _status.postValue("Capturando $remainingPhotos fotos")
+        callback(true, "Captura temporizada iniciada")
         captureNext()
     }
 
@@ -103,7 +103,7 @@ class CameraAutomationVM : DJIViewModel() {
         val plan = try {
             CameraAutomationPlanner.createRecordingPlan(durationSeconds)
         } catch (error: IllegalArgumentException) {
-            callback(false, error.message ?: "Invalid recording plan")
+            callback(false, error.message ?: "Plan de grabación no válido")
             return
         }
         stopScheduledWork()
@@ -113,12 +113,12 @@ class CameraAutomationVM : DJIViewModel() {
                 callback(false, message)
                 return@startRecording
             }
-            _status.postValue("Recording for ${plan.durationSeconds} seconds")
+            _status.postValue("Grabando ${plan.durationSeconds} segundos")
             handler.postDelayed({
                 stopRecording { stopped, stopMessage ->
                     if (stopped) {
                         _state.postValue(CameraAutomationState.IDLE)
-                        callback(true, "Timed recording completed")
+                        callback(true, "Grabación temporizada completada")
                     } else {
                         _state.postValue(CameraAutomationState.ERROR)
                         callback(false, stopMessage)
@@ -140,7 +140,7 @@ class CameraAutomationVM : DJIViewModel() {
     private fun captureNext() {
         if (remainingPhotos <= 0) {
             _state.postValue(CameraAutomationState.IDLE)
-            _status.postValue("Timed capture completed")
+            _status.postValue("Captura temporizada completada")
             return
         }
         takePhoto { success, message ->
@@ -151,12 +151,12 @@ class CameraAutomationVM : DJIViewModel() {
                 return@takePhoto
             }
             remainingPhotos -= 1
-            _status.postValue("Capturing $remainingPhotos photos")
+            _status.postValue("Capturando $remainingPhotos fotos")
             if (remainingPhotos > 0) {
                 handler.postDelayed({ captureNext() }, intervalMillis)
             } else {
                 _state.postValue(CameraAutomationState.IDLE)
-                _status.postValue("Timed capture completed")
+                _status.postValue("Captura temporizada completada")
             }
         }
     }

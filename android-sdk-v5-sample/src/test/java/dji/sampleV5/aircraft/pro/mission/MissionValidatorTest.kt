@@ -28,7 +28,7 @@ class MissionValidatorTest {
     fun rejectsNonFiniteBearing() {
         val validation = MissionValidator.validate(request().copy(bearingDegrees = Double.NaN))
         assertFalse(validation.isValid)
-        assertTrue(validation.errors.any { it.contains("Bearing") })
+        assertTrue(validation.errors.any { it.contains("El rumbo") })
     }
 
     @Test
@@ -37,8 +37,8 @@ class MissionValidatorTest {
             request().copy(standoffMeters = Double.NaN, gimbalPitchDegrees = Double.NaN)
         )
         assertFalse(validation.isValid)
-        assertTrue(validation.errors.any { it.contains("stand-off") })
-        assertTrue(validation.errors.any { it.contains("Gimbal") })
+        assertTrue(validation.errors.any { it.contains("distancia de seguridad") })
+        assertTrue(validation.errors.any { it.contains("inclinación del estabilizador") })
     }
 
     @Test
@@ -51,6 +51,6 @@ class MissionValidatorTest {
         )
         val validation = MissionValidator.validate(plan.request, plan)
         assertFalse(validation.isValid)
-        assertTrue(validation.errors.any { it.contains("coordinate") })
+        assertTrue(validation.errors.any { it.contains("coordenada") })
     }
 }

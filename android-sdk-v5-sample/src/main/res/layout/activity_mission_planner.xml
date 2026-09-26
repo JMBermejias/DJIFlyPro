@@ -14,20 +14,20 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Planificador de misiones"
+            android:text="@string/planner_title"
             style="@style/pro_title" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
-            android:text="Genera una ruta validada y expórtala como JSON o KMZ. La ejecución se habilita solo cuando el modelo y el firmware lo permiten."
+            android:text="@string/planner_subtitle"
             style="@style/pro_caption" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Tipo de trabajo"
+            android:text="@string/planner_work_type"
             style="@style/pro_section" />
 
         <Spinner
@@ -40,85 +40,85 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Centro de la parcela (WGS84)"
+            android:text="@string/planner_block_center"
             style="@style/pro_section" />
 
         <EditText
             android:id="@+id/edit_latitude"
             style="@style/pro_input"
-            android:hint="Latitud, por ejemplo 40.4168"
+            android:hint="@string/planner_hint_latitude"
             android:inputType="numberDecimal|numberSigned" />
 
         <EditText
             android:id="@+id/edit_longitude"
             style="@style/pro_input"
-            android:hint="Longitud, por ejemplo -3.7038"
+            android:hint="@string/planner_hint_longitude"
             android:inputType="numberDecimal|numberSigned" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Geometría y captura"
+            android:text="@string/planner_geometry_capture"
             style="@style/pro_section" />
 
         <EditText
             android:id="@+id/edit_length"
             style="@style/pro_input"
-            android:hint="Longitud de la parcela / fachada (m)"
+            android:hint="@string/planner_hint_length"
             android:inputType="numberDecimal" />
 
         <EditText
             android:id="@+id/edit_width"
             style="@style/pro_input"
-            android:hint="Ancho de la parcela (m)"
+            android:hint="@string/planner_hint_width"
             android:inputType="numberDecimal" />
 
         <EditText
             android:id="@+id/edit_height"
             style="@style/pro_input"
-            android:hint="Altura de fachada / zona (m)"
+            android:hint="@string/planner_hint_height"
             android:inputType="numberDecimal" />
 
         <EditText
             android:id="@+id/edit_bearing"
             style="@style/pro_input"
-            android:hint="Rumbo de la línea (grados, 0 = norte)"
+            android:hint="@string/planner_hint_bearing"
             android:inputType="numberDecimal|numberSigned" />
 
         <EditText
             android:id="@+id/edit_altitude"
             style="@style/pro_input"
-            android:hint="Altura de vuelo (m)"
+            android:hint="@string/planner_hint_altitude"
             android:inputType="numberDecimal" />
 
         <EditText
             android:id="@+id/edit_standoff"
             style="@style/pro_input"
-            android:hint="Distancia de seguridad a la fachada (m)"
+            android:hint="@string/planner_hint_standoff"
             android:inputType="numberDecimal" />
 
         <EditText
             android:id="@+id/edit_line_spacing"
             style="@style/pro_input"
-            android:hint="Separación entre líneas / alturas (m)"
+            android:hint="@string/planner_hint_line_spacing"
             android:inputType="numberDecimal" />
 
         <EditText
             android:id="@+id/edit_photo_spacing"
             style="@style/pro_input"
-            android:hint="Separación entre fotos (m)"
+            android:hint="@string/planner_hint_photo_spacing"
             android:inputType="numberDecimal" />
 
         <EditText
             android:id="@+id/edit_overlap"
             style="@style/pro_input"
-            android:hint="Solape longitudinal (%)"
+            android:hint="@string/planner_hint_overlap"
             android:inputType="number" />
 
         <EditText
             android:id="@+id/edit_speed"
             style="@style/pro_input"
-            android:hint="Velocidad (m/s)"
+            android:hint="@string/planner_hint_speed"
             android:inputType="numberDecimal" />
 
         <Spinner
@@ -140,29 +140,29 @@
         <Button
             android:id="@+id/button_cartography"
             style="@style/pro_button_secondary"
-            android:text="Cartografía: calcular desde GSD" />
+            android:text="@string/planner_cartography_button" />
 
         <Button
             android:id="@+id/button_open_map"
             style="@style/pro_button_secondary"
             android:enabled="false"
-            android:text="Ver en el mapa" />
+            android:text="@string/planner_open_map" />
 
         <Button
             android:id="@+id/button_pick_control_point"
             style="@style/pro_button_secondary"
-            android:text="Añadir control desde el mapa" />
+            android:text="@string/planner_pick_control" />
 
         <EditText
             android:id="@+id/edit_mission_name"
             style="@style/pro_input"
-            android:hint="Nombre de la misión"
+            android:hint="@string/planner_hint_name"
             android:inputType="textCapSentences" />
 
         <Button
             android:id="@+id/button_generate_mission"
             style="@style/pro_button"
-            android:text="Generar y validar misión" />
+            android:text="@string/planner_generate" />
 
         <TextView
             android:id="@+id/text_capability"
@@ -171,7 +171,7 @@
             android:layout_marginTop="12dp"
             android:background="@drawable/pro_warning_background"
             android:padding="12dp"
-            android:text="Comprobando compatibilidad del aircraft…"
+            android:text="@string/planner_checking_compatibility"
             style="@style/pro_caption" />
 
         <TextView
@@ -181,7 +181,7 @@
             android:layout_marginTop="12dp"
             android:background="@drawable/pro_card_background"
             android:padding="14dp"
-            android:text="Todavía no hay una ruta generada."
+            android:text="@string/planner_no_route"
             style="@style/pro_body" />
 
         <TextView
@@ -191,7 +191,7 @@
             android:layout_marginTop="8dp"
             android:background="@drawable/pro_card_background"
             android:padding="14dp"
-            android:text="Sin perfil cartográfico. Usa «Cartografía» para definir resolución y solape."
+            android:text="@string/planner_no_profile"
             style="@style/pro_body" />
 
         <TextView
@@ -215,65 +215,65 @@
             android:id="@+id/button_export_json"
             style="@style/pro_button_secondary"
             android:enabled="false"
-            android:text="Exportar mission.json" />
+            android:text="@string/planner_export_json" />
 
         <Button
             android:id="@+id/button_export_kmz"
             style="@style/pro_button_secondary"
             android:enabled="false"
-            android:text="Exportar KMZ/WPML" />
+            android:text="@string/planner_export_kmz" />
 
         <Button
             android:id="@+id/button_export_geojson"
             style="@style/pro_button_secondary"
             android:enabled="false"
-            android:text="Exportar GeoJSON" />
+            android:text="@string/planner_export_geojson" />
 
         <Button
             android:id="@+id/button_export_kml"
             style="@style/pro_button_secondary"
             android:enabled="false"
-            android:text="Exportar KML" />
+            android:text="@string/planner_export_kml" />
 
         <Button
             android:id="@+id/button_export_report"
             style="@style/pro_button_secondary"
             android:enabled="false"
-            android:text="Exportar ficha de vuelo" />
+            android:text="@string/planner_export_report" />
 
         <Button
             android:id="@+id/button_export_validation_report"
             style="@style/pro_button_secondary"
-            android:text="Exportar informe de validación" />
+            android:text="@string/planner_export_validation" />
 
         <Button
             android:id="@+id/button_upload_mission"
             style="@style/pro_button"
             android:enabled="false"
-            android:text="Subir al aircraft" />
+            android:text="@string/planner_upload" />
 
         <Button
             android:id="@+id/button_start_mission"
             style="@style/pro_button"
             android:enabled="false"
-            android:text="Iniciar misión" />
+            android:text="@string/planner_start" />
 
         <Button
             android:id="@+id/button_pause_mission"
             style="@style/pro_button_secondary"
             android:enabled="false"
-            android:text="Pausar / reanudar" />
+            android:text="@string/planner_pause" />
 
         <Button
             android:id="@+id/button_stop_mission"
             style="@style/pro_button_secondary"
             android:enabled="false"
-            android:text="Detener misión" />
+            android:text="@string/planner_stop" />
 
         <Button
             android:id="@+id/button_manual_guidance"
             style="@style/pro_button"
             android:enabled="false"
-            android:text="Guía de vuelo manual" />
+            android:text="@string/planner_manual_guidance" />
     </LinearLayout>
 </ScrollView>

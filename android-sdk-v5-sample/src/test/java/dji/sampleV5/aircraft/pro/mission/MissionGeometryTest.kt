@@ -59,7 +59,7 @@ class MissionGeometryTest {
         val unsafe = request().copy(altitudeMeters = MissionValidator.MAX_GUIDED_ALTITUDE_METERS + 1.0)
         val error = runCatching { MissionGeometry.plan(unsafe) }.exceptionOrNull()
         assertTrue(error is IllegalArgumentException)
-        assertTrue(MissionValidator.validate(unsafe).errors.any { it.contains("Altitude") })
+        assertTrue(MissionValidator.validate(unsafe).errors.any { it.contains("La altura de vuelo") })
     }
 
     @Test
@@ -69,11 +69,11 @@ class MissionGeometryTest {
         val high = request().copy(altitudeMeters = 160.0)
         val plan = MissionGeometry.plan(high)
         assertTrue(MissionValidator.validate(high, plan).isValid)
-        assertTrue(MissionValidator.validate(high, plan).warnings.any { it.contains("manual guidance") })
+        assertTrue(MissionValidator.validate(high, plan).warnings.any { it.contains("guía manual") })
         val automatic = MissionValidator.validateAutomaticMission(high, plan)
         assertTrue(!automatic.isValid)
         assertTrue(automatic.errors.any { it.contains("120 m") })
-        assertTrue(automatic.errors.any { it.contains("manual guidance") })
+        assertTrue(automatic.errors.any { it.contains("guía manual") })
     }
 
     @Test
@@ -96,7 +96,7 @@ class MissionGeometryTest {
             )
         }.exceptionOrNull()
         assertTrue(error is IllegalArgumentException)
-        assertTrue(error?.message?.contains("waypoints") == true)
+        assertTrue(error?.message?.contains("puntos de vuelo") == true)
     }
 
     @Test

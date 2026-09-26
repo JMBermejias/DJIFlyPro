@@ -51,8 +51,8 @@ class ValidationReportBuilderTest {
         )
 
         assertTrue(report.contains("UNKNOWN_PRODUCT") || report.contains("UNKNOWN_AIRCRAFT_FIRMWARE"))
-        assertTrue(report.contains("# connected: false"))
-        assertTrue(report.contains("# registered: false"))
+        assertTrue(report.contains("# conectado: false"))
+        assertTrue(report.contains("# registrado: false"))
         assertTrue(ValidatedWpmlProfileRepository.parse(report).isEmpty())
     }
 
@@ -67,7 +67,7 @@ class ValidationReportBuilderTest {
         )
         val report = ValidationReportBuilder.build(result(profiles = setOf(profile)))
 
-        assertTrue(report.contains("# current gate: profile-matched"))
+        assertTrue(report.contains("# barrera actual: perfil-coincidente"))
         assertTrue(report.contains("REPLACE_WITH_YOUR_TEST_RECORD_REFERENCE"))
         assertTrue(ValidatedWpmlProfileRepository.parse(report).isEmpty())
     }
@@ -76,15 +76,15 @@ class ValidationReportBuilderTest {
     fun gateLabelReflectsWhyExecutionIsBlocked() {
         assertTrue(
             ValidationReportBuilder.build(result(connected = false))
-                .contains("# current gate: not-connected")
+                .contains("# barrera actual: sin-conexion")
         )
         assertTrue(
             ValidationReportBuilder.build(result(registered = false))
-                .contains("# current gate: not-registered")
+                .contains("# barrera actual: sin-registro")
         )
         assertTrue(
             ValidationReportBuilder.build(result())
-                .contains("# current gate: no-validated-profile")
+                .contains("# barrera actual: sin-perfil-validado")
         )
     }
 
@@ -92,8 +92,8 @@ class ValidationReportBuilderTest {
     fun reportDoesNotClaimCompatibility() {
         val report = ValidationReportBuilder.build(result())
 
-        assertFalse(report.contains("approved", ignoreCase = true))
-        assertFalse(report.contains("certified", ignoreCase = true))
-        assertTrue(report.contains("candidate, not a"))
+        assertFalse(report.contains("aprobado", ignoreCase = true))
+        assertFalse(report.contains("certificad", ignoreCase = true))
+        assertTrue(report.contains("es un candidato,"))
     }
 }

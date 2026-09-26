@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  DJIFlyPro se entrega en español. Se declara aquí para que Android 13 y
+  posteriores ofrezcan el ajuste de idioma por aplicación, y para que el
+  sistema sepa que no hay más idiomas que el que la app trae.
+-->
+<locale-config xmlns:android="http://schemas.android.com/apk/res/android">
+    <locale android:name="es" />
+</locale-config>

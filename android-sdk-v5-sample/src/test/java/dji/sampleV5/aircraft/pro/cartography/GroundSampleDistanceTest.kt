@@ -163,16 +163,16 @@ class GroundSampleDistanceTest {
     @Test
     fun assessmentFlagsThinOverlap() {
         val assessment = GroundSampleDistance.assess(2.0, 160.0, SurveyCamera.ZENMUSE_P1, 50, 40)
-        assertTrue(assessment.notes.any { it.contains("60%") })
-        assertTrue(assessment.notes.any { it.contains("50%") })
-        assertTrue(assessment.notes.any { it.contains("perpendicular") || it.contains("opposite") })
+        assertTrue(assessment.notes.any { it.contains("60 %") })
+        assertTrue(assessment.notes.any { it.contains("50 %") })
+        assertTrue(assessment.notes.any { it.contains("lo contrario") || it.contains("opposite") })
     }
 
     @Test
     fun assessmentOfAConformingSolutionIsReliable() {
         val assessment = GroundSampleDistance.assess(2.0, 159.7, SurveyCamera.ZENMUSE_P1, 80, 70)
         assertTrue(assessment.isReliable)
-        assertTrue(assessment.notes.any { it.contains("Validate") })
+        assertTrue(assessment.notes.any { it.contains("Valida") })
         // 159.7 m is above the caution threshold, and that is a note, not a veto.
         assertTrue(assessment.notes.any { it.contains("120 m") })
     }
@@ -186,7 +186,7 @@ class GroundSampleDistanceTest {
     @Test
     fun assessmentWarnsAboutVariableLens() {
         val assessment = GroundSampleDistance.assess(2.0, 100.0, SurveyCamera.IPHONE_15_PRO, 80, 70)
-        assertTrue(assessment.notes.any { it.contains("variable lens") })
+        assertTrue(assessment.notes.any { it.contains("objetivo variable") })
     }
 
     @Test

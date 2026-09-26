@@ -63,7 +63,7 @@ class DroneCapabilitiesTest {
 
         assertFalse(result.waypointUploadSupported)
         assertFalse(result.waypointExecutionSupported)
-        assertTrue(result.reason.contains("profile"))
+        assertTrue(result.reason.contains("perfil revisado"))
     }
 
     @Test
@@ -111,7 +111,7 @@ class DroneCapabilitiesTest {
 
             assertFalse(product, result.waypointUploadSupported)
             assertFalse(product, result.waypointExecutionSupported)
-            assertTrue(product, result.reason.contains("do not support waypoint missions"))
+            assertTrue(product, result.reason.contains("no admite misiones wayline"))
         }
     }
 
@@ -148,8 +148,8 @@ class DroneCapabilitiesTest {
 
         assertFalse(result.waypointUploadSupported)
         assertFalse(result.waypointExecutionSupported)
-        assertTrue(result.reason, result.reason.contains("does not support waypoint missions"))
-        assertFalse(result.reason, result.reason.contains("profile"))
+        assertTrue(result.reason, result.reason.contains("no admite misiones wayline"))
+        assertFalse(result.reason, result.reason.contains("perfil revisado"))
         assertEquals(FirmwareWaypointSupport.NOT_SUPPORTED, result.firmwareWaypointSupport)
     }
 

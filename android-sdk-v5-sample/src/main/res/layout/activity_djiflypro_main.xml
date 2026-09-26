@@ -14,14 +14,14 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="DJIFlyPro"
+            android:text="@string/dash_title"
             style="@style/pro_title" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="2dp"
-            android:text="Control y planificación de vuelos DJI"
+            android:text="@string/dash_subtitle"
             style="@style/pro_caption" />
 
         <LinearLayout
@@ -36,7 +36,7 @@
                 android:id="@+id/dashboard_connection_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Estado del sistema"
+                android:text="@string/dash_system_status"
                 style="@style/pro_section" />
 
             <TextView
@@ -44,7 +44,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
-                android:text="Iniciando DJI Mobile SDK…"
+                android:text="@string/dash_starting"
                 style="@style/pro_body" />
 
             <TextView
@@ -52,7 +52,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
-                android:text="Producto: pendiente"
+                android:text="@string/dash_product_pending"
                 style="@style/pro_caption" />
 
             <ProgressBar
@@ -68,39 +68,39 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Operaciones"
+            android:text="@string/dash_operations"
             style="@style/pro_section" />
 
         <Button
             android:id="@+id/button_control_center"
             style="@style/pro_button"
-            android:text="Centro de control" />
+            android:text="@string/dash_control_center" />
 
         <Button
             android:id="@+id/button_cartography"
             style="@style/pro_button"
-            android:text="Cartografía" />
+            android:text="@string/dash_cartography" />
 
         <Button
             android:id="@+id/button_mission_planner"
             style="@style/pro_button"
-            android:text="Planificar misión" />
+            android:text="@string/dash_mission_planner" />
 
         <Button
             android:id="@+id/button_algorithm_library"
             style="@style/pro_button"
-            android:text="Algoritmos y recetas" />
+            android:text="@string/dash_algorithms" />
 
         <Button
             android:id="@+id/button_documentation"
             style="@style/pro_button_secondary"
-            android:text="Documentación y compatibilidade" />
+            android:text="@string/dash_documentation" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="14dp"
-            android:text="Última misión"
+            android:text="@string/dash_last_mission"
             style="@style/pro_section" />
 
         <TextView
@@ -109,7 +109,7 @@
             android:layout_height="wrap_content"
             android:background="@drawable/pro_card_background"
             android:padding="14dp"
-            android:text="No hay misiones guardadas"
+            android:text="@string/dash_no_missions"
             style="@style/pro_caption" />
 
         <TextView
@@ -119,7 +119,7 @@
             android:layout_marginTop="16dp"
             android:padding="12dp"
             android:background="@drawable/pro_warning_background"
-            android:text="DJIFlyPro no sustituye las comprobaciones de vuelo. Verifica espacio aéreo, obstáculos, permisos, batería y mantenimiento antes de despegar."
+            android:text="@string/dash_safety_notice"
             style="@style/pro_caption" />
     </LinearLayout>
 </ScrollView>

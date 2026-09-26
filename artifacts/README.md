@@ -9,8 +9,8 @@ La compilación release incluye R8 y lint vital.
 
 | Archivo | Tamaño | SHA-256 |
 |---|---:|---|
-| `DJIFlyPro-1.1.0-alpha.3.apk` | 205,002,230 bytes | `df27ec9dbdbd9d7193a4401edf22e7b7ee12cd4b36251b617e06d143bb4b0c34` |
-| `DJIFlyPro-1.1.0-alpha.3.aab` | 198,917,596 bytes | `a089cd197832ca75bd6d757b13d61c51d922ab5a000719b3c7ae446d0ae72ee7` |
+| `DJIFlyPro-1.1.0-alpha.4.apk` | 205,113,194 bytes | `4f95403da5aca91af9dcaa1ae45ec671912e441e7b395938eed7ad48c1a860cd` |
+| `DJIFlyPro-1.1.0-alpha.4.aab` | 198,923,664 bytes | `c6734bde078f232378d7cd320af65149c4fbc92294c2d0a57f86608a268963fe` |
 
 **Solo se publica el APK release.** El APK debug no va en la release, y no por
 tamaño:
@@ -50,7 +50,7 @@ DJIFlyPro release preflight failed: AIRCRAFT_API_KEY is empty.
 - `com.dji.sdk.API_KEY` presente en el manifiesto de los **tres** binarios
   (APK release, APK debug y AAB), verificado con `aapt2 dump xmltree` y
   extrayendo el manifiesto del AAB.
-- `DJIFlyPro-1.1.0-alpha.3.apk`: `apksigner verify --verbose` correcto; APK
+- `DJIFlyPro-1.1.0-alpha.4.apk`: `apksigner verify --verbose` correcto; APK
   Signature Scheme v2 y v3, un firmante `CN=DJIFlyPro Local Test`, RSA 2048,
   y `android:debuggable` ausente. La v1 (JAR) no se emite:
   AGP la omite con `minSdk 24` porque la plataforma verifica la v2 por su
@@ -63,14 +63,15 @@ DJIFlyPro release preflight failed: AIRCRAFT_API_KEY is empty.
 - El APK contiene solo `lib/arm64-v8a`. Es lo que declara `abiFilters` y lo que
   instala en móviles y tablets ARM de 64 bits. No instala en emuladores x86_64
   ni en ARM de 32 bits; para eso hay que quitar el `abiFilters` y recompilar.
-- `DJIFlyPro-1.1.0-alpha.3.aab`: `jarsigner -verify` terminó con código 0.
-- Identidad: `com.djiflypro.app`, `versionName 1.1.0-alpha.3`, `versionCode 4`,
+- `DJIFlyPro-1.1.0-alpha.4.aab`: `jarsigner -verify` terminó con código 0.
+- Identidad: `com.djiflypro.app`, `versionName 1.1.0-alpha.4`, `versionCode 5`,
   `minSdk 24`, `targetSdk 35`, `compileSdk 35`.
 - El APK y el manifiesto merged no declaran `MANAGE_EXTERNAL_STORAGE`.
 - El asset `assets/validated_wpml_profiles.json` está empaquetado y contiene una
   lista de perfiles vacía, por lo que la subida y la ejecución automática de
   misiones WPML siguen bloqueadas.
-- `lintDebug`: 0 errores.
+- `lintDebug`: 0 errores, y ni un `HardcodedText` en los layouts de DJIFlyPro.
+- Un único locale de recursos en el APK: la aplicación solo trae español.
 - `:sample:testDebugUnitTest`: 292 pruebas, 0 fallos.
 - `sha256sum -c SHA256SUMS.txt` sobre los binarios recién copiados, dentro del
   propio script, antes de que termine.
@@ -97,7 +98,7 @@ clave de producción y no debe usarse para publicar en Google Play.
 ## Release en GitHub
 
 Estos dos binarios están publicados como assets del release
-`v1.1.0-alpha.3`, junto con `SHA256SUMS.txt` y las notas de
+`v1.1.0-alpha.4`, junto con `SHA256SUMS.txt` y las notas de
 `artifacts/release-notes.md`.
 
 Cada build es una release nueva con su etiqueta. No se reemplazan los assets de

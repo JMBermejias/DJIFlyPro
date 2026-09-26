@@ -66,21 +66,21 @@ data class GroundControlPoint(
 
     fun validate(): ControlPointValidation {
         val errors = mutableListOf<String>()
-        if (id.isBlank()) errors += "The control point id is required"
-        if (code.isBlank()) errors += "The control point code is required"
-        if (!latitude.isFinite() || latitude !in -90.0..90.0) errors += "Latitude is outside WGS 84"
-        if (!longitude.isFinite() || longitude !in -180.0..180.0) errors += "Longitude is outside WGS 84"
-        if (heightMeters != null && !heightMeters.isFinite()) errors += "The height must be a number"
+        if (id.isBlank()) errors += "El identificador del punto de control es obligatorio"
+        if (code.isBlank()) errors += "El código del punto de control es obligatorio"
+        if (!latitude.isFinite() || latitude !in -90.0..90.0) errors += "La latitud está fuera del rango WGS 84"
+        if (!longitude.isFinite() || longitude !in -180.0..180.0) errors += "La longitud está fuera del rango WGS 84"
+        if (heightMeters != null && !heightMeters.isFinite()) errors += "La altura debe ser un número"
         if (horizontalAccuracyMillimeters != null &&
             (!horizontalAccuracyMillimeters.isFinite() || horizontalAccuracyMillimeters <= 0.0)
         ) {
-            errors += "The horizontal accuracy must be greater than 0 mm"
+            errors += "La exactitud horizontal debe ser mayor que 0 mm"
         }
         if (isCheckPoint && target == ControlPointTarget.FEATURE) {
-            errors += "A check point on a terrain feature cannot be measured precisely; use it only as a rough check"
+            errors += "Un punto de verificación sobre un elemento del terreno no se puede medir con precisión; úsalo solo como comprobación aproximada"
         }
         if (!isCheckPoint && !target.isSuitableAsControl) {
-            errors += "${target.displayName} is not a valid control target; use it as a check point instead"
+            errors += "${target.displayName} no es una diana de control válida; úsalo como punto de verificación"
         }
         return ControlPointValidation(errors)
     }
@@ -149,23 +149,23 @@ object ControlNetwork {
 
         val valid = points.filter { it.validate().isValid }
         if (valid.size < points.size) {
-            errors += "${points.size - valid.size} control point(s) are not usable and were ignored"
+            errors += "${points.size - valid.size} punto(s) de control no son utilizables y se han descartado"
         }
         if (valid.isEmpty()) {
-            errors += "The block has no usable ground control"
+            errors += "El bloque no tiene control terrestre utilizable"
             return ControlNetworkAssessment(errors, warnings, ControlNetworkMetrics())
         }
 
         val control = valid.filter { !it.isCheckPoint }
         val check = valid.filter { it.isCheckPoint }
         if (control.size < MIN_CONTROL_POINTS) {
-            errors += "At least $MIN_CONTROL_POINTS control points are needed to georeference a block, found ${control.size}"
+            errors += "Hacen falta al menos $MIN_CONTROL_POINTS puntos de control para georreferenciar un bloque; hay ${control.size}"
         }
         if (check.size < MIN_CHECK_POINTS && control.size >= MIN_CONTROL_POINTS) {
-            warnings += "Without an independent check point the block cannot be validated, only adjusted"
+            warnings += "Sin un punto de verificación independiente el bloque no se puede validar, solo ajustar"
         }
         valid.filter { it.target == ControlPointTarget.FEATURE && !it.isCheckPoint }.forEach { point ->
-            errors += "${point.code} is a terrain feature used as control; its measured accuracy is not controllable"
+            errors += "${point.code} es un elemento del terreno usado como control; su exactitud medida no es controlable"
         }
 
         if (valid.size >= 2) {
@@ -177,7 +177,7 @@ object ControlNetwork {
                 }
             }
             if (minSeparation < 5.0) {
-                warnings += "Two control points are less than 5 m apart. Points that close do not constrain the block."
+                warnings += "Dos puntos de control están a menos de 5 m. Tan juntos no condicionan el bloque."
             }
         }
 
@@ -188,8 +188,8 @@ object ControlNetwork {
 
         val blockCoverage = if (blockRadiusMeters > 0.0) (maxControlRadius / blockRadiusMeters).coerceAtMost(1.0) else 0.0
         if (control.size >= 2 && blockRadiusMeters > 0.0 && blockCoverage < MIN_BLOCK_COVERAGE) {
-            warnings += "Control only reaches ${(blockCoverage * 100).toInt()}% of the block radius. " +
-                "A block needs control near its edges, not only in the middle."
+            warnings += "El control solo llega al ${(blockCoverage * 100).toInt()} % del radio del bloque. " +
+                "Un bloque necesita control cerca de sus bordes, no solo en el centro."
         }
 
         if (controlOffsets.size >= 3) {
@@ -198,21 +198,21 @@ object ControlNetwork {
             val shorter = minOf(northExtent, eastExtent)
             val longer = maxOf(northExtent, eastExtent)
             if (shorter < 0.001) {
-                warnings += "All control lies on one line. A collinear network cannot resolve rotation and will " +
-                    "leave the block tilted."
+                warnings += "Todo el control está en una línea. Una red colineal no puede resolver la rotación y " +
+                    "dejará el bloque inclinado."
             } else if (longer / shorter > MAX_ELONGATION_RATIO) {
-                warnings += "Control is ${(longer / shorter).toInt()} times longer in one direction than the other. " +
-                    "Spread it across the short axis of the block too."
+                warnings += "El control es ${(longer / shorter).toInt()} veces más largo en una dirección que en la otra. " +
+                    "Repártelo también por el eje corto del bloque."
             }
         }
 
         val worstAccuracy = control.mapNotNull { it.horizontalAccuracyMillimeters }.maxOrNull()
         if (worstAccuracy != null && worstAccuracy > 50.0) {
-            warnings += "The worst control accuracy is ${worstAccuracy.toInt()} mm. " +
-                "The block cannot be more accurate than its control."
+            warnings += "La peor exactitud de control es de ${worstAccuracy.toInt()} mm. " +
+                "El bloque no puede ser más exacto que su control."
         }
         if (control.isNotEmpty() && control.all { it.heightMeters == null }) {
-            warnings += "No control has a height. The block can only be georeferenced in 2D."
+            warnings += "Ningún punto de control tiene altura. El bloque solo se puede georreferenciar en 2D."
         }
 
         return ControlNetworkAssessment(

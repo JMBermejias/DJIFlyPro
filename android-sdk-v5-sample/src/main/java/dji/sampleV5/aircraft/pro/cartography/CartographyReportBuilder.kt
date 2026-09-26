@@ -143,7 +143,7 @@ object CartographyReportBuilder {
 
             appendLine("""  "checks": {""")
             appendLine("""    "profileValid": ${profileValidation?.isValid ?: false},""")
-            appendLine("""    "profileErrors": ${stringList(profileValidation?.errors ?: listOf("This plan has no cartography profile"))},""")
+            appendLine("""    "profileErrors": ${stringList(profileValidation?.errors ?: listOf("Este plan no tiene perfil cartográfico"))},""")
             appendLine("""    "controlErrors": ${stringList(network.errors)},""")
             appendLine("""    "controlWarnings": ${stringList(network.warnings)},""")
             appendLine("""    "planWarnings": ${stringList(plan.warnings)},""")
@@ -151,10 +151,10 @@ object CartographyReportBuilder {
             appendLine("  },")
 
             appendLine("""  "limitations": [""")
-            appendLine("""    "This document describes a plan. The block has not been flown and no imagery exists yet.",""")
-            appendLine("""    "Ground sample distance holds over ground of known height. Terrain relief shifts the effective resolution.",""")
-            appendLine("""    "The accuracy of a reconstructed product is bounded by its ground control, not by this plan.",""")
-            appendLine("""    "Airspace, obstacles, people, permissions and local regulations are not checked by this document."""")
+            appendLine("""    "Este documento describe una planificación. El bloque no se ha volado y todavía no existe ortofotografía ni imagen.",""")
+            appendLine("""    "La resolución de suelo se cumple sobre terreno de altura conocida. El relieve desplaza la resolución efectiva.",""")
+            appendLine("""    "La exactitud de un producto reconstruido la limita su control terrestre, no esta planificación.",""")
+            appendLine("""    "Este documento no comprueba espacio aéreo, obstáculos, personas, permisos ni normativa local."""")
             appendLine("  ]")
             append("}")
         }

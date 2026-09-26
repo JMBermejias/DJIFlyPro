@@ -32,6 +32,7 @@
         android:name="dji.sampleV5.aircraft.DJIAircraftApplication"
         android:allowBackup="false"
         android:icon="@drawable/ic_djiflypro"
+        android:localeConfig="@xml/locales_config"
         android:label="@string/app_name_aircraft"
         android:supportsRtl="true"
         android:usesCleartextTraffic="false"

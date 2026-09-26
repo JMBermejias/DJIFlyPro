@@ -1,0 +1,362 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Strings de DJIFlyPro. Español como idioma por defecto: la aplicación se
+  entrega en español y así se ve en español aunque el dispositivo esté en
+  otro idioma. La versión inglesa está en values-en/strings_pro.xml.
+
+  Deliberadamente NO se sustituye strings.xml, que es del sample de DJI: sus
+  406 cadenas no las usa ninguna pantalla alcanzable y borrarlas rompería el
+  código de ejemplo que se conserva como referencia.
+-->
+<resources>
+
+    <string name="app_name_aircraft" translatable="false">DJIFlyPro</string>
+
+    <!-- ===== Panel principal ===== -->
+    <string name="dash_title" translatable="false">DJIFlyPro</string>
+    <string name="dash_subtitle">Control y planificación de vuelos DJI</string>
+    <string name="dash_system_status">Estado del sistema</string>
+    <string name="dash_starting">Iniciando DJI Mobile SDK…</string>
+    <string name="dash_product_pending">Producto: pendiente</string>
+    <string name="dash_operations">Operaciones</string>
+    <string name="dash_control_center">Centro de control</string>
+    <string name="dash_cartography">Cartografía</string>
+    <string name="dash_mission_planner">Planificar misión</string>
+    <string name="dash_algorithms">Algoritmos y recetas</string>
+    <string name="dash_documentation">Documentación y compatibilidad</string>
+    <string name="dash_last_mission">Última misión</string>
+    <string name="dash_no_missions">No hay misiones guardadas</string>
+    <string name="dash_safety_notice">DJIFlyPro no sustituye las comprobaciones de vuelo. Verifica espacio aéreo, obstáculos, permisos, batería y mantenimiento antes de despegar.</string>
+    <string name="dash_product_connected">Producto conectado: DJI %1$s</string>
+    <string name="dash_product_disconnected">Producto: no conectado</string>
+    <string name="dash_permissions_denied">Se denegaron algunos permisos; el control del aircraft puede no estar disponible</string>
+    <string name="dash_last_mission_value">%1$s\n%2$d puntos · %3$s km</string>
+
+    <!-- ===== Centro de control ===== -->
+    <string name="control_center_title">Centro de control de vuelo</string>
+    <string name="item_control_center_title">Centro de control de vuelo</string>
+    <string name="item_control_center_description">Control de vuelo y cámara con barreras de seguridad</string>
+    <string name="control_flight_section">Vuelo</string>
+    <string name="control_camera_section">Cámara y automatización</string>
+    <string name="control_safety_notice">El vuelo automático y la captura temporizada necesitan un aircraft conectado, un operador autorizado, un punto de origen válido y una comprobación manual de seguridad. Ten el control remoto siempre listo.</string>
+    <string name="control_telemetry_format">Aircraft: %1$s\nControl remoto: %2$s\nBatería: %3$s\nNivel GPS: %4$d\nAltura: %5$s m</string>
+    <string name="control_safety_ready">Preparado: %1$s</string>
+    <string name="control_safety_blocked">Bloqueado: %1$s</string>
+    <string name="control_confirm_takeoff">Confirma que la zona está despejada, que el punto de origen es válido y que el control remoto está listo.</string>
+    <string name="control_confirm_land">Confirma la orden de aterrizaje. Ten el control remoto listo.</string>
+    <string name="control_confirm_return_home">Confirma la orden de regreso a casa. El aircraft usará el punto de origen guardado.</string>
+    <string name="btn_control_takeoff">Despegar</string>
+    <string name="btn_control_land">Aterrizar</string>
+    <string name="btn_control_return_home">Regresar a casa</string>
+    <string name="btn_control_enable_virtual_stick">Activar joysticks virtuales</string>
+    <string name="btn_control_disable_virtual_stick">Desactivar joysticks virtuales</string>
+    <string name="btn_control_take_photo">Hacer foto</string>
+    <string name="btn_control_start_recording">Iniciar grabación</string>
+    <string name="btn_control_stop_recording">Detener grabación</string>
+    <string name="btn_control_start_capture">Iniciar captura temporizada de 5 fotos</string>
+    <string name="btn_control_stop_capture">Detener la automatización de cámara</string>
+
+    <string name="control_state_connected">conectado</string>
+    <string name="control_state_disconnected">desconectado</string>
+    <string name="control_not_available">N/D</string>
+    <string name="control_audio_denied">Permiso de audio denegado; no se inicia la grabación</string>
+    <string name="control_virtual_sticks_on">Joysticks virtuales activados</string>
+    <string name="control_virtual_sticks_off">Joysticks virtuales desactivados</string>
+    <string name="control_automation_stopped">Automatización de cámara detenida</string>
+    <string name="control_camera_status">%1$s: %2$s</string>
+    <string name="control_command_accepted">Orden aceptada</string>
+
+    <string name="camera_photo_accepted">Orden de foto aceptada</string>
+    <string name="camera_photo_failed">No se pudo hacer la foto</string>
+    <string name="camera_recording_started">Grabación iniciada</string>
+    <string name="camera_recording_start_failed">No se pudo iniciar la grabación</string>
+    <string name="camera_recording_stopped">Grabación detenida</string>
+    <string name="camera_recording_stop_failed">No se pudo detener la grabación</string>
+    <string name="camera_capture_plan_invalid">Plan de captura no válido</string>
+    <string name="camera_capturing">Capturando %1$d fotos</string>
+    <string name="camera_timed_capture_started">Captura temporizada iniciada</string>
+    <string name="camera_recording_for">Grabando %1$d segundos</string>
+    <string name="camera_timed_recording_completed">Grabación temporizada completada</string>
+    <string name="camera_timed_capture_completed">Captura temporizada completada</string>
+    <string name="camera_recording_plan_invalid">Plan de grabación no válido</string>
+
+    <string name="camera_state_idle">Inactivo</string>
+    <string name="camera_state_capturing">Capturando</string>
+    <string name="camera_state_recording">Grabando</string>
+    <string name="camera_state_error">Error</string>
+
+    <string name="safety_reason_not_registered">SDK no registrado</string>
+    <string name="safety_reason_battery_too_low">Batería demasiado baja</string>
+    <string name="safety_reason_home_not_set">Punto de origen sin definir</string>
+    <string name="safety_reason_gps_too_weak">Señal GPS demasiado débil</string>
+    <string name="safety_reason_low_battery_warning">Aviso de batería baja</string>
+    <string name="safety_reason_motors_already_on">Motores ya en marcha</string>
+    <string name="safety_reason_aircraft_disconnected">Aircraft desconectado</string>
+    <string name="safety_reason_remote_disconnected">Control remoto desconectado</string>
+    <string name="safety_reason_battery_unknown">Estado de batería desconocido</string>
+    <string name="safety_reason_not_flying">No está en vuelo</string>
+
+    <!-- ===== Planificador de misiones ===== -->
+    <string name="planner_title">Planificador de misiones</string>
+    <string name="planner_subtitle">Genera una ruta validada y expórtala como JSON, GeoJSON, KML o KMZ. La ejecución automática solo se habilita cuando el modelo y el firmware lo permiten.</string>
+    <string name="planner_work_type">Tipo de trabajo</string>
+    <string name="planner_block_center">Centro de la parcela (WGS84)</string>
+    <string name="planner_geometry_capture">Geometría y captura</string>
+    <string name="planner_cartography_button">Cartografía: calcular desde GSD</string>
+    <string name="planner_open_map">Ver en el mapa</string>
+    <string name="planner_pick_control">Añadir control desde el mapa</string>
+    <string name="planner_generate">Generar y validar misión</string>
+    <string name="planner_checking_compatibility">Comprobando compatibilidad del aircraft…</string>
+    <string name="planner_no_route">Todavía no hay una ruta generada.</string>
+    <string name="planner_no_profile">Sin perfil cartográfico. Usa «Cartografía» para definir resolución y solape.</string>
+    <string name="planner_export_json">Exportar mission.json</string>
+    <string name="planner_export_kmz">Exportar KMZ/WPML</string>
+    <string name="planner_export_geojson">Exportar GeoJSON</string>
+    <string name="planner_export_kml">Exportar KML</string>
+    <string name="planner_export_report">Exportar ficha de vuelo</string>
+    <string name="planner_export_validation">Exportar informe de validación</string>
+    <string name="planner_upload">Subir al aircraft</string>
+    <string name="planner_start">Iniciar misión</string>
+    <string name="planner_pause">Pausar / reanudar</string>
+    <string name="planner_resume">Reanudar misión</string>
+    <string name="planner_stop">Detener misión</string>
+    <string name="planner_manual_guidance">Guía de vuelo manual</string>
+    <string name="planner_parameters_applied">Parámetros cartográficos aplicados. Genera de nuevo la ruta para usarlos.</string>
+
+    <string name="planner_hint_latitude">Latitud, por ejemplo 40.4168</string>
+    <string name="planner_hint_longitude">Longitud, por ejemplo -3.7038</string>
+    <string name="planner_hint_length">Longitud de la parcela / fachada (m)</string>
+    <string name="planner_hint_width">Ancho de la parcela (m)</string>
+    <string name="planner_hint_height">Altura de fachada / zona (m)</string>
+    <string name="planner_hint_bearing">Rumbo de la línea (grados, 0 = norte)</string>
+    <string name="planner_hint_altitude">Altura de vuelo (m)</string>
+    <string name="planner_hint_standoff">Distancia de seguridad a la fachada (m)</string>
+    <string name="planner_hint_line_spacing">Separación entre líneas / alturas (m)</string>
+    <string name="planner_hint_photo_spacing">Separación entre fotos (m)</string>
+    <string name="planner_hint_overlap">Solape longitudinal (%)</string>
+    <string name="planner_hint_speed">Velocidad (m/s)</string>
+    <string name="planner_hint_name">Nombre de la misión</string>
+
+    <string name="planner_summary_format">Misión: %1$s\nPuntos: %2$d\nDistancia: %3$s km\nDuración estimada: %4$s min\nFotos: %5$d\nID: %6$s</string>
+    <string name="planner_above_automatic_ceiling">Esta ruta está por encima de %1$d m: no puede ejecutarse como misión automática, solo con guía manual.</string>
+    <string name="planner_bullet">• %1$s</string>
+
+    <!-- ===== Cartografía ===== -->
+    <string name="cartography_title">Cartografía</string>
+    <string name="cartography_subtitle">Define la resolución dellevantada y el solape. La altura de vuelo y las separaciones se calculan a partir del sensor y del objetivo, no al revés.</string>
+    <string name="cartography_camera">Cámara</string>
+    <string name="cartography_resolution_overlap">Resolución y solape</string>
+    <string name="cartography_reference_block">Referencia de altura y bloque</string>
+    <string name="cartography_terrain_following">Seguir el terreno</string>
+    <string name="cartography_cross_track">Pasada cruzada (bloque en perpendicular)</string>
+    <string name="cartography_area">Parcela que se quiere cubrir</string>
+    <string name="cartography_calculate">Calcular parámetros</string>
+    <string name="cartography_intro">Introduce la resolución, el solape y la parcela para calcular los parámetros de vuelo.</string>
+    <string name="cartography_apply">Aplicar al planificador</string>
+    <string name="cartography_control_section">Puntos de control</string>
+    <string name="cartography_control_intro">Un bloque sin control no se puede georreferenciar. Mínimo 4 puntos de control y 1 de verificación, repartidos por los bordes.</string>
+    <string name="cartography_add_control">Añadir punto de control</string>
+    <string name="cartography_pick_control">Elegir punto en el mapa</string>
+    <string name="cartography_no_control">Sin puntos de control.</string>
+    <string name="cartography_delivery">Entrega</string>
+    <string name="cartography_export_geojson">Exportar GeoJSON</string>
+    <string name="cartography_export_kml">Exportar KML</string>
+    <string name="cartography_export_report">Exportar ficha de vuelo (JSON)</string>
+    <string name="cartography_open_map">Ver en el mapa</string>
+    <string name="cartography_hint_gsd">Resolución objetivo (cm/px, por ejemplo 2)</string>
+    <string name="cartography_hint_forward">Solape longitudinal (%)</string>
+    <string name="cartography_hint_side">Solape transversal (%)</string>
+    <string name="cartography_hint_length">Longitud de la parcela (m)</string>
+    <string name="cartography_hint_width">Ancho de la parcela (m)</string>
+    <string name="cartography_hint_latitude">Latitud del centro (WGS84)</string>
+    <string name="cartography_hint_longitude">Longitud del centro (WGS84)</string>
+
+    <string name="cartography_sensor">Sensor: %1$s × %2$s mm</string>
+    <string name="cartography_lens">Objetivo: %1$s mm</string>
+    <string name="cartography_camera_resolution">Resolución: %1$d × %2$d px</string>
+    <string name="cartography_fov">Campo de visión: %1$s° × %2$s°</string>
+    <string name="cartography_altitude">Altura de vuelo: %1$s m</string>
+    <string name="cartography_expected_gsd">Resolución prevista: %1$s cm/px</string>
+    <string name="cartography_footprint">Huella de la foto: %1$s × %2$s m</string>
+    <string name="cartography_line_spacing">Separación entre líneas: %1$s m</string>
+    <string name="cartography_photo_spacing">Separación entre fotos: %1$s m</string>
+    <string name="cartography_line_count">Líneas de vuelo: %1$d</string>
+    <string name="cartography_photos_per_line">Fotos por línea: %1$d</string>
+    <string name="cartography_estimated_photos">Fotos estimadas: %1$d</string>
+    <string name="cartography_area_result">Superficie: %1$s ha</string>
+    <string name="cartography_effective_overlap">Solape efectivo: %1$s×</string>
+    <string name="cartography_automatic_ok">Ejecución automática: disponible hasta %1$d m</string>
+    <string name="cartography_automatic_blocked">Ejecución automática: bloqueada por altura, se vuela con guía manual</string>
+    <string name="cartography_camera_line">Cámara: %1$s</string>
+    <string name="cartography_target_gsd">Resolución objetivo: %1$s cm/px</string>
+    <string name="cartography_overlap_pair">Solape: %1$d%% longitudinal, %2$d%% transversal</string>
+    <string name="cartography_altitude_reference">Referencia de altura: %1$s</string>
+    <string name="cartography_control_count">Puntos de control: %1$d</string>
+    <string name="cartography_control_added">Punto %1$s añadido desde el mapa.</string>
+    <string name="cartography_network_counts">%1$d de control, %2$d de verificación</string>
+    <string name="cartography_network_coverage">Cobertura de la parcela: %1$d%% del radio</string>
+    <string name="cartography_network_ok">Red de control utilizable para georreferenciar el bloque.</string>
+    <string name="cartography_network_needs_center">Introduce el centro de la parcela para comprobar la red de control.</string>
+    <string name="cartography_control_measured"> · medida ±%1$d mm</string>
+    <string name="cartography_control_source">\nOrigen: %1$s</string>
+    <string name="cartography_target_with_accuracy">%1$s (±%2$d mm)</string>
+
+    <!-- ===== Mapa ===== -->
+    <string name="map_loading">Cargando el mapa…</string>
+    <string name="map_support_notice">El mapa es una vista de apoyo. La ruta y la ficha de vuelo son la referencia; el mapa no verifica nada.</string>
+    <string name="map_use_centre">Usar el centro del mapa como punto de control</string>
+    <string name="map_centre_block">Centrar en la parcela</string>
+    <string name="map_no_plan_title">Sin bloque que mostrar</string>
+    <string name="map_no_plan_body">Genera primero una ruta en el planificador.</string>
+    <string name="map_no_plan_status">No hay ninguna ruta guardada en este dispositivo.</string>
+    <string name="map_init_failed">El mapa no se ha podido iniciar: %1$s. La ruta y la ficha de vuelo siguen siendo la referencia.</string>
+    <string name="map_legend">Parcela en azul, líneas de vuelo en verde, control en rojo. El mapa es una vista de apoyo: no verifica nada.</string>
+    <string name="map_no_centre_title">Sin posición</string>
+    <string name="map_no_centre_body">El mapa no ha devuelto el centro. Mueve el mapa e inténtalo de nuevo.</string>
+
+    <!-- ===== Guía de vuelo manual ===== -->
+    <string name="guidance_title">Guía de vuelo manual</string>
+    <string name="guidance_subtitle">La app no vuela el aircraft. Tú pilotas con el mando y la app te indica hacia dónde y a qué altura. Esta guía sustituye a las misiones WPML en aircraft cuyo firmware no las soporta.</string>
+    <string name="guidance_mark_reached">Marcar como alcanzado</string>
+    <string name="guidance_previous">Punto anterior</string>
+    <string name="guidance_skip">Saltar punto</string>
+    <string name="guidance_restart">Reiniciar guía</string>
+    <string name="guidance_no_mission">No hay ninguna misión guardada. Genera una en el planificador.</string>
+    <string name="guidance_loaded">Misión %1$s: %2$d puntos válidos, %3$d descartados por coordenadas no utilizables.</string>
+    <string name="guidance_registration_failed">No se han podido registrar las claves de telemetría. La guía no mostrará datos hasta que se resuelva.</string>
+    <string name="guidance_no_usable">La misión no tiene puntos de vuelo utilizables.</string>
+    <string name="guidance_completed">Guía completada: %1$d puntos.</string>
+    <string name="guidance_ready">LISTO</string>
+    <string name="guidance_progress">Punto %1$d de %2$d  ·  %3$d%%</string>
+    <string name="guidance_target_altitude">\nAltitud objetivo: %1$s m</string>
+    <string name="guidance_metric_distance">Distancia: </string>
+    <string name="guidance_metric_bearing">   Rumbo: </string>
+    <string name="guidance_metric_nose">   Morro: </string>
+    <string name="guidance_metric_altitude">   Altitud: </string>
+    <string name="guidance_metric_home">   A casa: </string>
+    <string name="guidance_metric_battery">Batería: </string>
+    <string name="guidance_metric_gps">   GPS: </string>
+
+    <!-- ===== Algoritmos ===== -->
+    <string name="algorithm_title">Algoritmos y recetas</string>
+    <string name="algorithm_subtitle">Importa recetas JSON declarativas y auditables. No se ejecuta código arbitrario descargado.</string>
+    <string name="algorithm_import">Importar receta JSON</string>
+    <string name="algorithm_loading">Cargando recetas…</string>
+    <string name="algorithm_imported">Receta importada: %1$s</string>
+    <string name="algorithm_import_failed">No se pudo importar</string>
+    <string name="algorithm_invalid">Receta inválida</string>
+    <string name="algorithm_count">%1$d recetas disponibles. Solo se admiten JSON declarativos validados.</string>
+    <string name="algorithm_card_title">Algoritmo</string>
+    <string name="algorithm_card_use">Usar en el planificador</string>
+    <string name="algorithm_metadata">%1$s · v%2$s · %3$s · %4$s</string>
+
+    <!-- ===== Documentación ===== -->
+    <string name="doc_title">Compatibilidad y seguridad</string>
+    <string name="doc_sdk">DJIFlyPro V5 usa DJI Mobile SDK V5.18.0. El registro de la aplicación y la clave de DJI son obligatorios para conectar el aircraft.</string>
+    <string name="doc_phantom4">El Phantom 4 pertenece al SDK V4 heredado. Esta APK V5 no intenta mezclar ambos SDK; consulta la variante Legacy antes de usarla con un Phantom 4.</string>
+    <string name="doc_mini3">El Mini 3 puede aparecer como producto compatible con telemetría, pero la ejecución de WPML a bordo no está garantizada en esta versión. El planificador permite exportar el plan y evita enviarlo si la capacidad no está verificada.</string>
+    <string name="doc_real_operation">Para una operación real: comprueba la versión de firmware, el espacio aéreo, el regreso a casa, la altura legal, los obstáculos, la autorización de vuelo y las baterías antes de ejecutar.</string>
+    <string name="doc_back">Volver</string>
+
+    <!-- ===== Editor de punto de control ===== -->
+    <string name="gcp_dialog_title">Punto de control</string>
+    <string name="gcp_dialog_subtitle">Un punto de control se mide en el terreno con precisión conocida. La exactitud del producto final la limita la de estos puntos, no la del plan de vuelo.</string>
+    <string name="gcp_target_type">Tipo de punto</string>
+    <string name="gcp_role">Uso</string>
+    <string name="gcp_save">Guardar punto</string>
+    <string name="gcp_hint_code">Código, por ejemplo CP01</string>
+    <string name="gcp_hint_latitude">Latitud (WGS84)</string>
+    <string name="gcp_hint_longitude">Longitud (WGS84)</string>
+    <string name="gcp_hint_height">Altura (m, opcional)</string>
+    <string name="gcp_hint_accuracy">Exactitud horizontal medida (mm, opcional)</string>
+    <string name="gcp_hint_source">Origen de la coordenada</string>
+    <string name="gcp_bad_number">Revisa los datos del punto</string>
+    <string name="gcp_latitude_number">La latitud debe ser un número</string>
+    <string name="gcp_longitude_number">La longitud debe ser un número</string>
+
+    <!-- ===== Avisos y errores comunes ===== -->
+    <string name="common_edit">Editar</string>
+    <string name="common_delete">Eliminar</string>
+    <string name="common_cancel">Cancelar</string>
+    <string name="common_ok">Aceptar</string>
+    <string name="common_error_io">Error de E/S</string>
+    <string name="common_error_msdk">Error de MSDK</string>
+    <string name="common_error_wpml">Error de WPML</string>
+    <string name="common_error_generation">Error de generación</string>
+    <string name="common_error_planning">Error de planificación</string>
+    <string name="common_error_export">No se pudo exportar</string>
+    <string name="common_field_required">%1$s es obligatorio</string>
+    <string name="common_field_number">%1$s debe ser un número</string>
+
+    <!-- ===== Diálogos del planificador ===== -->
+    <string name="dialog_no_position_title">Sin posición</string>
+    <string name="dialog_no_mission_title">No hay misión</string>
+    <string name="dialog_no_mission_body">Genera o carga una misión antes de abrir la guía</string>
+    <string name="dialog_check_parameters">Revisa los parámetros</string>
+    <string name="dialog_invalid_parameters">Parámetros inválidos</string>
+    <string name="dialog_check_block">Revisa la parcela</string>
+    <string name="dialog_invalid_block">Valor inválido</string>
+    <string name="dialog_cannot_calculate">No se pudo calcular</string>
+    <string name="dialog_invalid_profile">Configuración no válida</string>
+    <string name="dialog_invalid_mission">La misión no es válida</string>
+    <string name="dialog_cannot_generate">No se pudo generar la ruta</string>
+    <string name="dialog_cannot_build_kmz">No se pudo crear el KMZ</string>
+    <string name="dialog_mission_invalid">Misión no válida</string>
+    <string name="dialog_execution_blocked">Ejecución bloqueada</string>
+    <string name="dialog_mission_busy">Misión ocupada</string>
+    <string name="dialog_mission_busy_body">Espera a que la misión actual termine o deténla antes de subir otra.</string>
+    <string name="dialog_mission_unavailable">Misión no disponible</string>
+    <string name="dialog_mission_not_enabled">Misión no habilitada</string>
+    <string name="dialog_mission_not_enabled_body">La conexión, el registro o el firmware cambiaron durante la subida; no se habilita el inicio.</string>
+    <string name="dialog_no_waylines">Misión sin waylines</string>
+    <string name="dialog_no_waylines_body">El aircraft no devolvió waylines válidas.</string>
+    <string name="dialog_mission_uploaded">Misión subida</string>
+    <string name="dialog_waylines_found">Se han encontrado %1$d wayline(s). Selecciona cuáles ejecutar.</string>
+    <string name="dialog_upload_failed">Fallo al subir</string>
+    <string name="dialog_upload_start_failed">Fallo al iniciar la subida</string>
+    <string name="dialog_start_not_allowed">Inicio no permitido</string>
+    <string name="dialog_state_changed">La conexión, el firmware o el estado de la misión cambiaron.</string>
+    <string name="dialog_cannot_start">No se pudo iniciar</string>
+    <string name="dialog_not_ready">El aircraft no está en un estado listo para iniciar.</string>
+    <string name="dialog_select_waylines">Seleccionar waylines</string>
+    <string name="dialog_select_waylines_body">Selecciona explícitamente las waylines que forman parte de esta misión.</string>
+    <string name="dialog_review_start">Revisar inicio</string>
+    <string name="dialog_waylines_required">Waylines obligatorias</string>
+    <string name="dialog_wayline_item">Wayline %1$d</string>
+    <string name="dialog_confirm_start">Confirmar inicio de misión</string>
+    <string name="dialog_confirm_start_body">Comprueba en el aircraft y en el área de vuelo: obstáculos, personas, espacio aéreo, batería, GPS, control remoto y comportamiento ante pérdida de RC.\n\nWaylines seleccionadas: %1$s\nEsta confirmación es una ayuda, no una certificación de seguridad.</string>
+    <string name="dialog_accept_send">Aceptar y enviar</string>
+    <string name="dialog_waylines_changed">Waylines cambiaron</string>
+    <string name="dialog_waylines_changed_body">El aircraft no confirmó todas las waylines seleccionadas; vuelve a revisar la selección.</string>
+    <string name="dialog_waylines_started">Waylines %1$s</string>
+    <string name="dialog_mission_started">Misión iniciada</string>
+    <string name="dialog_mission_stopped">Misión detenida</string>
+    <string name="dialog_mission_stopped_body">El aircraft ha aceptado la orden de detención.</string>
+    <string name="dialog_control_blocked">Control bloqueado</string>
+    <string name="dialog_control_blocked_body">El aircraft o el registro SDK no están disponibles.</string>
+    <string name="dialog_mission_not_active">Misión no activa</string>
+    <string name="dialog_mission_not_active_body">No hay una misión activa que detener.</string>
+    <string name="dialog_mission_not_controllable">El aircraft no está ejecutando una misión controlable.</string>
+    <string name="dialog_cannot_change_state">No se pudo cambiar el estado</string>
+    <string name="dialog_cannot_stop">No se pudo detener</string>
+    <string name="dialog_kmz_missing">El KMZ local ya no existe.</string>
+    <string name="dialog_kmz_empty">El KMZ no existe o está vacío.</string>
+    <string name="dialog_incomplete_data">Datos incompletos</string>
+    <string name="dialog_cartography_no_result">La pantalla de cartografía no ha devuelto una solución utilizable.</string>
+    <string name="dialog_no_route">No hay ruta</string>
+    <string name="dialog_no_route_body">Genera primero una ruta para poder exportar.</string>
+    <string name="dialog_no_block">No hay bloque</string>
+    <string name="dialog_no_block_body">Genera primero una ruta en el planificador para poder exportar.</string>
+    <string name="dialog_control_invalid">Punto de control no válido</string>
+    <string name="dialog_control_duplicate">Punto duplicado</string>
+    <string name="dialog_control_duplicate_body">Ya hay otro punto a menos de 5 m de este.</string>
+    <string name="dialog_invalid_position">El mapa no ha devuelto una posición válida.</string>
+
+    <!-- ===== Estado del SDK ===== -->
+    <string name="sdk_api_key_missing">Falta la API Key de DJI: registra com.djiflypro.app en DJI Developer</string>
+    <string name="sdk_started">SDK iniciado</string>
+    <string name="sdk_registered">DJI Mobile SDK registrado correctamente</string>
+    <string name="sdk_not_registered_without_key">%1$s. Sin ella el SDK no se puede registrar.</string>
+    <string name="sdk_registration_error">Registro DJI: %1$s</string>
+    <string name="sdk_waiting_registration">Esperando registro</string>
+</resources>

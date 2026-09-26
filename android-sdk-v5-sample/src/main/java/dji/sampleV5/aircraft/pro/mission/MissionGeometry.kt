@@ -28,9 +28,9 @@ object MissionGeometry {
             MissionTemplate.FIELD,
             MissionTemplate.GRID -> areaPoints(request)
         }
-        require(points.isNotEmpty()) { "The planner did not generate any waypoints" }
+        require(points.isNotEmpty()) { "El planificador no ha generado ningún punto de vuelo" }
         require(points.size <= MissionValidator.MAX_WAYPOINTS) {
-            "The route contains ${points.size} waypoints; maximum is ${MissionValidator.MAX_WAYPOINTS}"
+            "La ruta contiene ${points.size} puntos de vuelo; el máximo es ${MissionValidator.MAX_WAYPOINTS}"
         }
 
         val distance = points.zipWithNext().sumOf { (a, b) -> distanceMeters(a.latitude, a.longitude, b.latitude, b.longitude) }
@@ -38,24 +38,24 @@ object MissionGeometry {
         val hoverSeconds = points.sumOf { it.hoverSeconds }
         val duration = distance / max(request.speedMps, 0.1) + photoCount * 1.5 + hoverSeconds
         val warnings = buildList {
-            add("Verify airspace, obstacles, people, property permissions and local regulations before flight.")
+            add("Verifica el espacio aéreo, los obstáculos, las personas, los permisos y la normativa local antes de volar.")
             if (request.template == MissionTemplate.FACADE) {
-                add("Facade routes use the requested bearing as the wall direction and stand off to its right; verify the aircraft side before upload.")
+                add("Las rutas de fachada usan el rumbo indicado como dirección del muro y se separan hacia su derecha; verifica de qué lado queda el aircraft antes de subir.")
             }
             if (request.overlapPercent < 35) {
-                add("Low overlap may reduce photogrammetry quality; validate the result on a test flight.")
+                add("Un solape bajo puede reducir la calidad fotogramétrica; valida el resultado en un vuelo de prueba.")
             }
             if (request.photoSpacingMeters > 10.0) {
-                add("Photo spacing is greater than 10 m; check that it matches the camera and required ground sample distance.")
+                add("La separación entre fotos es mayor de 10 m; comprueba que encaja con la cámara y la resolución de suelo requerida.")
             }
             if (points.size > 600) {
-                add("This is a large route. Verify aircraft memory, battery reserve and airspace limits.")
+                add("Esta ruta es extensa. Verifica la memoria del aircraft, la reserva de batería y los límites de espacio aéreo.")
             }
             if (request.template != MissionTemplate.FACADE) {
-                add("The block is covered by an area route, not by a single survey strip. " +
-                    "Overlapping lines only reconstruct if the aircraft holds a constant height over the terrain.")
+                add("El bloque se cubre con una ruta en área, no con una sola pasada de levantamiento. " +
+                    "Las líneas solapadas solo reconstruyen si el aircraft mantiene una altura constante sobre el terreno.")
                 if (request.routePattern == RoutePattern.CROSS) {
-                    add("The cross pass covers the corners of the block; it costs a second full traversal of the area.")
+                    add("La pasada en cruz cubre las esquinas del bloque; cuesta un segundo recorrido completo del área.")
                 }
             }
         }
@@ -111,25 +111,25 @@ object MissionGeometry {
     }
 
     private fun validateGeometryInput(request: MissionRequest) {
-        require(request.centerLatitude.isFinite() && request.centerLatitude in -90.0..90.0) { "Latitude is outside WGS84" }
-        require(request.centerLongitude.isFinite() && request.centerLongitude in -180.0..180.0) { "Longitude is outside WGS84" }
-        require(request.bearingDegrees.isFinite()) { "Bearing must be finite" }
+        require(request.centerLatitude.isFinite() && request.centerLatitude in -90.0..90.0) { "La latitud está fuera del rango WGS84" }
+        require(request.centerLongitude.isFinite() && request.centerLongitude in -180.0..180.0) { "La longitud está fuera del rango WGS84" }
+        require(request.bearingDegrees.isFinite()) { "El rumbo debe ser un valor finito" }
         require(request.lengthMeters in 1.0..5_000.0 && request.widthMeters in 1.0..5_000.0) {
-            "Length and width must be between 1 m and 5 km"
+            "La longitud y el ancho deben estar entre 1 m y 5 km"
         }
         val maxHeight = if (request.template == MissionTemplate.FACADE) 300.0 else 5_000.0
-        require(request.heightMeters in 1.0..maxHeight) { "Height is outside the safe range" }
+        require(request.heightMeters in 1.0..maxHeight) { "La altura está fuera del rango seguro" }
         require(request.altitudeMeters in 2.0..MissionValidator.MAX_GUIDED_ALTITUDE_METERS) {
-            "Altitude is outside the safe range"
+            "La altura de vuelo está fuera del rango seguro"
         }
         require(request.standoffMeters in 0.5..500.0) { "Stand-off is outside the safe range" }
-        require(request.speedMps in 1.0..MissionValidator.MAX_SPEED_MPS) { "Speed is outside the safe range" }
-        require(request.overlapPercent in 10..90) { "Overlap is outside the safe range" }
+        require(request.speedMps in 1.0..MissionValidator.MAX_SPEED_MPS) { "La velocidad está fuera del rango seguro" }
+        require(request.overlapPercent in 10..90) { "El solape está fuera del rango seguro" }
         require(request.gimbalPitchDegrees.isFinite() && request.gimbalPitchDegrees in -90.0..30.0) {
-            "Gimbal pitch is outside the safe range"
+            "La inclinación del estabilizador está fuera del rango seguro"
         }
         require(request.photoSpacingMeters in 0.5..100.0 && request.lineSpacingMeters in 0.5..500.0) {
-            "Photo and line spacing are outside the safe range"
+            "La separación entre fotos y entre líneas está fuera del rango seguro"
         }
     }
 
@@ -221,10 +221,10 @@ object MissionGeometry {
         while (level < wallHeight - 0.05) {
             levels += level
             if (levels.size > MissionValidator.MAX_WAYPOINTS) {
-                error("The facade route contains too many vertical levels")
+                error("La ruta de fachada tiene demasiados niveles verticales")
             }
             val next = level + request.lineSpacingMeters
-            require(next.isFinite() && next > level) { "Facade level spacing did not advance safely" }
+            require(next.isFinite() && next > level) { "La separación entre alturas de fachada no avanza de forma segura" }
             level = min(wallHeight, next)
         }
         if (levels.isEmpty() || abs(levels.last() - wallHeight) > 0.05) levels += wallHeight
@@ -303,7 +303,7 @@ object MissionGeometry {
 
     private fun ensureWaypointBudget(estimated: Long) {
         require(estimated <= MissionValidator.MAX_WAYPOINTS.toLong()) {
-            "The requested route would contain approximately $estimated waypoints; maximum is ${MissionValidator.MAX_WAYPOINTS}"
+            "La ruta solicitada tendría unos $estimated puntos de vuelo; el máximo es ${MissionValidator.MAX_WAYPOINTS}"
         }
     }
 

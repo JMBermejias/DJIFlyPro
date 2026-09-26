@@ -19,31 +19,7 @@ More refer to the release notes." </string>
     <string name="release_note_loading">loading…</string>
 
     <string name="app_name_all">MSDK ALL</string>
-    <string name="app_name_aircraft">DJIFlyPro</string>
     <string name="app_name_handheld">MSDK Handheld</string>
-
-    <string name="control_center_title">Flight Control Center</string>
-    <string name="item_control_center_title">Flight Control Center</string>
-    <string name="item_control_center_description">Safety-gated flight and camera control</string>
-    <string name="control_flight_section">Flight</string>
-    <string name="control_camera_section">Camera and automation</string>
-    <string name="control_safety_notice">Automated flight and timed capture require a connected aircraft, an authorized operator, a valid home point, and a manual safety check. Keep the remote controller ready at all times.</string>
-    <string name="control_telemetry_format">Aircraft: %1$s\nRemote: %2$s\nBattery: %3$s\nGPS level: %4$d\nAltitude: %5$s m</string>
-    <string name="control_safety_ready">Ready: %1$s</string>
-    <string name="control_safety_blocked">Blocked: %1$s</string>
-    <string name="control_confirm_takeoff">Confirm that the area is clear, the home point is valid, and the remote controller is ready.</string>
-    <string name="control_confirm_land">Confirm the landing command. Keep the remote controller ready.</string>
-    <string name="control_confirm_return_home">Confirm the return-to-home command. The aircraft will use its stored home point.</string>
-    <string name="btn_control_takeoff">Take off</string>
-    <string name="btn_control_land">Land</string>
-    <string name="btn_control_return_home">Return home</string>
-    <string name="btn_control_enable_virtual_stick">Enable virtual sticks</string>
-    <string name="btn_control_disable_virtual_stick">Disable virtual sticks</string>
-    <string name="btn_control_take_photo">Take photo</string>
-    <string name="btn_control_start_recording">Start recording</string>
-    <string name="btn_control_stop_recording">Stop recording</string>
-    <string name="btn_control_start_capture">Start 5-photo timed capture</string>
-    <string name="btn_control_stop_capture">Stop camera automation</string>
 
     <string name="item_key_value_title">Key/Value</string>
     <string name="item_key_value_description">Demonstrate how to use the Key/Value function</string>
@@ -95,7 +71,6 @@ More refer to the release notes." </string>
     <string name="tip_ldn_choice_title" >Please select the LDM exempt module</string>
     <string name="tip_ldn_choice_confirm" >Confirm</string>
     <string name="tip_ldn_choice_cancel" >Cancel</string>
-
 
     <string name="btn_enable_virtual_stick">Enable Virtual Stick</string>
     <string name="btn_disable_virtual_stick">Disable Virtual Stick</string>
@@ -186,7 +161,6 @@ More refer to the release notes." </string>
     <string name="btn_audio_list">Audio List</string>
     <string name="cur_volume_value">current volume:</string>
 
-
     <string name="item_simulator_title">Simulator</string>
     <string name="item_simulator_description">Demonstrate how to use the Simulator function</string>
     <string name="btn_enable_simulator">Enable Simulator</string>
@@ -208,7 +182,6 @@ More refer to the release notes." </string>
     <!--CMSS RTK-->
     <string name="btn_start_cmcc_rtk_service">Start CMCC RTK</string>
     <string name="btn_stop_cmcc_rtk_service">Stop CMCC RTK</string>
-
 
     <!--PSDK-->
     <string name="item_psdk_title">PSDK Test</string>
@@ -452,7 +425,6 @@ More refer to the release notes." </string>
     <string name="ad_confirm">Confirm</string>
     <string name="ad_cancel">Cancel</string>
 
-
     <string name="msg_start_live_stream_success">Start Live Stream Success!</string>
     <string name="msg_start_live_stream_failed">Start Live Stream Failed: %1$s</string>
     <string name="msg_stop_live_stream_success">Stop Live Stream Success!</string>
@@ -464,7 +436,6 @@ More refer to the release notes." </string>
 
     <string name="msg_download_compelete_tips">Download compelete ,average download speed</string>
     <string name="msg_download_save_tips">File is saved in</string>
-
 
     <string name="delete_files">delete file</string>
     <string name="select_files">select file</string>

@@ -14,7 +14,7 @@ de la cadena cartográfica.
 
 ## Releases
 
-- [v1.1.0-alpha.3](https://github.com/JMBermejias/DJIFlyPro/releases/tag/v1.1.0-alpha.3) — **la que hay que instalar**. Un solo APK, con la App Key de DJI incrustada.
+- [v1.1.0-alpha.4](https://github.com/JMBermejias/DJIFlyPro/releases/tag/v1.1.0-alpha.4) — **la que hay que instalar**. Toda la aplicación en español, un solo APK, con la App Key de DJI incrustada.
 - [v1.1.0-alpha.2](https://github.com/JMBermejias/DJIFlyPro/releases/tag/v1.1.0-alpha.2) — igual, pero además con un APK debug de otro certificado que no se puede instalar encima.
 - [v1.1.0-alpha.1](https://github.com/JMBermejias/DJIFlyPro/releases/tag/v1.1.0-alpha.1) — compilada sin App Key: no puede registrarse con DJI.
 - [v0.1.0-alpha.1](https://github.com/JMBermejias/DJIFlyPro/releases/tag/v0.1.0-alpha.1) — base de planificación de rutas.
@@ -22,6 +22,15 @@ de la cadena cartográfica.
 Todas son prereleases. Cada build es una release nueva con su etiqueta; los
 assets de una release publicada no se reemplazan. Instalación y estado:
 `artifacts/release-notes.md`.
+
+## Idioma
+
+La aplicación se entrega **en español**, y el español es el idioma por defecto,
+no una traducción: se ve en español aunque el dispositivo esté en otro idioma.
+La capa de dominio (validadores, barrera de ejecución, motor de GSD, control
+terrestre) también está en español, y las fichas de entrega que genera
+—GeoJSON, KML, ficha de vuelo e informe de validación— salen con los textos en
+español. Ver `docs/IDIOMA.md`.
 
 ## Qué hace
 
@@ -96,8 +105,8 @@ waypoint automática de DJI. La aplicación no lo oculta ni lo sube:
 - `algorithms/`: copias de las recetas de ejemplo.
 - `legacy/`: variante MSDK V4 para Phantom 4, con `preflight.sh` y registro de
   hardware.
-- `docs/`: cartografía, algoritmos, compatibilidad, seguridad, compilación y
-  [pruebas en móvil](docs/PRUEBAS.md).
+- `docs/`: [idioma](docs/IDIOMA.md), cartografía, algoritmos, compatibilidad,
+  seguridad, compilación y [pruebas en móvil](docs/PRUEBAS.md).
 - `artifacts/`: APK/AAB generados, notas de release y manifiesto de hashes. Los
   binarios no se versionan; se publican como assets del release.
 - `config/`: configuración local de firma (no publicar claves privadas).

@@ -160,7 +160,7 @@ class CartographyReportBuilderTest {
     fun theReferenceSystemGivesBothRepresentations() {
         val reference = report(CartographyReportBuilder.build(plan(), profile, control)).obj("referenceSystem")
         assertEquals("EPSG:4326", reference.get("geographic").asString)
-        assertEquals("EPSG:32630 (WGS 84 / UTM zone 30N)", reference.get("projected").asString)
+        assertEquals("EPSG:32630 (WGS 84 / zona UTM 30N)", reference.get("projected").asString)
         assertEquals(30, reference.get("utmZone").asInt)
         assertEquals(-3.0, reference.get("centralMeridianDegrees").asDouble, 1e-9)
         assertEquals(0.9996, reference.get("scaleFactor").asDouble, 1e-9)
@@ -208,7 +208,7 @@ class CartographyReportBuilderTest {
     fun aPlanWithoutAProfileIsMarkedInvalid() {
         val checks = report(CartographyReportBuilder.build(plan(), null)).obj("checks")
         assertFalse(checks.get("profileValid").asBoolean)
-        assertTrue(checks.getAsJsonArray("profileErrors")[0].asString.contains("no cartography profile"))
+        assertTrue(checks.getAsJsonArray("profileErrors")[0].asString.contains("no tiene perfil cartográfico"))
     }
 
     @Test
@@ -217,10 +217,10 @@ class CartographyReportBuilderTest {
             .getAsJsonArray("limitations")
         assertTrue(limitations.size() >= 4)
         val text = (0 until limitations.size()).joinToString(" ") { limitations[it].asString }
-        assertTrue(text.contains("not been flown"))
-        assertTrue(text.contains("Ground sample distance holds over ground of known height"))
-        assertTrue(text.contains("bounded by its ground control"))
-        assertTrue(text.contains("Airspace"))
+        assertTrue(text.contains("no se ha volado"))
+        assertTrue(text.contains("se cumple sobre terreno de altura conocida"))
+        assertTrue(text.contains("la limita su control terrestre"))
+        assertTrue(text.contains("espacio aéreo"))
     }
 
     @Test

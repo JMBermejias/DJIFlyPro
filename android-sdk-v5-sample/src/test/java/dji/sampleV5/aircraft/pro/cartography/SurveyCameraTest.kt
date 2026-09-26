@@ -70,7 +70,7 @@ class SurveyCameraTest {
     fun validationRequiresAnIdentifier() {
         val anonymous = SurveyCamera.custom("   ", "Cámara", 10.0, 10.0, 10.0, 100, 100)
         val validation = anonymous.validate()
-        assertTrue(validation.errors.any { it.contains("id") })
+        assertTrue(validation.errors.any { it.contains("identificador") })
     }
 
     @Test

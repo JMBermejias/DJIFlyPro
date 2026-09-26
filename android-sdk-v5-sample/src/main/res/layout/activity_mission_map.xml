@@ -29,7 +29,7 @@
             android:id="@+id/text_map_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Cargando el mapa…"
+            android:text="@string/map_loading"
             style="@style/pro_title" />
 
         <TextView
@@ -46,19 +46,19 @@
             android:layout_marginTop="6dp"
             android:background="@drawable/pro_warning_background"
             android:padding="10dp"
-            android:text="El mapa es una vista de apoyo. La ruta y la ficha de vuelo son la referencia; el mapa no verifica nada."
+            android:text="@string/map_support_notice"
             style="@style/pro_caption" />
 
         <Button
             android:id="@+id/button_pick_here"
             style="@style/pro_button"
             android:enabled="false"
-            android:text="Usar el centro del mapa como punto de control" />
+            android:text="@string/map_use_centre" />
 
         <Button
             android:id="@+id/button_center_block"
             style="@style/pro_button_secondary"
             android:enabled="false"
-            android:text="Centrar en la parcela" />
+            android:text="@string/map_centre_block" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -14,20 +14,20 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Cartografía"
+            android:text="@string/cartography_title"
             style="@style/pro_title" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
-            android:text="Define la resolución dellevantada y el solape. La altura de vuelo y las separaciones se calculan a partir del sensor y del objetivo, no al revés."
+            android:text="@string/cartography_subtitle"
             style="@style/pro_caption" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Cámara"
+            android:text="@string/cartography_camera"
             style="@style/pro_section" />
 
         <Spinner
@@ -49,31 +49,31 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Resolución y solape"
+            android:text="@string/cartography_resolution_overlap"
             style="@style/pro_section" />
 
         <EditText
             android:id="@+id/edit_gsd"
             style="@style/pro_input"
-            android:hint="Resolución objetivo (cm/px, por ejemplo 2)"
+            android:hint="@string/cartography_hint_gsd"
             android:inputType="numberDecimal" />
 
         <EditText
             android:id="@+id/edit_forward_overlap"
             style="@style/pro_input"
-            android:hint="Solape longitudinal (%)"
+            android:hint="@string/cartography_hint_forward"
             android:inputType="number" />
 
         <EditText
             android:id="@+id/edit_side_overlap"
             style="@style/pro_input"
-            android:hint="Solape transversal (%)"
+            android:hint="@string/cartography_hint_side"
             android:inputType="number" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Referencia de altura y bloque"
+            android:text="@string/cartography_reference_block"
             style="@style/pro_section" />
 
         <Spinner
@@ -88,7 +88,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:minHeight="44dp"
-            android:text="Seguir el terreno"
+            android:text="@string/cartography_terrain_following"
             android:textColor="@color/pro_text" />
 
         <CheckBox
@@ -96,43 +96,43 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:minHeight="44dp"
-            android:text="Pasada cruzada (bloque en perpendicular)"
+            android:text="@string/cartography_cross_track"
             android:textColor="@color/pro_text" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Parcela que se quiere cubrir"
+            android:text="@string/cartography_area"
             style="@style/pro_section" />
 
         <EditText
             android:id="@+id/edit_area_length"
             style="@style/pro_input"
-            android:hint="Longitud de la parcela (m)"
+            android:hint="@string/cartography_hint_length"
             android:inputType="numberDecimal" />
 
         <EditText
             android:id="@+id/edit_area_width"
             style="@style/pro_input"
-            android:hint="Ancho de la parcela (m)"
+            android:hint="@string/cartography_hint_width"
             android:inputType="numberDecimal" />
 
         <EditText
             android:id="@+id/edit_area_latitude"
             style="@style/pro_input"
-            android:hint="Latitud del centro (WGS84)"
+            android:hint="@string/cartography_hint_latitude"
             android:inputType="numberDecimal|numberSigned" />
 
         <EditText
             android:id="@+id/edit_area_longitude"
             style="@style/pro_input"
-            android:hint="Longitud del centro (WGS84)"
+            android:hint="@string/cartography_hint_longitude"
             android:inputType="numberDecimal|numberSigned" />
 
         <Button
             android:id="@+id/button_calculate"
             style="@style/pro_button"
-            android:text="Calcular parameters" />
+            android:text="@string/cartography_calculate" />
 
         <TextView
             android:id="@+id/text_solution"
@@ -141,36 +141,36 @@
             android:layout_marginTop="12dp"
             android:background="@drawable/pro_card_background"
             android:padding="14dp"
-            android:text="Introduce la resolución, el solape y la parcela para calcular los parámetros de vuelo."
+            android:text="@string/cartography_intro"
             style="@style/pro_body" />
 
         <Button
             android:id="@+id/button_apply_to_planner"
             style="@style/pro_button"
             android:enabled="false"
-            android:text="Aplicar al planificador" />
+            android:text="@string/cartography_apply" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Puntos de control"
+            android:text="@string/cartography_control_section"
             style="@style/pro_section" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Un bloque sin control no se puede georreferenciar. Mínimo 4 puntos de control y 1 de verificación, repartidos por los bordes."
+            android:text="@string/cartography_control_intro"
             style="@style/pro_caption" />
 
         <Button
             android:id="@+id/button_add_control_point"
             style="@style/pro_button_secondary"
-            android:text="Añadir punto de control" />
+            android:text="@string/cartography_add_control" />
 
         <Button
             android:id="@+id/button_pick_control_point"
             style="@style/pro_button_secondary"
-            android:text="Elegir punto en el mapa" />
+            android:text="@string/cartography_pick_control" />
 
         <TextView
             android:id="@+id/text_control_network"
@@ -179,7 +179,7 @@
             android:layout_marginTop="6dp"
             android:background="@drawable/pro_card_background"
             android:padding="14dp"
-            android:text="Sin puntos de control."
+            android:text="@string/cartography_no_control"
             style="@style/pro_body" />
 
         <LinearLayout
@@ -191,32 +191,32 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Entrega"
+            android:text="@string/cartography_delivery"
             style="@style/pro_section" />
 
         <Button
             android:id="@+id/button_export_geojson"
             style="@style/pro_button_secondary"
             android:enabled="false"
-            android:text="Exportar GeoJSON" />
+            android:text="@string/cartography_export_geojson" />
 
         <Button
             android:id="@+id/button_export_kml"
             style="@style/pro_button_secondary"
             android:enabled="false"
-            android:text="Exportar KML" />
+            android:text="@string/cartography_export_kml" />
 
         <Button
             android:id="@+id/button_export_report"
             style="@style/pro_button_secondary"
             android:enabled="false"
-            android:text="Exportar ficha de vuelo (JSON)" />
+            android:text="@string/cartography_export_report" />
 
         <Button
             android:id="@+id/button_open_map"
             style="@style/pro_button_secondary"
             android:enabled="false"
-            android:text="Ver en el mapa" />
+            android:text="@string/cartography_open_map" />
 
         <ProgressBar
             android:id="@+id/progress_cartography"

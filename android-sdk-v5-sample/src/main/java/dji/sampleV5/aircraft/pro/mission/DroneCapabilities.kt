@@ -115,22 +115,22 @@ object DroneCapabilities {
             remoteName != null && remoteFirmware != null && matchingProfile != null &&
             firmwareWaypointSupport != FirmwareWaypointSupport.NOT_SUPPORTED
         val reason = when {
-            !connected -> "No aircraft connected"
-            !registered -> "DJI SDK registration is pending or failed"
-            phantom -> "Phantom 4 requires the legacy DJI SDK; this V5 build cannot connect to it"
+            !connected -> "No hay ningún aircraft conectado"
+            !registered -> "El registro del SDK de DJI está pendiente o ha fallado"
+            phantom -> "El Phantom 4 necesita el SDK heredado de DJI; esta compilación V5 no puede conectarse a él"
             // What the aircraft says about itself outranks anything in this file.
             firmwareWaypointSupport == FirmwareWaypointSupport.NOT_SUPPORTED ->
-                "The aircraft reports that its firmware does not support waypoint missions; " +
-                    "this cannot be enabled from the app"
-            mini3 -> "Mini 3 and Mini 3 Pro firmware do not support waypoint missions " +
-                "(DJI confirms DJI Fly has no route feature on these models); " +
-                "use the app for telemetry, camera and manual control only"
-            !enterprise -> "Automatic waypoint execution is not enabled for this product"
-            firmware == null -> "Aircraft firmware is unknown; WPML execution is blocked until the firmware is identified and validated"
-            remoteName == null -> "Remote-controller model is unknown; WPML execution remains blocked"
-            remoteFirmware == null -> "Remote-controller firmware is unknown; WPML execution remains blocked"
-            matchingProfile == null -> "No reviewed model/remote-controller/firmware profile matches; automatic WPML is disabled"
-            else -> "Waypoint upload and execution match a reviewed physical-validation profile; verify airspace and aircraft state"
+                "El aircraft informa de que su firmware no admite misiones wayline; " +
+                    "la aplicación no puede activarlo"
+            mini3 -> "El firmware del Mini 3 y del Mini 3 Pro no admite misiones wayline " +
+                "(DJI confirma que DJI Fly no tiene función de rutas en estos modelos); " +
+                "usa la aplicación solo para telemetría, cámara y control manual"
+            !enterprise -> "La ejecución automática de waylines no está habilitada para este producto"
+            firmware == null -> "El firmware del aircraft es desconocido; la ejecución WPML queda bloqueada hasta identificarlo y validarlo"
+            remoteName == null -> "El modelo del control remoto es desconocido; la ejecución WPML sigue bloqueada"
+            remoteFirmware == null -> "El firmware del control remoto es desconocido; la ejecución WPML sigue bloqueada"
+            matchingProfile == null -> "Ningún perfil revisado de modelo, control remoto y firmware coincide; la ejecución WPML automática está desactivada"
+            else -> "La subida y la ejecución de waylines coinciden con un perfil de validación física revisado; verifica el espacio aéreo y el estado del aircraft"
         }
         return Result(
             productName = name,

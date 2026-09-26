@@ -56,7 +56,7 @@ class AlgorithmRepository(private val context: Context) {
     fun import(uri: Uri): AlgorithmRecipe {
         val bytes = readRecipeBytes(uri)
         if (bytes.size > MAX_RECIPE_BYTES) {
-            error("Algorithm recipes are limited to 1 MiB")
+            error("Las recetas de algoritmo están limitadas a 1 MiB")
         }
         val raw = bytes.toString(Charsets.UTF_8)
         val recipe = parseAndValidate(raw)
@@ -72,48 +72,48 @@ class AlgorithmRepository(private val context: Context) {
 
     fun validate(recipe: AlgorithmRecipe) {
         require(recipe.schema == AlgorithmRecipe.SCHEMA) {
-            "Unsupported schema; expected ${AlgorithmRecipe.SCHEMA}"
+            "Esquema no admitido; se esperaba ${AlgorithmRecipe.SCHEMA}"
         }
         require(recipe.id.matches(Regex("[a-z0-9][a-z0-9._-]{2,63}"))) {
-            "Algorithm id must use lowercase letters, digits, dot, underscore or hyphen"
+            "El identificador del algoritmo solo admite minúsculas, dígitos, punto, guion bajo o guion"
         }
-        require(recipe.name.isNotBlank() && recipe.name.length <= 100) { "Algorithm name is invalid" }
+        require(recipe.name.isNotBlank() && recipe.name.length <= 100) { "El nombre del algoritmo no es válido" }
         require(recipe.version.matches(Regex("[A-Za-z0-9][A-Za-z0-9.+_-]{0,31}"))) {
-            "Algorithm version is invalid"
+            "La versión del algoritmo no es válida"
         }
         require(recipe.jobType.matches(Regex("[a-z0-9][a-z0-9._-]{1,31}"))) {
-            "Algorithm jobType is invalid"
+            "El jobType del algoritmo no es válido"
         }
-        require(recipe.description.length <= 500) { "Algorithm description is too long" }
-        require(recipe.outputs.all { it in ALLOWED_OUTPUTS }) { "Algorithm outputs contain an unsupported value" }
+        require(recipe.description.length <= 500) { "La descripción del algoritmo es demasiado larga" }
+        require(recipe.outputs.all { it in ALLOWED_OUTPUTS }) { "Las salidas del algoritmo contienen un valor no admitido" }
         val d = recipe.defaults
-        require(d.lengthMeters in 1.0..5_000.0) { "Algorithm length is outside the allowed range" }
-        require(d.widthMeters in 1.0..5_000.0) { "Algorithm width is outside the allowed range" }
-        require(d.heightMeters in 1.0..300.0) { "Algorithm height is outside the allowed range" }
-        require(d.bearingDegrees.isFinite()) { "Algorithm bearing is invalid" }
+        require(d.lengthMeters in 1.0..5_000.0) { "La longitud del algoritmo está fuera del rango permitido" }
+        require(d.widthMeters in 1.0..5_000.0) { "El ancho del algoritmo está fuera del rango permitido" }
+        require(d.heightMeters in 1.0..300.0) { "La altura del algoritmo está fuera del rango permitido" }
+        require(d.bearingDegrees.isFinite()) { "El rumbo del algoritmo no es válido" }
         require(d.altitudeMeters in 2.0..dji.sampleV5.aircraft.pro.mission.MissionValidator.MAX_GUIDED_ALTITUDE_METERS) {
-            "Algorithm altitude is outside the allowed range"
+            "La altura de vuelo del algoritmo está fuera del rango permitido"
         }
-        require(d.standoffMeters in 0.5..500.0) { "Algorithm stand-off is outside the allowed range" }
-        require(d.lineSpacingMeters in 0.5..500.0) { "Algorithm line spacing is outside the allowed range" }
-        require(d.photoSpacingMeters in 0.5..100.0) { "Algorithm photo spacing is outside the allowed range" }
-        require(d.overlapPercent in 10..90) { "Algorithm overlap is outside the allowed range" }
-        require(d.speedMps in 1.0..15.0) { "Algorithm speed is outside the allowed range" }
-        require(d.gimbalPitchDegrees in -90.0..30.0) { "Algorithm gimbal pitch is outside the allowed range" }
+        require(d.standoffMeters in 0.5..500.0) { "La distancia de seguridad del algoritmo está fuera del rango permitido" }
+        require(d.lineSpacingMeters in 0.5..500.0) { "La separación entre líneas del algoritmo está fuera del rango permitido" }
+        require(d.photoSpacingMeters in 0.5..100.0) { "La separación entre fotos del algoritmo está fuera del rango permitido" }
+        require(d.overlapPercent in 10..90) { "El solape del algoritmo está fuera del rango permitido" }
+        require(d.speedMps in 1.0..15.0) { "La velocidad del algoritmo está fuera del rango permitido" }
+        require(d.gimbalPitchDegrees in -90.0..30.0) { "La inclinación del estabilizador del algoritmo está fuera del rango permitido" }
     }
 
     private fun parseAndValidate(raw: String): AlgorithmRecipe {
         val recipe = try {
             gson.fromJson(raw, AlgorithmRecipe::class.java)
         } catch (error: JsonParseException) {
-            error("Invalid JSON recipe: ${error.message}")
+            error("Receta JSON no válida: ${error.message}")
         } catch (error: Exception) {
-            error("Invalid JSON recipe: ${error.message}")
-        } ?: error("The recipe is empty")
+            error("Receta JSON no válida: ${error.message}")
+        } ?: error("La receta está vacía")
         try {
             validate(recipe)
         } catch (error: Exception) {
-            throw IllegalArgumentException("Invalid algorithm recipe: ${error.message}", error)
+            throw IllegalArgumentException("Receta de algoritmo no válida: ${error.message}", error)
         }
         return recipe
     }
@@ -156,7 +156,7 @@ class AlgorithmRepository(private val context: Context) {
 
     private fun readRecipeBytes(uri: Uri): ByteArray {
         val input = context.contentResolver.openInputStream(uri)
-            ?: error("Could not read the selected file")
+            ?: error("No se pudo leer el fichero seleccionado")
         val output = ByteArrayOutputStream()
         val buffer = ByteArray(8 * 1024)
         var total = 0
@@ -167,7 +167,7 @@ class AlgorithmRepository(private val context: Context) {
                 if (read == 0) continue
                 total += read
                 if (total > MAX_RECIPE_BYTES) {
-                    error("Algorithm recipes are limited to 1 MiB")
+                    error("Las recetas de algoritmo están limitadas a 1 MiB")
                 }
                 output.write(buffer, 0, read)
             }

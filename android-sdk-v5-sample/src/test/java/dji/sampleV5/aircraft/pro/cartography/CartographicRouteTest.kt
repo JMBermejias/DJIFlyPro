@@ -184,7 +184,7 @@ class CartographicRouteTest {
         // further than the 120 m the single pass does.
         val along = alongOffsets(cross)
         assertTrue("span was ${along.max() - along.min()}", along.max() - along.min() > 220.0)
-        assertTrue(cross.warnings.any { it.contains("cross pass") })
+        assertTrue(cross.warnings.any { it.contains("pasada en cruz") })
     }
 
     @Test
@@ -193,7 +193,7 @@ class CartographicRouteTest {
             MissionGeometry.plan(request(photoSpacing = 8.0, lineSpacing = 12.0, routePattern = RoutePattern.CROSS))
         }.exceptionOrNull()
         assertTrue(error is IllegalArgumentException)
-        assertTrue(error?.message?.contains("waypoints") == true)
+        assertTrue(error?.message?.contains("puntos de vuelo") == true)
     }
 
     @Test
@@ -225,7 +225,7 @@ class CartographicRouteTest {
             MissionGeometry.plan(request(length = 5000.0, width = 5000.0, lineSpacing = 2.0, photoSpacing = 2.0))
         }.exceptionOrNull()
         assertTrue(error is IllegalArgumentException)
-        assertTrue(error?.message?.contains("waypoints") == true)
+        assertTrue(error?.message?.contains("puntos de vuelo") == true)
     }
 
     @Test

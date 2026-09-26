@@ -114,7 +114,7 @@ class ControlCenterFragment : DJIFragment() {
             }
             virtualStickVM.enableVirtualStick(object : CommonCallbacks.CompletionCallback {
                 override fun onSuccess() {
-                    showResult(true, "Virtual sticks enabled")
+                    showResult(true, "Joysticks virtuales activados")
                 }
 
                 override fun onFailure(error: IDJIError) {
@@ -125,7 +125,7 @@ class ControlCenterFragment : DJIFragment() {
         binding?.btnControlDisableVirtualStick?.setOnClickListener {
             virtualStickVM.disableVirtualStick(object : CommonCallbacks.CompletionCallback {
                 override fun onSuccess() {
-                    showResult(true, "Virtual sticks disabled")
+                    showResult(true, "Joysticks virtuales desactivados")
                 }
 
                 override fun onFailure(error: IDJIError) {
@@ -155,7 +155,7 @@ class ControlCenterFragment : DJIFragment() {
         }
         binding?.btnControlStopCapture?.setOnClickListener {
             cameraAutomationVM.stopAutomation()
-            showResult(true, "Camera automation stopped")
+            showResult(true, "Automatización de cámara detenida")
         }
     }
 
@@ -169,10 +169,10 @@ class ControlCenterFragment : DJIFragment() {
     }
 
     private fun renderTelemetry(telemetry: dji.sampleV5.aircraft.models.FlightTelemetry) {
-        val battery = if (telemetry.batteryPercent >= 0) "${telemetry.batteryPercent}%" else "N/A"
+        val battery = if (telemetry.batteryPercent >= 0) "${telemetry.batteryPercent}%" else getString(R.string.control_not_available)
         binding?.controlTelemetryStatus?.text = getString(
             R.string.control_telemetry_format,
-            if (telemetry.aircraftConnected) "connected" else "disconnected",
+            if (telemetry.aircraftConnected) getString(R.string.control_state_connected) else getString(R.string.control_state_disconnected),
             if (telemetry.remoteControllerConnected) "connected" else "disconnected",
             battery,
             telemetry.gpsSignalLevel,

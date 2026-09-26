@@ -35,73 +35,73 @@ object MissionValidator {
         val warnings = mutableListOf<String>()
 
         if (request.name.isBlank() || request.name.length > 80) {
-            errors += "Mission name must contain between 1 and 80 characters"
+            errors += "El nombre de la misión debe tener entre 1 y 80 caracteres"
         }
         if (!request.centerLatitude.isFinite() || request.centerLatitude !in -90.0..90.0) {
-            errors += "Latitude must be a finite WGS84 value between -90 and 90"
+            errors += "La latitud debe ser un valor WGS84 finito entre -90 y 90"
         }
         if (!request.centerLongitude.isFinite() || request.centerLongitude !in -180.0..180.0) {
-            errors += "Longitude must be a finite WGS84 value between -180 and 180"
+            errors += "La longitud debe ser un valor WGS84 finito entre -180 y 180"
         }
         if (!request.bearingDegrees.isFinite()) {
-            errors += "Bearing must be a finite value"
+            errors += "El rumbo debe ser un valor finito"
         }
-        checkPositive(request.lengthMeters, "Length", errors)
-        checkPositive(request.widthMeters, "Width", errors)
-        checkPositive(request.heightMeters, "Height", errors)
-        checkPositive(request.lineSpacingMeters, "Line spacing", errors)
-        checkPositive(request.photoSpacingMeters, "Photo spacing", errors)
+        checkPositive(request.lengthMeters, "La longitud", errors)
+        checkPositive(request.widthMeters, "El ancho", errors)
+        checkPositive(request.heightMeters, "La altura", errors)
+        checkPositive(request.lineSpacingMeters, "La separación entre líneas", errors)
+        checkPositive(request.photoSpacingMeters, "La separación entre fotos", errors)
         if (request.lengthMeters > 5_000.0 || request.widthMeters > 5_000.0) {
-            errors += "Length and width are limited to 5 km per side"
+            errors += "La longitud y el ancho están limitados a 5 km por lado"
         }
         if (request.lineSpacingMeters < 0.5 || request.lineSpacingMeters > 500.0) {
-            errors += "Line spacing must be between 0.5 m and 500 m"
+            errors += "La separación entre líneas debe estar entre 0,5 m y 500 m"
         }
         if (request.photoSpacingMeters < 0.5 || request.photoSpacingMeters > 100.0) {
-            errors += "Photo spacing must be between 0.5 m and 100 m"
+            errors += "La separación entre fotos debe estar entre 0,5 m y 100 m"
         }
         if (request.altitudeMeters !in 2.0..altitudeCeiling) {
-            errors += "Altitude must be between 2 m and ${altitudeCeiling.toInt()} m"
+            errors += "La altura de vuelo debe estar entre 2 m y ${altitudeCeiling.toInt()} m"
         }
         if (request.altitudeMeters > MAX_ALTITUDE_METERS) {
-            warnings += "Above ${MAX_ALTITUDE_METERS.toInt()} m this block cannot run as an automatic waypoint mission; " +
-                "it has to be flown with manual guidance."
+            warnings += "Por encima de ${MAX_ALTITUDE_METERS.toInt()} m este bloque no puede ejecutarse como misión automática; " +
+                "hay que volarlo con guía manual."
         }
         if (request.speedMps !in 1.0..MAX_SPEED_MPS) {
-            errors += "Speed must be between 1 and ${MAX_SPEED_MPS.toInt()} m/s"
+            errors += "La velocidad debe estar entre 1 y ${MAX_SPEED_MPS.toInt()} m/s"
         }
         if (request.overlapPercent !in 10..90) {
-            errors += "Overlap must be between 10% and 90%"
+            errors += "El solape debe estar entre 10 % y 90 %"
         }
         if (!request.standoffMeters.isFinite() || request.standoffMeters < 0.5 || request.standoffMeters > 500.0) {
-            errors += "Facade stand-off must be between 0.5 m and 500 m"
+            errors += "La distancia de seguridad a la fachada debe estar entre 0,5 m y 500 m"
         }
         if (!request.gimbalPitchDegrees.isFinite() || request.gimbalPitchDegrees !in -90.0..30.0) {
-            errors += "Gimbal pitch must be between -90° and 30°"
+            errors += "La inclinación del estabilizador debe estar entre -90° y 30°"
         }
         if (request.template == MissionTemplate.FACADE && request.heightMeters > 300.0) {
-            errors += "Facade height is limited to 300 m in this release"
+            errors += "La altura de fachada está limitada a 300 m en esta versión"
         }
 
         if (plan != null) {
-            if (plan.schemaVersion != 1) errors += "Unsupported mission schema version"
-            if (plan.id.isBlank() || plan.id.length > 120) errors += "Mission id is invalid"
-            if (plan.createdAtEpochMs < 0L) errors += "Mission timestamp is invalid"
-            if (plan.waypoints.isEmpty()) errors += "Mission has no waypoints"
-            if (plan.waypoints.size > MAX_WAYPOINTS) errors += "Mission has too many waypoints"
+            if (plan.schemaVersion != 1) errors += "Versión del esquema de misión no admitida"
+            if (plan.id.isBlank() || plan.id.length > 120) errors += "El identificador de la misión no es válido"
+            if (plan.createdAtEpochMs < 0L) errors += "La fecha de la misión no es válida"
+            if (plan.waypoints.isEmpty()) errors += "La misión no tiene puntos de vuelo"
+            if (plan.waypoints.size > MAX_WAYPOINTS) errors += "La misión tiene demasiados puntos de vuelo"
             if (!plan.totalDistanceMeters.isFinite() || plan.totalDistanceMeters < 0.0) {
-                errors += "Mission distance is invalid"
+                errors += "La longitud de la ruta no es válida"
             } else if (plan.totalDistanceMeters > 200_000.0) {
-                errors += "Mission route exceeds the 200 km safety limit"
+                errors += "La ruta supera el límite de seguridad de 200 km"
             }
             if (!plan.estimatedDurationSeconds.isFinite() || plan.estimatedDurationSeconds < 0.0) {
-                errors += "Mission duration is invalid"
+                errors += "La duración estimada no es válida"
             }
             if (plan.waypoints.any {
                     !it.latitude.isFinite() || it.latitude !in -90.0..90.0 ||
                         !it.longitude.isFinite() || it.longitude !in -180.0..180.0
                 }) {
-                errors += "Mission contains an invalid coordinate"
+                errors += "La misión contiene una coordenada no válida"
             }
             if (plan.waypoints.any {
                     !it.heightMeters.isFinite() || it.heightMeters !in 2.0..altitudeCeiling ||
@@ -109,12 +109,12 @@ object MissionValidator {
                         !it.pitchDegrees.isFinite() || it.pitchDegrees !in -90.0..30.0 ||
                         it.hoverSeconds !in 0..3_600
                 }) {
-                errors += "Mission contains an invalid waypoint property"
+                errors += "La misión contiene un punto de vuelo con propiedades no válidas"
             }
             if (plan.waypoints.firstOrNull()?.index != 0 ||
                 plan.waypoints.zipWithNext().any { (a, b) -> a.index + 1 != b.index }
             ) {
-                errors += "Waypoint indexes are not consecutive"
+                errors += "Los índices de los puntos de vuelo no son consecutivos"
             }
         }
         return MissionValidation(errors, warnings + (plan?.warnings ?: emptyList()))
@@ -129,8 +129,8 @@ object MissionValidator {
         val base = validate(request, plan)
         if (request.altitudeMeters > MAX_ALTITUDE_METERS) {
             return MissionValidation(
-                errors = base.errors + "Automatic waypoint missions are limited to ${MAX_ALTITUDE_METERS.toInt()} m " +
-                    "in this release. Fly this block with manual guidance, or pick a coarser ground sample distance.",
+                errors = base.errors + "Las misiones waypoint automáticas están limitadas a ${MAX_ALTITUDE_METERS.toInt()} m " +
+                    "en esta versión. Vuela este bloque con guía manual o elige una resolución más gruesa.",
                 warnings = base.warnings
             )
         }
@@ -138,6 +138,6 @@ object MissionValidator {
     }
 
     private fun checkPositive(value: Double, label: String, errors: MutableList<String>) {
-        if (!value.isFinite() || value <= 0.0) errors += "$label must be greater than zero"
+        if (!value.isFinite() || value <= 0.0) errors += "$label debe ser mayor que cero"
     }
 }

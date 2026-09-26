@@ -30,7 +30,7 @@ data class UtmCoordinate(
         get() = (if (hemisphere == 'S') 32700 else 32600) + zone
 
     val crsLabel: String
-        get() = "EPSG:$epsgCode (WGS 84 / UTM zone $zone$hemisphere)"
+        get() = "EPSG:$epsgCode (WGS 84 / zona UTM $zone$hemisphere)"
 }
 
 /** North/east offset on a local tangent plane, in metres. */
@@ -303,8 +303,8 @@ object CoordinateReferenceSystem {
         val latitude = latitudeDegrees + north / METERS_PER_DEGREE
         val longitudeScale = max(abs(cos(Math.toRadians(latitudeDegrees))), 1e-9)
         val longitude = longitudeDegrees + east / (METERS_PER_DEGREE * longitudeScale)
-        require(latitude.isFinite() && latitude in -90.0..90.0) { "The block leaves the WGS 84 latitude range" }
-        require(longitude.isFinite() && longitude in -180.0..180.0) { "The block leaves the WGS 84 longitude range" }
+        require(latitude.isFinite() && latitude in -90.0..90.0) { "El bloque sale del rango de latitud WGS 84" }
+        require(longitude.isFinite() && longitude in -180.0..180.0) { "El bloque sale del rango de longitud WGS 84" }
         return latitude to longitude
     }
 
@@ -333,7 +333,7 @@ object CoordinateReferenceSystem {
      * two. Comparing against the cluster being built has no such boundary.
      */
     fun clusterByTolerance(values: List<Double>, tolerance: Double): List<Double> {
-        require(tolerance > 0.0 && tolerance.isFinite()) { "The tolerance must be greater than 0" }
+        require(tolerance > 0.0 && tolerance.isFinite()) { "La tolerancia debe ser mayor que 0" }
         if (values.isEmpty()) return emptyList()
         val sorted = values.filter { it.isFinite() }.sorted()
         if (sorted.isEmpty()) return emptyList()

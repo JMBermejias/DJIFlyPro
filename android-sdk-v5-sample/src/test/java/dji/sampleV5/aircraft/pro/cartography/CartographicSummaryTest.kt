@@ -123,14 +123,14 @@ class CartographicSummaryTest {
         // The profile asks for 2 cm/px but the route was built for 60 m, which
         // is 0.75 cm/px. The discrepancy has to be visible, not averaged away.
         val summary = CartographicSummaryBuilder.build(plan(altitude = 60.0), profile)
-        assertTrue(summary.notes.toString(), summary.notes.any { it.contains("cm/px") && it.contains("route was built") })
+        assertTrue(summary.notes.toString(), summary.notes.any { it.contains("cm/px") && it.contains("se construyó") })
         assertEquals(0.75, summary.achievedGsdCentimetersPerPixel, 0.01)
     }
 
     @Test
     fun aPlanWithoutAProfileSaysSoRatherThanGuessing() {
         val summary = CartographicSummaryBuilder.build(plan(), null)
-        assertTrue(summary.notes.any { it.contains("no cartography profile") })
+        assertTrue(summary.notes.any { it.contains("no tiene perfil cartográfico") })
         assertTrue(summary.notes.any { it.contains(SurveyCamera.DEFAULT.displayName) })
     }
 
@@ -139,7 +139,7 @@ class CartographicSummaryTest {
         // At 90 m a P1 covers 92.3 m, so a 95 m photo advance leaves gaps along
         // every flight line.
         val summary = CartographicSummaryBuilder.build(plan(altitude = 90.0, photoSpacing = 95.0), profile)
-        assertTrue(summary.notes.any { it.contains("exceeds") && it.contains("footprint") })
+        assertTrue(summary.notes.any { it.contains("supera la huella") })
     }
 
     @Test
@@ -165,7 +165,7 @@ class CartographicSummaryTest {
             )
         )
         val summary = CartographicSummaryBuilder.build(narrow, profile)
-        assertTrue(summary.notes.any { it.contains("single flight line") })
+        assertTrue(summary.notes.any { it.contains("Una sola línea de vuelo") })
     }
 
     @Test
@@ -173,7 +173,7 @@ class CartographicSummaryTest {
         val summary = CartographicSummaryBuilder.build(plan(), profile, listOf(
             GroundControlPoint(id = "1", code = "A", latitude = 40.4168, longitude = -3.7038)
         ))
-        assertTrue(summary.notes.any { it.startsWith("Control:") && it.contains("At least 4") })
+        assertTrue(summary.notes.any { it.startsWith("Control:") && it.contains("Hacen falta al menos 4") })
     }
 
     @Test
@@ -200,7 +200,7 @@ class CartographicSummaryTest {
         val summary = CartographicSummaryBuilder.build(empty, profile)
         assertEquals(0, summary.waypointCount)
         assertEquals(0, summary.photoCount)
-        assertTrue(summary.notes.any { it.contains("takes no photographs") })
+        assertTrue(summary.notes.any { it.contains("no hace ninguna foto") })
     }
 
     @Test

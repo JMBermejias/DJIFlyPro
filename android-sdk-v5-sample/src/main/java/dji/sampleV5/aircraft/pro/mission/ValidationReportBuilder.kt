@@ -39,28 +39,28 @@ object ValidationReportBuilder {
             appendLine("  ]")
             appendLine("}")
             appendLine()
-            appendLine("# DJIFlyPro WPML validation evidence")
-            appendLine("# generated: ${generatedAt()}")
+            appendLine("# DJIFlyPro: evidencia de validacion WPML")
+            appendLine("# generado: ${generatedAt()}")
             if (!deviceLabel.isNullOrBlank()) {
-                appendLine("# device: $deviceLabel")
+                appendLine("# dispositivo: $deviceLabel")
             }
-            appendLine("# connected: ${capability.connected}")
-            appendLine("# registered: ${capability.registered}")
-            appendLine("# current gate: ${gateLabel(capability)}")
+            appendLine("# conectado: ${capability.connected}")
+            appendLine("# registrado: ${capability.registered}")
+            appendLine("# barrera actual: ${gateLabel(capability)}")
             appendLine("#")
-            appendLine("# Values above were reported by MSDK for the connected hardware.")
-            appendLine("# Copy them into android-sdk-v5-sample/src/main/assets/validated_wpml_profiles.json")
-            appendLine("# ONLY after a real flight test, and replace the validationReference with")
-            appendLine("# the actual record reference. Until then this file is a candidate, not a")
-            appendLine("# permission to fly, and the app keeps automatic WPML execution disabled.")
+            appendLine("# Los valores de arriba los ha informado MSDK para el hardware conectado.")
+            appendLine("# Copialos en android-sdk-v5-sample/src/main/assets/validated_wpml_profiles.json")
+            appendLine("# SOLO despues de una prueba de vuelo real, y sustituye validationReference por")
+            appendLine("# la referencia real del registro. Hasta entonces este fichero es un candidato,")
+            appendLine("# no un permiso para volar, y la app mantiene desactivada la ejecucion WPML automatica.")
         }
     }
 
     private fun gateLabel(capability: DroneCapabilities.Result): String = when {
-        capability.waypointExecutionSupported -> "profile-matched"
-        !capability.connected -> "not-connected"
-        !capability.registered -> "not-registered"
-        else -> "no-validated-profile"
+        capability.waypointExecutionSupported -> "perfil-coincidente"
+        !capability.connected -> "sin-conexion"
+        !capability.registered -> "sin-registro"
+        else -> "sin-perfil-validado"
     }
 
     private fun generatedAt(): String =

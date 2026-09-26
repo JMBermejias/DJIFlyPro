@@ -1,2 +1,2 @@
-df27ec9dbdbd9d7193a4401edf22e7b7ee12cd4b36251b617e06d143bb4b0c34  DJIFlyPro-1.1.0-alpha.3.apk
-a089cd197832ca75bd6d757b13d61c51d922ab5a000719b3c7ae446d0ae72ee7  DJIFlyPro-1.1.0-alpha.3.aab
+4f95403da5aca91af9dcaa1ae45ec671912e441e7b395938eed7ad48c1a860cd  DJIFlyPro-1.1.0-alpha.4.apk
+c6734bde078f232378d7cd320af65149c4fbc92294c2d0a57f86608a268963fe  DJIFlyPro-1.1.0-alpha.4.aab

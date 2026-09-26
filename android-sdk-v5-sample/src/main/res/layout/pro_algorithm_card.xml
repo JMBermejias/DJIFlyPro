@@ -11,7 +11,7 @@
         android:id="@+id/algorithm_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Algoritmo"
+        android:text="@string/algorithm_card_title"
         style="@style/pro_body" />
 
     <TextView
@@ -31,5 +31,5 @@
     <Button
         android:id="@+id/algorithm_use"
         style="@style/pro_button_secondary"
-        android:text="Usar en el planificador" />
+        android:text="@string/algorithm_card_use" />
 </LinearLayout>

@@ -1,4 +1,4 @@
-# Build y artefactos
+# Compilación y artefactos
 
 ## Publicar en GitHub
 

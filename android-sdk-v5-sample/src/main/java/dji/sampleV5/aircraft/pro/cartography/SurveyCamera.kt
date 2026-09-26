@@ -37,19 +37,19 @@ data class SurveyCamera(
 
     fun validate(): CameraValidation {
         val errors = mutableListOf<String>()
-        if (id.isBlank()) errors += "The camera id is required"
-        if (displayName.isBlank()) errors += "The camera name is required"
+        if (id.isBlank()) errors += "El identificador de la cámara es obligatorio"
+        if (displayName.isBlank()) errors += "El nombre de la cámara es obligatorio"
         if (!sensorWidthMillimeters.isFinite() || sensorWidthMillimeters <= 0.0) {
-            errors += "Sensor width must be greater than 0 mm"
+            errors += "El ancho del sensor debe ser mayor que 0 mm"
         }
         if (!sensorHeightMillimeters.isFinite() || sensorHeightMillimeters <= 0.0) {
-            errors += "Sensor height must be greater than 0 mm"
+            errors += "El alto del sensor debe ser mayor que 0 mm"
         }
         if (!focalLengthMillimeters.isFinite() || focalLengthMillimeters <= 0.0) {
-            errors += "Focal length must be greater than 0 mm"
+            errors += "La focal debe ser mayor que 0 mm"
         }
-        if (imageWidthPixels <= 0) errors += "Image width must be greater than 0 px"
-        if (imageHeightPixels <= 0) errors += "Image height must be greater than 0 px"
+        if (imageWidthPixels <= 0) errors += "El ancho de la imagen debe ser mayor que 0 px"
+        if (imageHeightPixels <= 0) errors += "El alto de la imagen debe ser mayor que 0 px"
         return CameraValidation(errors)
     }
 
@@ -71,7 +71,7 @@ data class SurveyCamera(
 
         val ZENMUSE_H20T = SurveyCamera(
             id = "zenmuse-h20t",
-            displayName = "Zenmuse H20T (wide 23 MP / tele 48 MP)",
+            displayName = "Zenmuse H20T (angular 23 MP / tele 48 MP)",
             sensorWidthMillimeters = 18.4,
             sensorHeightMillimeters = 12.3,
             focalLengthMillimeters = 11.0,
@@ -101,7 +101,7 @@ data class SurveyCamera(
 
         val MATRICE_4E = SurveyCamera(
             id = "matrice-4e",
-            displayName = "Matrice 4E (wide 20 MP)",
+            displayName = "Matrice 4E (angular 20 MP)",
             sensorWidthMillimeters = 17.3,
             sensorHeightMillimeters = 13.0,
             focalLengthMillimeters = 10.5,
@@ -111,7 +111,7 @@ data class SurveyCamera(
 
         val PHANTOM_4_PRO = SurveyCamera(
             id = "phantom-4-pro",
-            displayName = "Phantom 4 Pro (1\" CMOS, 24 mm)",
+            displayName = "Phantom 4 Pro (CMOS 1\", 24 mm)",
             sensorWidthMillimeters = 13.2,
             sensorHeightMillimeters = 8.8,
             focalLengthMillimeters = 10.0,
@@ -121,7 +121,7 @@ data class SurveyCamera(
 
         val IPHONE_15_PRO = SurveyCamera(
             id = "iphone-15-pro",
-            displayName = "iPhone 15 Pro (reference for hand-held mapping)",
+            displayName = "iPhone 15 Pro (referencia para levantamientos a mano)",
             sensorWidthMillimeters = 9.52,
             sensorHeightMillimeters = 6.35,
             focalLengthMillimeters = 6.86,
