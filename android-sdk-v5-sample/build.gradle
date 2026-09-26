@@ -82,6 +82,17 @@ android {
                 storePassword releaseStorePassword
                 keyAlias releaseKeyAlias
                 keyPassword releaseKeyPassword
+                // AGP omits the JAR signature (v1) when minSdk is 24 or
+                // above, because the platform verifies v2 on its own, and it
+                // ignores enableV1Signing at that minSdk. That is the right
+                // trade for this app: v1 would only help third-party installers
+                // with pre-7.0 code paths, at the cost of a second full
+                // signature pass over a 200 MB package. v2 and v3 are stated
+                // explicitly rather than left to the default, so the published
+                // artifact's signature schemes are a decision and not a
+                // side effect of the minSdk.
+                enableV2Signing true
+                enableV3Signing true
             }
         }
     }

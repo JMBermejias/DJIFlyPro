@@ -9,7 +9,7 @@ La compilación release incluye R8 y lint vital.
 
 | Archivo | Tamaño | SHA-256 |
 |---|---:|---|
-| `DJIFlyPro-1.1.0-alpha.2.apk` | 205,002,230 bytes | `9d33fb2b78f12afef345a321fcaff9eaf8346b1fcb7a70c3bf657e29e0cdf19f` |
+| `DJIFlyPro-1.1.0-alpha.2.apk` | 205,002,230 bytes | `ce47e8857bac39214dbedbbd1d3feb9ec87f08399ab98a455124bc23f90f810a` |
 | `DJIFlyPro-1.1.0-alpha.2.aab` | 198,917,609 bytes | `469872bc57db2514795fe742623be14199762ea3fb2fdf365d9189e0bc86f3d7` |
 | `DJIFlyPro-1.1.0-alpha.2-debug.apk` | 238,562,076 bytes | `60f6fcd6f18e050f152fc741d401578ccb48af5bfa96724e2fc32a9117231643` |
 
@@ -42,8 +42,18 @@ DJIFlyPro release preflight failed: AIRCRAFT_API_KEY is empty.
 - `com.dji.sdk.API_KEY` presente en el manifiesto de los **tres** binarios
   (APK release, APK debug y AAB), verificado con `aapt2 dump xmltree` y
   extrayendo el manifiesto del AAB.
-- `DJIFlyPro-1.1.0-alpha.2.apk` y `-debug.apk`: `apksigner verify --verbose`
-  correcto; APK Signature Scheme v2, un firmante, RSA 2048.
+- `DJIFlyPro-1.1.0-alpha.2.apk`: `apksigner verify --verbose` correcto; APK
+  Signature Scheme v2 y v3, un firmante, RSA 2048. La v1 (JAR) no se emite:
+  AGP la omite con `minSdk 24` porque la plataforma verifica la v2 por su
+  cuenta. `v2` y `v3` se piden de forma explícita en `signingConfigs` para que
+  los esquemas del artefacto publicado sean una decisión y no un efecto del
+  `minSdk`.
+- `zipalign -c 4` y `zipalign -c -P 16` correctos, y las 63 bibliotecas
+  nativas (303 MB descomprimidas) van comprimidas con `extractNativeLibs`, que
+  es el ajuste que el instalador del sistema maneja bien.
+- El APK contiene solo `lib/arm64-v8a`. Es lo que declara `abiFilters` y lo que
+  instala en móviles y tablets ARM de 64 bits. No instala en emuladores x86_64
+  ni en ARM de 32 bits; para eso hay que quitar el `abiFilters` y recompilar.
 - `DJIFlyPro-1.1.0-alpha.2.aab`: `jarsigner -verify` terminó con código 0.
 - Identidad: `com.djiflypro.app`, `versionName 1.1.0-alpha.2`, `versionCode 3`,
   `minSdk 24`, `targetSdk 35`, `compileSdk 35`.
