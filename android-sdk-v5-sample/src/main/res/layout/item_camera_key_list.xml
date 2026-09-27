@@ -13,7 +13,7 @@
         android:layout_gravity="center"
         android:gravity="center"
         android:padding="10dp"
-        android:text="白平衡"
+        android:text="@string/kvd_white_balance"
         android:textColor="@color/white"
         android:textSize="18sp"/>
 

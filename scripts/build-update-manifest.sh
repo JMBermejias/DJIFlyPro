@@ -21,7 +21,7 @@ VERSION_NAME="$(cd android-sdk-v5-as && ./gradlew -q :sample:printAppVersion --c
 VERSION_CODE="$(cd android-sdk-v5-as && ./gradlew -q :sample:printAppVersion --console=plain \
   | sed -n 's/^versionCode=//p' | tail -1 | tr -d '[:space:]')"
 if [ -z "$VERSION_NAME" ] || [ -z "$VERSION_CODE" ]; then
-  echo "Error: could not read the version from the build." >&2
+  echo "Error: no se ha podido leer la versión del build." >&2
   exit 1
 fi
 
@@ -32,7 +32,7 @@ fi
 REPO="JMBermejias/DJIFlyPro"
 APK="artifacts/DJIFlyPro-${VERSION_NAME}.apk"
 if [ ! -f "$APK" ]; then
-  echo "Error: $APK does not exist. Run scripts/build-release.sh first." >&2
+  echo "Error: $APK no existe. Ejecuta antes scripts/build-release.sh." >&2
   exit 1
 fi
 
@@ -54,7 +54,7 @@ APK_URL="https://github.com/${REPO}/releases/download/${TAG}/DJIFlyPro-${VERSION
 ANDROID_SDK_ROOT="${ANDROID_SDK_ROOT:-$ROOT_DIR/tools/android-sdk}"
 BT="$(ls -d "$ANDROID_SDK_ROOT"/build-tools/* 2>/dev/null | sort -V | tail -1)"
 if [ -z "$BT" ] || [ ! -x "$BT/apksigner" ]; then
-  echo "Error: apksigner not found under $ANDROID_SDK_ROOT/build-tools." >&2
+  echo "Error: no se encuentra apksigner en $ANDROID_SDK_ROOT/build-tools." >&2
   exit 1
 fi
 export JAVA_HOME="${JAVA_HOME:-$ROOT_DIR/tools/jdk/17}"
@@ -62,7 +62,7 @@ export PATH="$JAVA_HOME/bin:$PATH"
 CERT_SHA="$("$BT/apksigner" verify --print-certs "$APK" 2>/dev/null \
   | sed -n 's/.*certificate SHA-256 digest: //p' | tr -d '[:space:]' | tr 'A-Z' 'a-z' | head -1)"
 if [ -z "$CERT_SHA" ]; then
-  echo "Error: could not read the signing certificate digest from $APK." >&2
+  echo "Error: no se ha podido leer el resumen del certificado de firma de $APK." >&2
   exit 1
 fi
 
@@ -90,7 +90,7 @@ cat > artifacts/update.json <<EOF
 EOF
 
 python3 -c "import json; json.load(open('artifacts/update.json'))" \
-  || { echo "Error: the generated manifest is not valid JSON." >&2; exit 1; }
+  || { echo "Error: el manifiesto generado no es JSON válido." >&2; exit 1; }
 
-echo "Wrote artifacts/update.json for ${TAG} (versionCode ${VERSION_CODE})"
+echo "Escrito artifacts/update.json para ${TAG} (versionCode ${VERSION_CODE})"
 sed 's/^/  /' artifacts/update.json

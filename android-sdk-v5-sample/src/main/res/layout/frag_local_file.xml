@@ -31,7 +31,7 @@
                 android:id="@+id/btn_choose_local_file"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:text="选择本地文件" />
+                android:text="@string/djv_pick_local_file" />
         </RelativeLayout>
 
         <RelativeLayout
@@ -42,7 +42,7 @@
                 android:id="@+id/btn_convert_to_opus"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:text="mp3转化为opus" />
+                android:text="@string/djv_mp3_to_opus" />
         </RelativeLayout>
     </LinearLayout>
 
@@ -63,7 +63,7 @@
                 android:id="@+id/btn_start_upload"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:text="上传本地文件" />
+                android:text="@string/djv_upload_local_file" />
         </RelativeLayout>
 
         <RelativeLayout
@@ -75,7 +75,7 @@
                 android:id="@+id/btn_start_upload_last_opus_file"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:text="上传本次录音" />
+                android:text="@string/djv_upload_recording" />
         </RelativeLayout>
 
         <RelativeLayout
@@ -87,7 +87,7 @@
                 android:id="@+id/btn_cancel_upload"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:text="取消上传" />
+                android:text="@string/djv_cancel_upload" />
         </RelativeLayout>
 
     </LinearLayout>
@@ -102,7 +102,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="文件传输状态显示："
+            android:text="@string/djv_transfer_status"
             android:textColor="@color/white"/>
 
         <TextView

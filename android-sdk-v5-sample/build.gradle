@@ -43,47 +43,47 @@ def assertReleasePreflight = {
         def raw = aircraftApiKey.toString()
         if (raw != raw.trim() || raw.contains('"') || raw.contains("'") || raw.contains(' ')) {
             throw new GradleException(
-                    "\nDJIFlyPro release preflight failed: AIRCRAFT_API_KEY is malformed.\n" +
-                    "It contains quotes or whitespace, so it is not a bare DJI App Key.\n" +
-                    "Got: " + raw.length() + " characters starting with " + raw.take(6) + "\n" +
-                    "It is a hex token of 24 characters. If .local/api-key.properties quotes the\n" +
-                    "value, the quotes are part of it unless a reader strips them.\n")
+                    "\nDJIFlyPro: la comprobación previa ha fallado: AIRCRAFT_API_KEY está mal formada.\n" +
+                    "Contiene comillas o espacios, así que no es una App Key de DJI desnuda.\n" +
+                    "Longitud: " + raw.length() + " caracteres, empieza por " + raw.take(6) + "\n" +
+                    "Es un token hexadecimal de 24 caracteres. Si .local/api-key.properties entrecomilla el\n" +
+                    "valor, las comillas forman parte de él salvo que un lector las quite.\n")
         }
         if (raw.length() != 24) {
             logger.warn(
                     "\n*** DJIFlyPro: AIRCRAFT_API_KEY has " + raw.length() + " characters, not the\n" +
-                    "*** 24 that DJI issues. It compiles and signs, but if the SDK rejects it\n" +
-                    "*** the build is the first place worth looking.\n")
+                    "*** 24 that DJI issues. Compila y firma, pero si el SDK la rechaza,\n" +
+                    "*** el build es lo primero que conviene mirar.\n")
         }
     }
     if (!hasAircraftApiKey) {
         if (allowMissingApiKey) {
             logger.warn(
-                    "\n*** DJIFlyPro: building a release WITHOUT a DJI App Key because\n" +
-                    "*** DJIFLYPRO_ALLOW_MISSING_API_KEY=1 is set. The resulting APK and AAB\n" +
-                    "*** CANNOT register with DJI and are NOT distributable. Local verification only.\n")
+                    "\n*** DJIFlyPro: compilando una release SIN App Key de DJI porque\n" +
+                    "*** DJIFLYPRO_ALLOW_MISSING_API_KEY=1 está definido. La APK y el AAB resultantes\n" +
+                    "*** NO pueden registrarse con DJI y NO son distribuibles. Solo para verificación local.\n")
         } else {
             throw new GradleException(
-                    "\nDJIFlyPro release preflight failed: AIRCRAFT_API_KEY is empty.\n" +
-                    "Register the applicationId 'com.djiflypro.app' in the DJI Developer console and\n" +
-                    "set AIRCRAFT_API_KEY in gradle.properties or as an environment variable.\n" +
-                    "See docs/BUILD.md. A signed APK without this key cannot register with DJI.\n" +
-                    "For a local pipeline check only, set DJIFLYPRO_ALLOW_MISSING_API_KEY=1.\n")
+                    "\nDJIFlyPro: la comprobación previa de la release ha fallado: AIRCRAFT_API_KEY está vacía.\n" +
+                    "Registra el applicationId 'com.djiflypro.app' en la consola de DJI Developer y\n" +
+                    "define AIRCRAFT_API_KEY en gradle.properties o como variable de entorno.\n" +
+                    "Ver docs/BUILD.md. Una APK firmada sin esta clave no puede registrarse con DJI.\n" +
+                    "Solo para comprobar la cadena de build, define DJIFLYPRO_ALLOW_MISSING_API_KEY=1.\n")
         }
     }
     if (!hasMapLibreToken) {
         logger.warn(
-                "\n*** DJIFlyPro: building WITHOUT a map token. MAPLIBRE_TOKEN is empty.\n" +
-                "*** The app will register and connect, but every map renders blank.\n" +
-                "*** It is a Mapbox token or a MapTiler key, not a DJI key: DJI only\n" +
-                "*** provides the manifest slot com.dji.mapkit.maplibre.apikey.\n" +
-                "*** Set MAPLIBRE_TOKEN in .local/api-key.properties. See docs/MAPA.md.\n")
+                "\n*** DJIFlyPro: compilando SIN token de mapa. MAPLIBRE_TOKEN está vacío.\n" +
+                "*** La app se registrará y conectará, pero todos los mapas saldrán en blanco.\n" +
+                "*** Es un token de Mapbox o una clave de MapTiler, no una clave de DJI: DJI solo\n" +
+                "*** proporciona el hueco del manifiesto com.dji.mapkit.maplibre.apikey.\n" +
+                "*** Define MAPLIBRE_TOKEN en .local/api-key.properties. Ver docs/MAPA.md.\n")
     }
     if (!hasReleaseSigning) {
         throw new GradleException(
-                "\nDJIFlyPro release preflight failed: signing configuration is incomplete.\n" +
-                "Set STORE_FILE, STORE_PASSWORD, KEY_ALIAS and KEY_PASSWORD outside the repository.\n" +
-                "See config/README.md. Do not use the local test keystore for distribution.\n")
+                "\nDJIFlyPro: la comprobación previa ha fallado: la configuración de firma está incompleta.\n" +
+                "Define STORE_FILE, STORE_PASSWORD, KEY_ALIAS y KEY_PASSWORD fuera del repositorio.\n" +
+                "Ver config/README.md. No uses la keystore de pruebas local para distribuir.\n")
     }
 }
 
@@ -95,8 +95,8 @@ android {
         applicationId "com.djiflypro.app"
         minSdkVersion Integer.parseInt(project.ANDROID_MIN_SDK_VERSION)
         targetSdkVersion Integer.parseInt(project.ANDROID_TARGET_SDK_VERSION)
-        versionCode 10
-        versionName "1.1.0-alpha.9"
+        versionCode 11
+        versionName "1.1.0-alpha.10"
         manifestPlaceholders["API_KEY"] = aircraftApiKey ?: ''
         manifestPlaceholders["GMAP_API_KEY"] = configuredRuntimeValue('GMAP_API_KEY') ?: ''
         manifestPlaceholders["MAPLIBRE_TOKEN"] = configuredRuntimeValue('MAPLIBRE_TOKEN') ?: ''

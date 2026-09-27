@@ -19,7 +19,7 @@
         android:id="@+id/analytics_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="埋点测试按钮"
+        android:text="@string/djv_track_test_button"
         tools:ignore="MissingConstraints" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

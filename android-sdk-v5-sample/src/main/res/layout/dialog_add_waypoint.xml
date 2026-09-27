@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:background="@color/gray"
         android:gravity="center"
-        android:text="全局设置"
+        android:text="@string/wpv_global_settings"
         android:textColor="@android:color/white"
         android:textSize="20sp" />
     <LinearLayout
@@ -71,7 +71,7 @@
         android:layout_height="wrap_content"
         android:background="@color/gray"
         android:gravity="center"
-        android:text="添加航点"
+        android:text="@string/wpv_add_waypoint"
         android:textColor="@android:color/white"
         android:textSize="20sp" />
 
@@ -133,7 +133,7 @@
                     android:layout_gravity="center"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="显示动作2"/>
+                    android:text="@string/wpv_show_action_2"/>
             </LinearLayout>
 
 
@@ -231,7 +231,7 @@
                     android:layout_marginRight="10dp"
                     android:layout_weight="1"
                     android:background="@color/gray"
-                    android:text="取消"
+                    android:text="@string/cc_cancel"
                     android:textColor="@android:color/white"
                     android:textSize="16sp" />
                 <Button android:id="@+id/btn_add"
@@ -239,7 +239,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:background="@color/gray"
-                    android:text="添加点"
+                    android:text="@string/wpv_add_point"
                     android:textColor="@android:color/white"
                     android:textSize="16sp" />
             </LinearLayout>

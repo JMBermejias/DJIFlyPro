@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:background="@color/gray"
         android:gravity="center"
-        android:text="POI设置"
+        android:text="@string/wpv_poi_settings"
         android:textColor="@android:color/white"
         android:textSize="20sp" />
     <LinearLayout
@@ -51,7 +51,7 @@
             android:layout_marginRight="10dp"
             android:layout_weight="1"
             android:background="@color/gray"
-            android:text="取消"
+            android:text="@string/cc_cancel"
             android:textColor="@android:color/white"
             android:textSize="16sp" />
         <Button android:id="@+id/btn_add"
@@ -59,7 +59,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="@color/gray"
-            android:text="添加点"
+            android:text="@string/wpv_add_point"
             android:textColor="@android:color/white"
             android:textSize="16sp" />
     </LinearLayout>

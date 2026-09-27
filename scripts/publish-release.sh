@@ -34,18 +34,18 @@ for arg in "$@"; do
 done
 
 if [ -z "$VERSION" ]; then
-  echo "Error: a version is required, for example v0.1.0-alpha.2" >&2
+  echo "Error: hace falta una versión, por ejemplo v0.1.0-alpha.2" >&2
   exit 2
 fi
 
 if [ -z "${GH_TOKEN:-${GITHUB_TOKEN:-}}" ]; then
-  echo "Error: set GH_TOKEN (or GITHUB_TOKEN) to a token with repo scope." >&2
+  echo "Error: define GH_TOKEN (o GITHUB_TOKEN) con un token de ámbito repo." >&2
   echo "       Do not put the token in this script or in gradle.properties." >&2
   exit 2
 fi
 
 if ! git diff --quiet || ! git diff --cached --quiet; then
-  echo "Error: uncommitted changes. Commit first so the tag matches the" >&2
+  echo "Error: hay cambios sin commitear. Commitea primero para que la etiqueta coincida con la" >&2
   echo "       source it claims to publish." >&2
   exit 1
 fi
@@ -53,7 +53,7 @@ fi
 # Refuse to publish a tree that contains a keystore or secret-like file.
 LEAK="$(git ls-files | grep -iE '\.jks$|\.keystore$|\.p12$|signing\.properties$|(^|/)\.env$' || true)"
 if [ -n "$LEAK" ]; then
-  echo "Error: keystore or secret-like files are tracked:" >&2
+  echo "Error: hay ficheros de keystore o parecidos a secretos versionados:" >&2
   echo "$LEAK" >&2
   exit 1
 fi
@@ -102,7 +102,7 @@ else
 fi
 
 NOTES="artifacts/release-notes.md"
-[ -f "$NOTES" ] || { echo "Error: $NOTES is missing." >&2; exit 1; }
+[ -f "$NOTES" ] || { echo "Error: falta $NOTES." >&2; exit 1; }
 
 gh release create "$VERSION" \
   --title "DJIFlyPro $VERSION" \

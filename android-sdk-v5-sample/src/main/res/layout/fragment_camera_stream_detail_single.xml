@@ -55,7 +55,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="7dp"
-                        android:text="Scale："
+                        android:text="@string/cc_scale"
                         android:textColor="@color/white"
                         android:textSize="13sp"
                         android:textStyle="bold" />
@@ -103,7 +103,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="7dp"
-                        android:text="Lens："
+                        android:text="@string/cc_lens"
                         android:textColor="@color/white"
                         android:textSize="13sp"
                         android:textStyle="bold" />
@@ -256,7 +256,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="7dp"
-                        android:text="View Direction:"
+                        android:text="@string/cc_view_direction"
                         android:textColor="@color/white"
                         android:textSize="13sp"
                         android:textStyle="bold" />
@@ -356,7 +356,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="7dp"
-                        android:text="Stream Priority:"
+                        android:text="@string/cc_stream_priority"
                         android:textColor="@color/white"
                         android:textSize="13sp"
                         android:textStyle="bold" />
@@ -424,7 +424,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:minHeight="0dp"
-                    android:text="Capture"
+                    android:text="@string/cc_capture"
                     android:textAllCaps="false"
                     android:singleLine="true"
                     android:textSize="11sp" />
@@ -434,7 +434,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:minHeight="0dp"
-                    android:text="Close"
+                    android:text="@string/cc_close"
                     android:textAllCaps="false"
                     android:singleLine="true"
                     android:textSize="11sp" />
@@ -445,7 +445,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:minHeight="0dp"
-                    android:text="Open Vision Assist"
+                    android:text="@string/cc_open_vision_assist"
                     android:textAllCaps="false"
                     android:textSize="11sp"
                     android:singleLine="true" />
@@ -455,7 +455,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:minHeight="0dp"
-                    android:text="Begin Download Stream"
+                    android:text="@string/cc_begin_download_stream"
                     android:singleLine="true"
                     android:textAllCaps="false"
                     android:textSize="11sp" />
@@ -465,7 +465,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:minHeight="0dp"
-                    android:text="Stop Download Stream"
+                    android:text="@string/cc_stop_download_stream"
                     android:singleLine="true"
                     android:textAllCaps="false"
                     android:textSize="11sp" />
@@ -475,7 +475,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:minHeight="0dp"
-                    android:text="Set Stream Encode Bitrate"
+                    android:text="@string/cc_set_encode_bitrate"
                     android:singleLine="true"
                     android:textAllCaps="false"
                     android:textSize="11sp" />
@@ -485,7 +485,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:minHeight="0dp"
-                    android:text="Get Stream Encode Bitrate"
+                    android:text="@string/cc_get_encode_bitrate"
                     android:singleLine="true"
                     android:textAllCaps="false"
                     android:textSize="11sp" />
@@ -495,7 +495,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:minHeight="0dp"
-                    android:text="Change Camera Mode"
+                    android:text="@string/cc_change_camera_mode"
                     android:singleLine="true"
                     android:textAllCaps="false"
                     android:textSize="11sp" />

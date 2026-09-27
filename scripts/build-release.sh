@@ -73,7 +73,7 @@ while [ $# -gt 0 ]; do
       shift
       ;;
     --tag)
-      [ $# -ge 2 ] || { echo "Error: --tag needs a value" >&2; exit 1; }
+      [ $# -ge 2 ] || { echo "Error: --tag necesita un valor" >&2; exit 1; }
       TAG="$2"
       shift 2
       ;;
@@ -107,7 +107,7 @@ done
 VERSION_NAME="$(./gradlew -q :sample:printAppVersion --console=plain \
   | sed -n 's/^versionName=//p' | tail -1 | tr -d '[:space:]')"
 if [ -z "$VERSION_NAME" ]; then
-  echo "Error: could not read versionName from the build." >&2
+  echo "Error: no se ha podido leer el versionName del build." >&2
   exit 1
 fi
 printf 'Building DJIFlyPro %s (mode: %s)\n' "$VERSION_NAME" "$MODE"
@@ -116,7 +116,7 @@ mkdir -p "$ROOT_DIR/artifacts"
 OUT="$ROOT_DIR/android-sdk-v5-sample/build/outputs"
 
 stage() { # <source> <destination>
-  [ -f "$1" ] || { echo "Error: expected $1 to exist" >&2; exit 1; }
+  [ -f "$1" ] || { echo "Error: se esperaba que $1 existiera" >&2; exit 1; }
   cp -f "$1" "$2"
 }
 
@@ -146,7 +146,7 @@ stage "$OUT/bundle/release/sample-release.aab" \
 (
   cd "$ROOT_DIR/artifacts"
   if [ ! -f "DJIFlyPro-$VERSION_NAME.apk" ] || [ ! -f "DJIFlyPro-$VERSION_NAME.aab" ] || [ ! -f update.json ]; then
-    echo "Error: the release artifacts are not staged" >&2
+    echo "Error: los artefactos de la release no están en el índice" >&2
     exit 1
   fi
   # Only the two release artifacts, named explicitly, so the manifest describes
@@ -156,7 +156,7 @@ stage "$OUT/bundle/release/sample-release.aab" \
   sha256sum "DJIFlyPro-$VERSION_NAME.apk" "DJIFlyPro-$VERSION_NAME.aab" update.json \
     | sed 's#\./##' > SHA256SUMS.txt
   if ! sha256sum -c SHA256SUMS.txt >/dev/null 2>&1; then
-    echo "Error: SHA256SUMS.txt does not match the staged artifacts" >&2
+    echo "Error: SHA256SUMS.txt no coincide con los artefactos del índice" >&2
     exit 1
   fi
   cat SHA256SUMS.txt

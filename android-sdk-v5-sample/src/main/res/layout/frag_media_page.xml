@@ -33,7 +33,7 @@
             <TextView
                 android:id="@+id/tv_get_list_state"
                 style="@style/main_fragment_btn"
-                android:text="文件列表状态"
+                android:text="@string/djv_file_list_status"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"

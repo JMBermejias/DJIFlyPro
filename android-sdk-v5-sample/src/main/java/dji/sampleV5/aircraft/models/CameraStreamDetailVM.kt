@@ -1,6 +1,7 @@
 package dji.sampleV5.aircraft.models
 
 import android.view.Surface
+import androidx.annotation.StringRes
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import dji.v5.ux.core.util.ToastUtils
@@ -27,6 +28,10 @@ import dji.v5.utils.common.DateUtils
 import dji.v5.utils.common.LogPath
 import dji.v5.utils.common.LogUtils
 import dji.v5.utils.common.StringUtils
+// `R` here is the UXSDK's, so the app's own resources need a distinct name.
+// Without the alias, `R.string.cc_...` silently resolves against DJI and fails to
+// compile rather than picking up the wrong string.
+import dji.sampleV5.aircraft.R as AppR
 import dji.v5.ux.R
 import java.io.File
 import java.io.FileOutputStream
@@ -38,7 +43,22 @@ class CameraStreamDetailVM : DJIViewModel() {
 
     private val _availableLensListData = MutableLiveData<List<CameraVideoStreamSourceType>>(ArrayList())
     private val _currentLensData = MutableLiveData(CameraVideoStreamSourceType.DEFAULT_CAMERA)
-    private val _cameraName = MutableLiveData("Unknown")
+    private val _cameraName = MutableLiveData("")
+
+    /**
+     * Un mensaje para el operador, pendiente de que la vista lo traduzca.
+     *
+     * El ViewModel no tiene `Context`, así que no puede llamar a `getString`, y
+     * `ToastUtils` solo acepta cadenas ya montadas. Antes se montaban en inglés
+     * y se mostraban tal cual. Ahora la vista resuelve el recurso: un identificador
+     * y sus argumentos, con el texto en `strings_pro.xml`.
+     */
+    private val _message = MutableLiveData<StreamMessage?>()
+    val message: LiveData<StreamMessage?> = _message
+
+    fun postMessage(@StringRes resId: Int, vararg args: Any) {
+        _message.postValue(StreamMessage(resId, args.toList()))
+    }
     private val _isVisionAssistEnabled = MutableLiveData(false)
     private val _visionAssistViewDirection = MutableLiveData(VisionAssistDirection.UNKNOWN)
     private val _visionAssistViewDirectionRange = MutableLiveData<List<VisionAssistDirection>>(ArrayList())
@@ -79,7 +99,7 @@ class CameraStreamDetailVM : DJIViewModel() {
     private val streamListener = ICameraStreamManager.ReceiveStreamListener { data, offset, length, info ->
         if (streamFile == null) {
             val fileName = "[${cameraIndex.name}]${DateUtils.getSystemTime()}.${info.mimeType.name.lowercase(Locale.ROOT)}"
-            ToastUtils.showToast("begin to save,$fileName")
+            postMessage(AppR.string.cc_saving_started, fileName)
             streamFile = File(LogUtils.getLogPath(), fileName)
             streamFileOutputStream = FileOutputStream(streamFile)
             return@ReceiveStreamListener
@@ -210,11 +230,11 @@ class CameraStreamDetailVM : DJIViewModel() {
                             stream.write(frameData, offset, length)
                             stream.flush()
                             stream.close()
-                            ToastUtils.showToast("Save to : ${file.path}")
+                            postMessage(AppR.string.cc_saved_to, file.path)
                         }
                         LogUtils.i(TAG, "Save to : ${file.path}")
                     } catch (e: Exception) {
-                        ToastUtils.showToast("Save fail : $e")
+                        postMessage(AppR.string.cc_save_failed, e.toString())
                     }
                     // Because only one frame needs to be saved, you need to call removeOnFrameListener here
                     // If you need to read frame data for a long time, you can choose to actually call remove OnFrameListener according to your needs
@@ -227,11 +247,11 @@ class CameraStreamDetailVM : DJIViewModel() {
         MediaDataCenter.getInstance().cameraStreamManager.enableVisionAssist(enable, object :
             CommonCallbacks.CompletionCallback {
             override fun onSuccess() {
-                ToastUtils.showToast("enableVisionAssist onSuccess $enable")
+                postMessage(AppR.string.cc_vision_assist_enabled, enable.toString())
             }
 
             override fun onFailure(error: IDJIError) {
-                ToastUtils.showToast("enableVisionAssist onFailure $enable,error:$error")
+                postMessage(AppR.string.cc_vision_assist_failed, enable.toString(), error.toString())
             }
         })
     }
@@ -240,18 +260,18 @@ class CameraStreamDetailVM : DJIViewModel() {
         MediaDataCenter.getInstance().cameraStreamManager.setVisionAssistViewDirection(direction, object :
             CommonCallbacks.CompletionCallback {
             override fun onSuccess() {
-                ToastUtils.showToast("set Direction onSuccess $direction")
+                postMessage(AppR.string.cc_view_direction_set, direction.toString())
             }
 
             override fun onFailure(error: IDJIError) {
-                ToastUtils.showToast("set Direction onFailure $direction,error:$error")
+                postMessage(AppR.string.cc_view_direction_failed, direction.toString(), error.toString())
             }
         })
     }
 
     fun beginDownloadStreamToLocal() {
         if (streamFile != null) {
-            ToastUtils.showToast("Pls stop first.")
+            postMessage(AppR.string.cc_stop_download_first)
             return
         }
         MediaDataCenter.getInstance().cameraStreamManager.addReceiveStreamListener(cameraIndex, streamListener)
@@ -259,10 +279,10 @@ class CameraStreamDetailVM : DJIViewModel() {
 
     fun stopDownloadStreamToLocal() {
         if (streamFile == null) {
-            ToastUtils.showToast("Pls begin first.")
+            postMessage(AppR.string.cc_start_download_first)
             return
         }
-        ToastUtils.showToast("stop to save,${streamFile?.name}")
+        postMessage(AppR.string.cc_download_stopped, streamFile?.name.orEmpty())
         doStopDownloadStreamToLocal()
     }
 
@@ -312,3 +332,10 @@ class CameraStreamDetailVM : DJIViewModel() {
     val visionAssistViewDirectionRange: LiveData<List<VisionAssistDirection>>
         get() = _visionAssistViewDirectionRange
 }
+
+/**
+ * Un mensaje pendiente de traducir: el identificador del recurso y sus
+ * argumentos. Se define aquí y no dentro del ViewModel para poder compararla en
+ * una prueba sin Android.
+ */
+data class StreamMessage(@StringRes val resId: Int, val args: List<Any> = emptyList())

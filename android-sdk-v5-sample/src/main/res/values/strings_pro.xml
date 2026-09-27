@@ -472,4 +472,73 @@
     <string name="dji_error_translated">%1$s\nDJI: %2$s</string>
     <string name="dji_error_by_type">%1$s (código %2$s)\nDJI: %3$s</string>
 
+
+    <string name="cc_scale">Escala:</string>
+    <string name="cc_lens">Lente:</string>
+    <string name="cc_view_direction">Sentido de la vista:</string>
+    <string name="cc_stream_priority">Prioridad del flujo:</string>
+    <string name="cc_capture">Capturar</string>
+    <string name="cc_close">Cerrar</string>
+    <string name="cc_open_vision_assist">Abrir la asistencia de visión</string>
+    <string name="cc_begin_download_stream">Empezar a descargar el flujo</string>
+    <string name="cc_stop_download_stream">Parar la descarga del flujo</string>
+    <string name="cc_set_encode_bitrate">Fijar el bitrate de codificación</string>
+    <string name="cc_get_encode_bitrate">Leer el bitrate de codificación</string>
+    <string name="cc_change_camera_mode">Cambiar el modo de cámara</string>
+    <string name="cc_yuv_format_title">Elegir el formato de imagen</string>
+    <string name="cc_ok">Aceptar</string>
+    <string name="cc_cancel">Cancelar</string>
+
+    <string name="cc_bitrate_prompt">Bitrate de codificación (bps)</string>
+    <string name="cc_bitrate_invalid">No se ha podido leer el valor indicado</string>
+    <string name="cc_bitrate_applied">Fijado. Tendrá efecto cuando el codificador esté trabajando.</string>
+    <string name="cc_bitrate_current">Bitrate del codificador: %1$d</string>
+    <string name="cc_saving_started">Empieza a guardar: %1$s</string>
+    <string name="cc_saved_to">Guardado en: %1$s</string>
+    <string name="cc_save_failed">No se ha podido guardar: %1$s</string>
+    <string name="cc_vision_assist_enabled">Asistencia de visión activada: %1$s</string>
+    <string name="cc_vision_assist_failed">No se ha podido activar la asistencia de visión (%1$s): %2$s</string>
+    <string name="cc_view_direction_set">Sentido de la vista fijado: %1$s</string>
+    <string name="cc_view_direction_failed">No se ha podido fijar el sentido de la vista (%1$s): %2$s</string>
+    <string name="cc_stop_download_first">Primero hay que parar la descarga.</string>
+    <string name="cc_start_download_first">Primero hay que empezar la descarga.</string>
+    <string name="cc_download_stopped">Descarga parada: %1$s</string>
+    <string name="cc_camera_unknown">Desconocida</string>
+
+
+    <string name="kvd_param_title">Ajustes del parámetro</string>
+    <string name="kvd_tip_title">Aviso</string>
+    <string name="kvd_got_it">Entendido</string>
+    <string name="kvd_white_balance">Balance de blancos</string>
+
+    <!-- Dialogos de waypoint del sample de DJI: venian en chino -->
+    <string name="wpv_global_settings">Ajustes generales</string>
+    <string name="wpv_add_waypoint">Añadir punto de ruta</string>
+    <string name="wpv_show_action_2">Acción 2</string>
+    <string name="wpv_add_point">Añadir punto</string>
+    <string name="wpv_poi_settings">Ajustes de POI</string>
+
+    <!-- Resto del sample de DJI: venia en chino -->
+    <string name="djv_file_list_status">Estado de la lista de archivos</string>
+    <string name="djv_import_flysafe">Importar datos locales de zona de vuelo seguro</string>
+    <string name="djv_test_flysafe_ok">Prueba: importar datos locales de zona segura válidos</string>
+    <string name="djv_test_flysafe_bad">Prueba: importar datos locales de zona segura no válidos</string>
+    <string name="djv_sync_to_aircraft">Sincronizar los datos con el aircraft</string>
+    <string name="djv_wayline_fields">Editar los campos de la ruta</string>
+    <string name="djv_flight_height">Altura de vuelo</string>
+    <string name="djv_waypoint_speed">Velocidad de vuelo en los puntos</string>
+    <string name="djv_preview">Vista previa</string>
+    <string name="djv_download_original">Descargar el original</string>
+    <string name="djv_cancel_download">Cancelar la descarga</string>
+    <string name="djv_download_json">Descargar el JSON</string>
+
+    <string name="djv_download_subfile">Descargar el subarchivo</string>
+    <string name="djv_track_test_button">Botón de prueba de eventos</string>
+    <string name="djv_pick_local_file">Elegir un archivo local</string>
+
+    <string name="djv_mp3_to_opus">Convertir MP3 a Opus</string>
+    <string name="djv_upload_local_file">Subir un archivo local</string>
+    <string name="djv_upload_recording">Subir esta grabación</string>
+    <string name="djv_cancel_upload">Cancelar la subida</string>
+    <string name="djv_transfer_status">Estado de la transferencia de archivos:</string>
 </resources>

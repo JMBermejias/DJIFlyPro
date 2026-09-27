@@ -108,7 +108,7 @@
             <Button
                 android:id="@+id/btn_import"
                 style="@style/main_fragment_btn"
-                android:text="导入本地限飞数据"
+                android:text="@string/djv_import_flysafe"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/importMode" />
@@ -116,7 +116,7 @@
             <Button
                 android:id="@+id/btn_test_import_available"
                 style="@style/main_fragment_btn"
-                android:text="测试:导入可用的本地限飞数据"
+                android:text="@string/djv_test_flysafe_ok"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/btn_import" />
@@ -124,7 +124,7 @@
             <Button
                 android:id="@+id/btn_test_import_unavailable"
                 style="@style/main_fragment_btn"
-                android:text="测试:导入不可用的本地限飞数据"
+                android:text="@string/djv_test_flysafe_bad"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/btn_test_import_available" />
@@ -132,7 +132,7 @@
             <Button
                 android:id="@+id/btn_sync"
                 style="@style/main_fragment_btn"
-                android:text="同步数据到飞机"
+                android:text="@string/djv_sync_to_aircraft"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/btn_test_import_unavailable" />

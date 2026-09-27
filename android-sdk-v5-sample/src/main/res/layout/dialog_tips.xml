@@ -14,7 +14,7 @@
         android:layout_gravity="center"
         android:layout_marginTop="20dp"
         android:gravity="center"
-        android:text="提示"
+        android:text="@string/kvd_tip_title"
         android:textColor="@color/white"
         android:textSize="18sp"/>
 
@@ -46,7 +46,7 @@
             android:layout_marginTop="10dp"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="知道了"/>
+            android:text="@string/kvd_got_it"/>
 
     </LinearLayout>
 

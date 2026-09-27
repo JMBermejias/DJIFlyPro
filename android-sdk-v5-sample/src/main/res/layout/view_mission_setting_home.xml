@@ -22,7 +22,7 @@
             android:textColor="@color/white"
             android:layout_gravity="center"
             android:textSize="20sp"
-            android:text="航线字段编辑"/>
+            android:text="@string/djv_wayline_fields"/>
 
 
         <dji.v5.ux.accessory.DescSpinnerCell
@@ -53,7 +53,7 @@
             app:imageColor="@color/uxsdk_colorPrimary"
             android:inputType="number"
             android:lines="1"
-            android:hint="飞行高度"
+            android:hint="@string/djv_flight_height"
             android:text="50"
             app:textBoxColor="@android:color/white"
             android:textColor="@color/uxsdk_colorPrimary"
@@ -69,7 +69,7 @@
             android:inputType="number"
             android:text="5"
             android:lines="1"
-            android:hint="航点飞行速度"
+            android:hint="@string/djv_waypoint_speed"
             app:textBoxColor="@android:color/white"
             android:textColor="@color/uxsdk_colorPrimary"
             app:floatingLabelColor="@android:color/white"

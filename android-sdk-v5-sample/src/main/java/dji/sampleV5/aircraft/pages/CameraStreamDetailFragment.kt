@@ -136,25 +136,26 @@ class CameraStreamDetailFragment : DJIFragment() {
         }
 
         initViewModel()
+        observeMessages()
 
         btnSetStreamEncodeBitrate.setOnClickListener {
             KeyValueDialogUtil.showInputDialog(
-                activity, "Stream Encode Bitrate(bps)",
+                activity, getString(R.string.cc_bitrate_prompt),
                 viewModel.getStreamEncoderBitrate().toString(), "", false
             ) {
                 it?.apply {
                     if (this.toIntOrNull() == null) {
-                        ToastUtils.showToast("Value Parse Error")
+                        ToastUtils.showToast(getString(R.string.cc_bitrate_invalid))
                         return@showInputDialog
                     }
                     viewModel.setStreamEncoderBitrate(this.toInt())
-                    ToastUtils.showToast("set success,it will take effect while encoder is working.")
+                    ToastUtils.showToast(getString(R.string.cc_bitrate_applied))
                 }
             }
         }
 
         btnGetStreamEncodeBitrate.setOnClickListener {
-            ToastUtils.showToast("Stream Encoder Bitrate:${viewModel.getStreamEncoderBitrate()}")
+            ToastUtils.showToast(getString(R.string.cc_bitrate_current, viewModel.getStreamEncoderBitrate()))
         }
 
         btnChangeCameraMode.setOnClickListener {
@@ -295,19 +296,37 @@ class CameraStreamDetailFragment : DJIFragment() {
         )
     }
 
+    /**
+     * Resuelve lo que el ViewModel no puede traducir. El ViewModel entrega el
+     * identificador del recurso y los argumentos; el texto vive en
+     * `strings_pro.xml` y sale en español.
+     */
+    private fun observeMessages() {
+        viewModel.message.observe(viewLifecycleOwner) { message ->
+            message ?: return@observe
+            ToastUtils.showToast(
+                if (message.args.isEmpty()) {
+                    getString(message.resId)
+                } else {
+                    getString(message.resId, *message.args.toTypedArray())
+                }
+            )
+        }
+    }
+
     private fun downloadYUVImage() {
         val selectedIndex = arrayOf(-1)
         val formatList = SUPPORT_YUV_FORMAT.keys.toTypedArray()
         AlertDialog.Builder(requireContext(), androidx.appcompat.R.style.Base_ThemeOverlay_AppCompat_Dialog_Alert)
             .setIcon(android.R.drawable.ic_input_get)
-            .setTitle(R.string.title_select_yuv_format)
+            .setTitle(R.string.cc_yuv_format_title)
             .setCancelable(true)
             .setSingleChoiceItems(formatList, -1) { _, i ->
                 if (i >= 0) {
                     selectedIndex[0] = i
                 }
             }
-            .setPositiveButton(R.string.title_select_yuv_format_ok) { dialog, _ ->
+            .setPositiveButton(R.string.cc_ok) { dialog, _ ->
                 if (selectedIndex[0] >= 0) {
                     val format = SUPPORT_YUV_FORMAT[formatList[selectedIndex[0]]]
                     val name = formatList[selectedIndex[0]]
@@ -315,7 +334,7 @@ class CameraStreamDetailFragment : DJIFragment() {
                 }
                 dialog.dismiss()
             }
-            .setNegativeButton(R.string.title_select_yuv_format_cancel) { dialog, _ ->
+            .setNegativeButton(R.string.cc_cancel) { dialog, _ ->
                 dialog.dismiss()
             }
             .create()

@@ -61,10 +61,31 @@ aeronave del MSDK) en vez de "DJIFlyPro". Un usuario con el dispositivo en
 chino habría visto el nombre de la aplicación cambiado por el del SDK.
 
 Se han retirado las claves propias de DJIFlyPro de ese fichero, de modo que
-caen en el español por defecto. Las 10 cadenas que quedan son del sample de
-DJI y se dejan intactas. Tres de ellas sí las usa una pantalla alcanzable
+caen en el español por defecto. Las cadenas que quedan son del sample de DJI y
+se dejan intactas. Tres de ellas sí las usa una pantalla alcanzable
 —el diálogo de descarga YUV de `CameraStreamDetailFragment`—, pero sus
 botones están en el layout, no en el recurso, y ya están en español allí.
+
+## Qué queda en inglés, y por qué
+
+No todo se traduce, y en algunos casos traducir sería un error:
+
+- **Los mensajes de error del SDK de DJI.** Se traducen los 52 códigos que esta
+  app puede llegar a mostrar, más los 21 tipos de error. Un código desconocido cae
+  en un texto en español que nombra el área del fallo, y **el texto original de
+  DJI se conserva siempre**. Traducir solo una parte es lo correcto: DJI no da
+  texto ni en inglés para 48 de sus 61 códigos de misión, y un mensaje inventado
+  podría decirle al piloto lo contrario de la verdad. Ver `DjiErrorText.kt`.
+- **Los nombres de enum** (`CameraAutomationState`, `FlightSafetyReason`) están en
+  inglés porque son identificadores. Lo que el usuario lee sale de
+  `strings_pro.xml`, elegido por `FlightFailureText`.
+- **Las etiquetas de enum del SDK** en los layouts del centro de control
+  (`MS_G_CAMERA`, `WIDE`, `CenterCrop`): son los códigos con los que aparecen en la
+  documentación de DJI, y traducirlos rompería la correspondencia.
+- **Los nombres propios**: OpenStreetMap, Mapbox, M350_RTK, Zenmuse P1.
+- **Los identificadores de código** en general.
+- **Las citas textuales de DJI** en esta documentación, que van entrecomilladas y
+  atribuidas.
 
 ## Comprobación
 
@@ -85,6 +106,6 @@ botones están en el layout, no en el recurso, y ya están en español allí.
 - `res/values/strings.xml` conserva 406 cadenas del sample de DJI en inglés. No
   se traducen porque no se usan, y borrarlas rompería el código de ejemplo que
   se conserva como referencia del SDK.
-- Las 319 pruebas unitarias pasan. Las que fijaban texto en inglés ahora fijan
+- Las 324 pruebas unitarias pasan. Las que fijaban texto en inglés ahora fijan
   el texto español, y al revés de lo que parecía: si alguien cambia un mensaje
   de cara al usuario sin querer, la prueba falla.
