@@ -1,13 +1,13 @@
 {
   "schema": "djiflypro.update/v1",
-  "versionCode": 8,
-  "versionName": "1.1.0-alpha.7",
-  "tag": "v1.1.0-alpha.7",
-  "apkUrl": "https://github.com/JMBermejias/DJIFlyPro/releases/download/v1.1.0-alpha.7/DJIFlyPro-1.1.0-alpha.7.apk",
-  "apkSize": 205135518,
-  "sha256": "3411d560c0060d19d240f0be6436a742bb1d8eed8454a5b470fca6b4117cf648",
+  "versionCode": 9,
+  "versionName": "1.1.0-alpha.8",
+  "tag": "v1.1.0-alpha.8",
+  "apkUrl": "https://github.com/JMBermejias/DJIFlyPro/releases/download/v1.1.0-alpha.8/DJIFlyPro-1.1.0-alpha.8.apk",
+  "apkSize": 205138570,
+  "sha256": "ec4cac991e563f6553b42b30893957dd984863734fbfa53bbbf4c41b52e630b4",
   "signingCertificateSha256": "8a3aac2e456093f76dc0a2ccd717538b1732da3cecf470231feb48de187def43",
-  "releaseUrl": "https://github.com/JMBermejias/DJIFlyPro/releases/tag/v1.1.0-alpha.7",
-  "notes": "Novedad de esta versi\u00f3n: App Key correcta, la app ya registra con DJI",
-  "publishedAt": "2026-09-27T09:09:20Z"
+  "releaseUrl": "https://github.com/JMBermejias/DJIFlyPro/releases/tag/v1.1.0-alpha.8",
+  "notes": "Novedad: el mapa ya carga teselas",
+  "publishedAt": "2026-09-27T09:56:51Z"
 }

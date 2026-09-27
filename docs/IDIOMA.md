@@ -24,11 +24,11 @@ sepa que no hay más traducciones que aplicar.
 | Texto de los layouts de DJIFlyPro | `res/values/strings_pro.xml` |Ya estaba en español; extraído a recursos para que sea localizable |
 | 23 cadenas de la interfaz de control | `res/values/strings_pro.xml` | Traducidas de inglés a español |
 | Textos de la capa de dominio | En el propio código, en español | Ver el apartado siguiente |
-| Textos de los diálogos y avisos | `res/values/strings_pro.xml` + código | definingidas como recursos para los reutilizables |
+| Textos de los diálogos y avisos | `res/values/strings_pro.xml` + código | definidas como recursos para los reutilizables |
 | Recetas de ejemplo | `assets/algorithms/*.json` | Los `name` y `description` están en español |
 | Fichas de entrega (GeoJSON, KML, ficha de vuelo, informe de validación) | Se generan con textos en español desde el código | Los identificadores JSON y las claves WPML siguen en inglés, porque son formato |
-| `res/values/strings.xml` | Del sample de DJI, 406 cadenas | **No se tocan.** Ninguna pantalla alcanzable las usa |
-| UX SDK y SDK de DJI | Dentro de los AAR | **No se pueden traducir.** El único widget alcanzable es el mapa, que no tiene texto |
+| `res/values/strings.xml` | Del sample de DJI, 406 cadenas | **No se traducen.** Solo 3 las usa una pantalla alcanzable, y se cubren en sus propios layouts |
+| UX SDK y SDK de DJI | Dentro de los AAR | **No se pueden traducir.** El AAR sí trae `values-es/`, pero el único widget alcanzable es el mapa, que no tiene texto |
 
 ### Por qué los mensajes del dominio están en el código y no en `strings.xml`
 
@@ -62,7 +62,9 @@ chino habría visto el nombre de la aplicación cambiado por el del SDK.
 
 Se han retirado las claves propias de DJIFlyPro de ese fichero, de modo que
 caen en el español por defecto. Las 10 cadenas que quedan son del sample de
-DJI, no se usan en ninguna pantalla alcanzable, y se dejan intactas.
+DJI y se dejan intactas. Tres de ellas sí las usa una pantalla alcanzable
+—el diálogo de descarga YUV de `CameraStreamDetailFragment`—, pero sus
+botones están en el layout, no en el recurso, y ya están en español allí.
 
 ## Comprobación
 
@@ -75,14 +77,14 @@ DJI, no se usan en ninguna pantalla alcanzable, y se dejan intactas.
   `pro_control_point_card.xml` y `pro_algorithm_card.xml`.
 - Los identificadores técnicos no se traducen: `EPSG:32630`, `WGS 84`,
   `GeoJSON`, `KML`, `WPML`, `RTK`, `mm`, `cm/px`, `ha`, `m`. Son parte del
-  vocabulario de la，speciality y traducirlos daría información menos precisa.
+  vocabulario de la especialidad y traducirlos daría información menos precisa.
 - El formato numérico es independiente del idioma: las cifras se emiten con
   `Locale.US`, con punto decimal, porque van a un archivo de intercambio y a
   un parser. Un operador español ve "0.75" en pantalla, no "0,75", y eso es
   intencionado para que lo que lee sea exactamente lo que se exporta.
-- `res/values/strings.xml` conserva 406 cadenas del sample de DJI en inglés.
-  No se traducen porque no se usan, y borrarlas rompería el código de ejemplo
-  que se conserva como referencia del SDK.
-- Las 292 pruebas unitarias pasan. Las que fijaban texto en inglés ahora fijan
+- `res/values/strings.xml` conserva 406 cadenas del sample de DJI en inglés. No
+  se traducen porque no se usan, y borrarlas rompería el código de ejemplo que
+  se conserva como referencia del SDK.
+- Las 319 pruebas unitarias pasan. Las que fijaban texto en inglés ahora fijan
   el texto español, y al revés de lo que parecía: si alguien cambia un mensaje
   de cara al usuario sin querer, la prueba falla.

@@ -39,7 +39,7 @@ class FlightControlVM : DJIViewModel() {
         return decision
     }
 
-    fun takeOff(callback: (Boolean, String) -> Unit) {
+    fun takeOff(callback: (Boolean, FlightFailure?) -> Unit) {
         execute(
             FlightCommand.TAKEOFF,
             callback,
@@ -52,7 +52,7 @@ class FlightControlVM : DJIViewModel() {
         )
     }
 
-    fun land(callback: (Boolean, String) -> Unit) {
+    fun land(callback: (Boolean, FlightFailure?) -> Unit) {
         execute(
             FlightCommand.LAND,
             callback,
@@ -65,7 +65,7 @@ class FlightControlVM : DJIViewModel() {
         )
     }
 
-    fun returnHome(callback: (Boolean, String) -> Unit) {
+    fun returnHome(callback: (Boolean, FlightFailure?) -> Unit) {
         execute(
             FlightCommand.RETURN_HOME,
             callback,
@@ -78,7 +78,7 @@ class FlightControlVM : DJIViewModel() {
         )
     }
 
-    fun emergencyLand(callback: (Boolean, String) -> Unit) {
+    fun emergencyLand(callback: (Boolean, FlightFailure?) -> Unit) {
         execute(
             FlightCommand.EMERGENCY_LAND,
             callback,
@@ -95,21 +95,21 @@ class FlightControlVM : DJIViewModel() {
 
     private fun execute(
         command: FlightCommand,
-        callback: (Boolean, String) -> Unit,
+        callback: (Boolean, FlightFailure?) -> Unit,
         action: (CommonCallbacks.CompletionCallbackWithParam<EmptyMsg>) -> Unit
     ) {
         val decision = evaluate(command)
         if (!decision.allowed) {
-            callback(false, decision.reason.name)
+            callback(false, FlightFailure.Blocked(decision.reason))
             return
         }
         action(object : CommonCallbacks.CompletionCallbackWithParam<EmptyMsg> {
             override fun onSuccess(t: EmptyMsg?) {
-                callback(true, "Orden aceptada")
+                callback(true, null)
             }
 
             override fun onFailure(error: IDJIError) {
-                callback(false, error.description())
+                callback(false, FlightFailure.Rejected(error.description()))
             }
         })
     }

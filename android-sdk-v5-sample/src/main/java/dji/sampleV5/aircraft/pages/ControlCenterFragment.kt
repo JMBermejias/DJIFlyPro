@@ -16,9 +16,11 @@ import dji.sampleV5.aircraft.models.CameraAutomationState
 import dji.sampleV5.aircraft.models.CameraAutomationVM
 import dji.sampleV5.aircraft.models.FlightCommand
 import dji.sampleV5.aircraft.models.FlightControlVM
+import dji.sampleV5.aircraft.models.FlightFailure
 import dji.sampleV5.aircraft.models.MSDKManagerVM
 import dji.sampleV5.aircraft.models.VirtualStickVM
 import dji.sampleV5.aircraft.models.globalViewModels
+import dji.sampleV5.aircraft.pro.FlightFailureText
 import dji.v5.common.callback.CommonCallbacks
 import dji.v5.common.error.IDJIError
 import dji.v5.ux.core.util.ToastUtils
@@ -88,7 +90,7 @@ class ControlCenterFragment : DJIFragment() {
                 R.string.btn_control_takeoff,
                 getString(R.string.control_confirm_takeoff)
             ) {
-                flightControlVM.takeOff(::showResult)
+                flightControlVM.takeOff(::showFlightResult)
             }
         }
         binding?.btnControlLand?.setOnClickListener {
@@ -96,7 +98,7 @@ class ControlCenterFragment : DJIFragment() {
                 R.string.btn_control_land,
                 getString(R.string.control_confirm_land)
             ) {
-                flightControlVM.land(::showResult)
+                flightControlVM.land(::showFlightResult)
             }
         }
         binding?.btnControlReturnHome?.setOnClickListener {
@@ -104,7 +106,7 @@ class ControlCenterFragment : DJIFragment() {
                 R.string.btn_control_return_home,
                 getString(R.string.control_confirm_return_home)
             ) {
-                flightControlVM.returnHome(::showResult)
+                flightControlVM.returnHome(::showFlightResult)
             }
         }
         binding?.btnControlEnableVirtualStick?.setOnClickListener {
@@ -173,7 +175,11 @@ class ControlCenterFragment : DJIFragment() {
         binding?.controlTelemetryStatus?.text = getString(
             R.string.control_telemetry_format,
             if (telemetry.aircraftConnected) getString(R.string.control_state_connected) else getString(R.string.control_state_disconnected),
-            if (telemetry.remoteControllerConnected) "connected" else "disconnected",
+            if (telemetry.remoteControllerConnected) {
+                getString(R.string.control_state_connected)
+            } else {
+                getString(R.string.control_state_disconnected)
+            },
             battery,
             telemetry.gpsSignalLevel,
             String.format(java.util.Locale.US, "%.1f", telemetry.altitudeMeters)
@@ -191,19 +197,37 @@ class ControlCenterFragment : DJIFragment() {
         binding?.btnControlEnableVirtualStick?.isEnabled = virtualStickDecision.allowed
         binding?.controlSafetyStatus?.text = getString(
             if (takeoffDecision.allowed) R.string.control_safety_ready else R.string.control_safety_blocked,
-            takeoffDecision.reason.name
+            getString(FlightFailureText.label(takeoffDecision.reason))
         )
     }
 
     private fun renderCameraState() {
         val state = cameraAutomationVM.state.value ?: CameraAutomationState.IDLE
         val status = cameraAutomationVM.status.value.orEmpty()
-        binding?.controlCameraStatus?.text = if (status.isBlank()) state.name else "$state: $status"
+        val label = getString(FlightFailureText.label(state))
+        binding?.controlCameraStatus?.text = if (status.isBlank()) {
+            label
+        } else {
+            getString(R.string.camera_state_with_detail, label, status)
+        }
     }
 
     private fun showSafetyBlock() {
         val decision = flightControlVM.evaluate(FlightCommand.MANUAL_CONTROL)
-        showResult(false, getString(R.string.control_safety_blocked, decision.reason.name))
+        showResult(false, getString(R.string.control_safety_blocked, getString(FlightFailureText.label(decision.reason))))
+    }
+
+    /**
+     * Traduce el resultado de una orden de vuelo. El texto no se decide aquí sino
+     * en [FlightFailureText], para que el ViewModel no tenga que fabricar frases
+     * ni traducirlas.
+     */
+    private fun showFlightResult(success: Boolean, failure: FlightFailure?) {
+        if (success) {
+            showResult(true, getString(R.string.flight_accepted))
+        } else if (failure != null) {
+            showResult(false, FlightFailureText.describe(requireContext(), failure))
+        }
     }
 
     private fun showResult(success: Boolean, message: String) {

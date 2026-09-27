@@ -1,11 +1,11 @@
-# DJIFlyPro v1.1.0-alpha.7
+# DJIFlyPro v1.1.0-alpha.8
 
-`versionName 1.1.0-alpha.7`, `versionCode 8`.
+`versionName 1.1.0-alpha.8`, `versionCode 9`.
 
 ## Instala esta. Las dos anteriores no conectaban con el aircraft
 
 Ninguna de las versiones hasta ahora ha llega a registrarse con DJI. La
-alpha.6 arregló una cosa y dejó otra, y las dos daban el mismo error. Esta es la
+alpha.7 arregló una cosa y dejó otra, y las dos daban el mismo error. Esta es la
 primera en la que la App Key llega a la APK como DJI la emitió.
 
 Había dos fallos, ambos en el camino entre el fichero de claves y el manifiesto:
@@ -21,7 +21,7 @@ Había dos fallos, ambos en el camino entre el fichero de claves y el manifiesto
    sobrevivían: DJI recibía una clave de **26 caracteres con dos comillas
    pegadas** en vez de los 24 reales.
 
-El segundo fallo es el que hace que la alpha.6 no sirviera, y es el más traicionero
+El segundo fallo es el que hace que la alpha.7 no sirviera, y es el más traicionero
 de los dos: la clave de DJI era correcta todo el rato, así que el error
 `INVALID_METADATA` senala a la consola de DJI y no al build. Cambiar el package name
 parecía haberlo arreglado, porque había arreglado la mitad.
@@ -30,7 +30,7 @@ Por eso esta vez el build falla si la App Key trae comillas o espacios, y avisa 
 no mide 24 caracteres. Un preflight que solo comprueba "no está vacía" deja pasar
 una clave corrupta sin decir nada.
 
-**Hay que desinstalar la alpha.6 antes de instalar esta.** No es opcional: la App
+**Hay que desinstalar la alpha.7 antes de instalar esta.** No es opcional: la App
 Key va incrustada en la APK y Android no admite dos APKs con la misma
 `applicationId` sin borrar la otra.
 
@@ -110,9 +110,9 @@ la telemetría, la cámara, el vídeo y el control manual.
 
 | Archivo | Tamaño | SHA-256 |
 |---|---:|---|
-| `DJIFlyPro-1.1.0-alpha.7.apk` | 205,135,518 bytes | `3411d560c0060d19d240f0be6436a742bb1d8eed8454a5b470fca6b4117cf648` |
-| `DJIFlyPro-1.1.0-alpha.7.aab` | 198,944,051 bytes | `c8979b62ccd8765898757be01201ba927cc945fbaa7c70eac24687f36f6a2bb4` |
-| `update.json` | 656 bytes | `c0851d47ac4ad9af34799bd9b30d11280bf3f512724b4c41a97a724fad5cac9d` |
+| `DJIFlyPro-1.1.0-alpha.8.apk` | 205,138,570 bytes | `ec4cac991e563f6553b42b30893957dd984863734fbfa53bbbf4c41b52e630b4` |
+| `DJIFlyPro-1.1.0-alpha.8.aab` | 198,945,965 bytes | `f174e2d95ff11d626ec872931b5d4fc5aa3090f5b96dd58b3542e2c37481b3e7` |
+| `update.json` | 615 bytes | `f574b211d03f84f581a4cccafff222cb459f1390d5274d6592d318864151469a` |
 
 El `.aab` es para subir a Google Play, no para instalar a mano.
 
@@ -128,9 +128,9 @@ MD5:     0bea2157164ef298389284423a21aaa5
 
 ## Verificación
 
-316 pruebas unitarias, 0 fallos. Lint con 0 errores.
+319 pruebas unitarias, 0 fallos. Lint con 0 errores.
 
-`scripts/verify-published-release.sh 7` recorre el camino completo contra esta
+`scripts/verify-published-release.sh 8` recorre el camino completo contra esta
 release: busca el manifiesto por la misma API, lo valida, decide que hay versión
 nueva, descarga los 205 MB desde la URL que anuncia el manifiesto y comprueba el
 hash y el firmante.

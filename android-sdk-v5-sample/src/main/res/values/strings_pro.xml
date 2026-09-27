@@ -2,7 +2,7 @@
 <!--
   Strings de DJIFlyPro. Español como idioma por defecto: la aplicación se
   entrega en español y así se ve en español aunque el dispositivo esté en
-  otro idioma. La versión inglesa está en values-en/strings_pro.xml.
+  otro idioma. La versión inglesa está en el directorio values-en/ del sample de DJI.
 
   Deliberadamente NO se sustituye strings.xml, que es del sample de DJI: sus
   406 cadenas no las usa ninguna pantalla alcanzable y borrarlas rompería el
@@ -104,6 +104,7 @@
     <string name="camera_state_recording">Grabando</string>
     <string name="camera_state_error">Error</string>
 
+    <string name="safety_reason_ready">Listo para despegar</string>
     <string name="safety_reason_not_registered">SDK no registrado</string>
     <string name="safety_reason_battery_too_low">Batería demasiado baja</string>
     <string name="safety_reason_home_not_set">Punto de origen sin definir</string>
@@ -114,6 +115,12 @@
     <string name="safety_reason_remote_disconnected">Control remoto desconectado</string>
     <string name="safety_reason_battery_unknown">Estado de batería desconocido</string>
     <string name="safety_reason_not_flying">No está en vuelo</string>
+
+    <!-- ===== Resultado de una orden de vuelo ===== -->
+
+    <string name="flight_accepted">Orden aceptada</string>
+    <string name="flight_rejected">Rechazado por el aircraft: %s</string>
+    <string name="camera_state_with_detail">%1$s: %2$s</string>
 
     <!-- ===== Planificador de misiones ===== -->
     <string name="planner_title">Planificador de misiones</string>
