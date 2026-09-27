@@ -39,7 +39,13 @@ fi
 APK_SIZE="$(stat -c %s "$APK")"
 APK_SHA="$(sha256sum "$APK" | cut -d' ' -f1)"
 RELEASE_URL="https://github.com/${REPO}/releases/tag/${TAG}"
-APK_URL="${RELEASE_URL}/download/DJIFlyPro-${VERSION_NAME}.apk"
+# The asset URL is NOT derived from RELEASE_URL. /releases/tag/<tag>/download/<asset>
+# answers with the release's HTML page, not with the asset: it returns 206 for a
+# range request, so a status check passes, and what arrives where 205 MB of APK
+# should be is ~218 KB of HTML. The app then fails the size check and refuses to
+# install, with a mismatch error that points at tampering rather than at a URL.
+# /releases/download/<tag>/<asset> is the only form that serves the file itself.
+APK_URL="https://github.com/${REPO}/releases/download/${TAG}/DJIFlyPro-${VERSION_NAME}.apk"
 
 # The certificate digest of the release signing key. The updater compares it
 # with the one of the installed app and refuses to install when they differ, so

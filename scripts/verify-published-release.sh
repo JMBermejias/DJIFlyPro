@@ -45,9 +45,29 @@ asset = next(a for a in newest["assets"] if a["name"] == "update.json")
 print(f"   release {newest['tag_name']} (prerelease={newest['prerelease']})")
 raw = get(asset["browser_download_url"]).read()
 open(f"{work}/update.json", "wb").write(raw)
-open(f"{work}/apkUrl", "w").write(
-    next(a for a in newest["assets"] if a["name"].endswith(".apk"))["browser_download_url"])
 open(f"{work}/tag", "w").write(newest["tag_name"])
+PY
+
+say "1b. Que la URL de descarga del manifiesto sirva el APK y no la web de la release"
+# This is the check that was missing. An earlier version of this script took the
+# APK URL from the API's browser_download_url, which is always correct, so the
+# manifest's own apkUrl was never exercised. The manifest carried
+# /releases/tag/<tag>/download/<asset>, which answers with the release's HTML
+# page: 206 on a range request, and ~218 KB of HTML where 205 MB of APK should
+# be. Status-only checks pass on it. So the URL under test is the one in the
+# manifest, which is the one the app actually downloads from.
+python3 - "$WORK/update.json" <<'PY'
+import json, sys, urllib.request
+m = json.load(open(sys.argv[1], encoding="utf-8"))
+url = m["apkUrl"]
+r = urllib.request.urlopen(urllib.request.Request(
+    url, headers={"User-Agent": "DJIFlyPro-Android", "Range": "bytes=0-3"}), timeout=40)
+head = r.read(4)
+print(f"   {url}")
+if head[:2] != b"PK":
+    sys.exit(f"la URL no sirve un APK (empieza por {head[:8]!r}, no por 'PK'). "
+             f"Status {r.status}, content-type {r.headers.get('Content-Type')}")
+print(f"   Status {r.status}, content-type {r.headers.get('Content-Type')}, magic PK: correcto")
 PY
 
 say "2. Validando el manifiesto con las mismas reglas que UpdateManifest.validate()"
@@ -80,8 +100,8 @@ print(f"   remota={m['versionCode']} instalada={installed} -> "
 sys.exit(0 if newer else 3)
 PY
 
-say "4. Descargando el APK que anuncia el manifiesto"
-APK_URL="$(cat "$WORK/apkUrl")"
+say "4. Descargando el APK desde la URL que anuncia el manifiesto"
+APK_URL="$(python3 -c "import json,sys;print(json.load(open(sys.argv[1]))['apkUrl'])" "$WORK/update.json")"
 curl -sL --fail --retry 3 -o "$WORK/app.apk" "$APK_URL"
 say "   $(stat -c %s "$WORK/app.apk") bytes descargados"
 

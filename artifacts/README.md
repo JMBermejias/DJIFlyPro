@@ -9,8 +9,8 @@ La compilación release incluye R8 y lint vital.
 
 | Archivo | Tamaño | SHA-256 |
 |---|---:|---|
-| `DJIFlyPro-1.1.0-alpha.5.apk` | 205,135,390 bytes | `b0e8b9af8ce3768017f53923d60e66496b59d44951e2072f9715d09c376ee325` |
-| `DJIFlyPro-1.1.0-alpha.5.aab` | 198,943,944 bytes | `c09f41dc66ad7a208d054bc175caa3cd0ed692a7407bd2c95bc620ce9d278913` |
+| `DJIFlyPro-1.1.0-alpha.6.apk` | 205,135,398 bytes | `32126b8e21d4aea98493409d7adc9844ebc2573e6963f501ac63361844e026a5` |
+| `DJIFlyPro-1.1.0-alpha.6.aab` | 198,943,949 bytes | `882350a620e48085bc38302ee3e3d1e8974d96f824331a8883827e6a8d2becaa` |
 
 **Solo se publica el APK release.** El APK debug no va en la release, y no por
 tamaño:
@@ -50,7 +50,7 @@ DJIFlyPro release preflight failed: AIRCRAFT_API_KEY is empty.
 - `com.dji.sdk.API_KEY` presente en el manifiesto de los **tres** binarios
   (APK release, APK debug y AAB), verificado con `aapt2 dump xmltree` y
   extrayendo el manifiesto del AAB.
-- `DJIFlyPro-1.1.0-alpha.5.apk`: `apksigner verify --verbose` correcto; APK
+- `DJIFlyPro-1.1.0-alpha.6.apk`: `apksigner verify --verbose` correcto; APK
   Signature Scheme v2 y v3, un firmante `CN=DJIFlyPro Local Test`, RSA 2048,
   y `android:debuggable` ausente. La v1 (JAR) no se emite:
   AGP la omite con `minSdk 24` porque la plataforma verifica la v2 por su
@@ -63,8 +63,8 @@ DJIFlyPro release preflight failed: AIRCRAFT_API_KEY is empty.
 - El APK contiene solo `lib/arm64-v8a`. Es lo que declara `abiFilters` y lo que
   instala en móviles y tablets ARM de 64 bits. No instala en emuladores x86_64
   ni en ARM de 32 bits; para eso hay que quitar el `abiFilters` y recompilar.
-- `DJIFlyPro-1.1.0-alpha.5.aab`: `jarsigner -verify` terminó con código 0.
-- Identidad: `com.djiflypro.app`, `versionName 1.1.0-alpha.5`, `versionCode 6`,
+- `DJIFlyPro-1.1.0-alpha.6.aab`: `jarsigner -verify` terminó con código 0.
+- Identidad: `com.djiflypro.app`, `versionName 1.1.0-alpha.6`, `versionCode 7`,
   `minSdk 24`, `targetSdk 35`, `compileSdk 35`.
 - El APK y el manifiesto merged no declaran `MANAGE_EXTERNAL_STORAGE`.
 - El asset `assets/validated_wpml_profiles.json` está empaquetado y contiene una
@@ -98,7 +98,7 @@ clave de producción y no debe usarse para publicar en Google Play.
 ## Release en GitHub
 
 Estos dos binarios están publicados como assets del release
-`v1.1.0-alpha.5`, junto con `update.json`, `SHA256SUMS.txt` y las notas de
+`v1.1.0-alpha.6`, junto con `update.json`, `SHA256SUMS.txt` y las notas de
 `artifacts/release-notes.md`.
 
 `update.json` es el manifiesto de actualización: lo lee la app instalada para
