@@ -1,13 +1,13 @@
 {
   "schema": "djiflypro.update/v1",
-  "versionCode": 11,
-  "versionName": "1.1.0-alpha.10",
-  "tag": "v1.1.0-alpha.10",
-  "apkUrl": "https://github.com/JMBermejias/DJIFlyPro/releases/download/v1.1.0-alpha.10/DJIFlyPro-1.1.0-alpha.10.apk",
-  "apkSize": 205193434,
-  "sha256": "4dd7a06ca69be01ea4e5c9e5705231c04df905beaee86f99578cc5ffa66be5e3",
+  "versionCode": 12,
+  "versionName": "1.1.0-alpha.11",
+  "tag": "v1.1.0-alpha.11",
+  "apkUrl": "https://github.com/JMBermejias/DJIFlyPro/releases/download/v1.1.0-alpha.11/DJIFlyPro-1.1.0-alpha.11.apk",
+  "apkSize": 205204714,
+  "sha256": "36528d0c54b465f42a8d9c1d04f32985f57f0571de0bb7221b05988e23024586",
   "signingCertificateSha256": "8a3aac2e456093f76dc0a2ccd717538b1732da3cecf470231feb48de187def43",
-  "releaseUrl": "https://github.com/JMBermejias/DJIFlyPro/releases/tag/v1.1.0-alpha.10",
+  "releaseUrl": "https://github.com/JMBermejias/DJIFlyPro/releases/tag/v1.1.0-alpha.11",
   "notes": "Novedad: el mapa ya carga teselas",
-  "publishedAt": "2026-09-27T10:34:21Z"
+  "publishedAt": "2026-09-27T11:11:34Z"
 }

@@ -1,6 +1,6 @@
-# DJIFlyPro v1.1.0-alpha.10
+# DJIFlyPro v1.1.0-alpha.11
 
-`versionName 1.1.0-alpha.10`, `versionCode 11`.
+`versionName 1.1.0-alpha.11`, `versionCode 12`.
 
 ## Instala esta. Las dos anteriores no conectaban con el aircraft
 
@@ -112,7 +112,7 @@ la telemetría, la cámara, el vídeo y el control manual.
 |---|---:|---|
 | `DJIFlyPro-1.1.0-alpha.9.apk` | 205,178,102 bytes | `b06c1855212a4656b58ff6fe19d645ca6ea5c331d53b4234dbf6a553ea4026f6` |
 | `DJIFlyPro-1.1.0-alpha.9.aab` | 198,953,127 bytes | `5c02865432b638a30464495baeaa1513db71cd32d9f656b5e634887b7eb294ae` |
-| `update.json` | 621 bytes | `efa4da60397d1c88db02f47ca1e1f603ceacfc5e83288803fa65e58754c66ca3` |
+| `update.json` | 621 bytes | `034322956c3cf3e8e4e685fa10fa2bec06f0ec221b3dbfc21123bbf96499f4b1` |
 
 El `.aab` es para subir a Google Play, no para instalar a mano.
 
@@ -128,9 +128,9 @@ MD5:     0bea2157164ef298389284423a21aaa5
 
 ## Verificación
 
-324 pruebas unitarias, 0 fallos. Lint con 0 errores.
+328 pruebas unitarias, 0 fallos. Lint con 0 errores.
 
-`scripts/verify-published-release.sh 10` recorre el camino completo contra esta
+`scripts/verify-published-release.sh 11` recorre el camino completo contra esta
 release: busca el manifiesto por la misma API, lo valida, decide que hay versión
 nueva, descarga los 205 MB desde la URL que anuncia el manifiesto y comprueba el
 hash y el firmante.

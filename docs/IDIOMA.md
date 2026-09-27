@@ -106,6 +106,6 @@ No todo se traduce, y en algunos casos traducir sería un error:
 - `res/values/strings.xml` conserva 406 cadenas del sample de DJI en inglés. No
   se traducen porque no se usan, y borrarlas rompería el código de ejemplo que
   se conserva como referencia del SDK.
-- Las 324 pruebas unitarias pasan. Las que fijaban texto en inglés ahora fijan
+- Las 328 pruebas unitarias pasan. Las que fijaban texto en inglés ahora fijan
   el texto español, y al revés de lo que parecía: si alguien cambia un mensaje
   de cara al usuario sin querer, la prueba falla.

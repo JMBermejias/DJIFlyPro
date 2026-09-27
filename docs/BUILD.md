@@ -71,7 +71,7 @@ se lee de `.local/api-key.properties`; con `--allow-missing-api-key` se
 comprueba el pipeline R8/lint/firma sin ella, y el resultado no puede
 registrarse con DJI.
 
-Resultados obtenidos: 324 pruebas correctas, `lintDebug` con 0 errores, y release sin advertencias de clase ausente de R8. Las advertencias de "implicit default constructor" que quedan provienen de `proguard-android-optimize.txt` de AGP y de los `proguard.txt` de DJI SDK, Play Services, Room, Lifecycle, Navigation, Glide, OkHttp y JetBrains.
+Resultados obtenidos: 328 pruebas correctas, `lintDebug` con 0 errores, y release sin advertencias de clase ausente de R8. Las advertencias de "implicit default constructor" que quedan provienen de `proguard-android-optimize.txt` de AGP y de los `proguard.txt` de DJI SDK, Play Services, Room, Lifecycle, Navigation, Glide, OkHttp y JetBrains.
 
 `ShippedWpmlAllowlistTest` valida el asset `validated_wpml_profiles.json` real. El asset está declarado como input de la tarea de test, así que un perfil inválido o con marcadores sin rellenar rompe la compilación en lugar de llegar a un dispositivo.
 

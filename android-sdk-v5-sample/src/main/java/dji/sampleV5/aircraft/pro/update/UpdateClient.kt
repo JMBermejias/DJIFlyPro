@@ -34,13 +34,26 @@ class UpdateClient(
      *
      * `releases/latest` is not usable here: it excludes prereleases, and every
      * release of this project is one, so it would always report that there is
-     * nothing. The list endpoint includes them and comes back newest first.
+     * nothing. The list endpoint includes them.
+     *
+     * The list is **sorted here, by the timestamp the response carries**, and the
+     * order of the array is not trusted. That is not defensive paranoia: with
+     * v1.1.0-alpha.10 the API returned it *last*, with the newest `created_at` of
+     * all, while v1.1.0-alpha.9 came first. Taking the first element with a
+     * manifest therefore found alpha.9 and reported "nothing new" while alpha.10
+     * was already published. The asset it had downloaded 400 MB of and checked
+     * the hash of was the wrong one.
+     *
+     * Timestamps are ISO 8601 in UTC with a fixed layout, so they compare
+     * correctly as plain strings. `published_at` is preferred over `created_at`
+     * because a release can be created as a draft and published later.
      */
     fun check(installedVersionCode: Int): Result = try {
         val releases = getJsonArray("$API/repos/$repository/releases?per_page=10")
         val newest = releases.asSequence()
             .filter { it.isJsonObject }
             .map { it.asJsonObject }
+            .sortedByDescending { releaseTimestamp(it) }
             .firstOrNull { hasUpdateAsset(it) }
             ?: return Result.Failed("No hay ninguna release con manifiesto de actualización")
 
@@ -111,6 +124,24 @@ class UpdateClient(
             connection?.disconnect()
         }
     }
+
+    /**
+     * The instant a release became visible, as an ISO 8601 string.
+     *
+     * `published_at` first, `created_at` as the fallback for a release that is
+     * not published yet. An absent timestamp yields an empty string, which sorts
+     * last: a release the API renders oddly is treated as the least recent rather
+     * than silently winning. ISO 8601 in UTC has a fixed layout, so these compare
+     * correctly as plain strings.
+     */
+    private fun releaseTimestamp(release: JsonObject): String {
+        val published = release.stringOrEmpty("published_at")
+        if (published.isNotBlank()) return published
+        return release.stringOrEmpty("created_at")
+    }
+
+    private fun JsonObject.stringOrEmpty(name: String): String =
+        get(name)?.takeIf { !it.isJsonNull }?.asString.orEmpty()
 
     private fun hasUpdateAsset(release: JsonObject): Boolean =
         release.getAsJsonArray("assets")?.asSequence()
