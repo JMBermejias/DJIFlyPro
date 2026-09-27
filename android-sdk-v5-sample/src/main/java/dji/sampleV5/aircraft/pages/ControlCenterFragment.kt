@@ -20,6 +20,7 @@ import dji.sampleV5.aircraft.models.FlightFailure
 import dji.sampleV5.aircraft.models.MSDKManagerVM
 import dji.sampleV5.aircraft.models.VirtualStickVM
 import dji.sampleV5.aircraft.models.globalViewModels
+import dji.sampleV5.aircraft.pro.DjiErrorText
 import dji.sampleV5.aircraft.pro.FlightFailureText
 import dji.v5.common.callback.CommonCallbacks
 import dji.v5.common.error.IDJIError
@@ -120,7 +121,7 @@ class ControlCenterFragment : DJIFragment() {
                 }
 
                 override fun onFailure(error: IDJIError) {
-                    showResult(false, error.description())
+                    showResult(false, DjiErrorText.describe(requireContext(), error))
                 }
             })
         }
@@ -131,7 +132,7 @@ class ControlCenterFragment : DJIFragment() {
                 }
 
                 override fun onFailure(error: IDJIError) {
-                    showResult(false, error.description())
+                    showResult(false, DjiErrorText.describe(requireContext(), error))
                 }
             })
         }

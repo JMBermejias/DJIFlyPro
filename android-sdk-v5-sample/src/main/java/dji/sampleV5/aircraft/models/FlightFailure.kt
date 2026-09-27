@@ -1,5 +1,7 @@
 package dji.sampleV5.aircraft.models
 
+import dji.v5.common.error.ErrorType
+
 /**
  * Por qué no se ha podido ejecutar una orden de vuelo.
  *
@@ -22,9 +24,16 @@ sealed interface FlightFailure {
     data class Blocked(val reason: FlightSafetyReason) : FlightFailure
 
     /**
-     * El aircraft o el SDK han rechazado la orden. El texto viene de DJI y llega
-     * en inglés; la traducción de estos mensajes se hace en la interfaz, con
-     * `docs/COMPATIBILITY.md` como referencia de los códigos.
+     * El aircraft o el SDK han rechazado la orden.
+     *
+     * Se guardan el tipo y el código además del texto porque son lo que permite
+     * traducirlo: el texto solo de DJI llega siempre en inglés, pero el par
+     * (tipo, código) identifica el fallo y tiene traducción propia. Sin ellos
+     * solo se podría repetir la frase de DJI.
      */
-    data class Rejected(val description: String) : FlightFailure
+    data class Rejected(
+        val type: ErrorType,
+        val code: String,
+        val description: String
+    ) : FlightFailure
 }

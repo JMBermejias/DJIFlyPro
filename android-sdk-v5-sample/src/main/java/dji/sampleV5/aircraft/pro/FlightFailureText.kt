@@ -62,6 +62,9 @@ object FlightFailureText {
      */
     fun describe(context: Context, failure: FlightFailure): String = when (failure) {
         is FlightFailure.Blocked -> context.getString(label(failure.reason))
-        is FlightFailure.Rejected -> context.getString(R.string.flight_rejected, failure.description)
+        is FlightFailure.Rejected -> context.getString(
+            R.string.flight_rejected,
+            DjiErrorText.describe(context, failure.type, failure.code, failure.description)
+        )
     }
 }

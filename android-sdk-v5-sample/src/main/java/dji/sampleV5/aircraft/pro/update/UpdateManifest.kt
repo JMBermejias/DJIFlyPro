@@ -52,15 +52,15 @@ data class UpdateManifest(
     /** Parsing. Anything missing, malformed or implausible is rejected, not guessed. */
     fun validate(): UpdateValidation {
         val errors = mutableListOf<String>()
-        if (versionCode <= 0) errors += "versionCode must be positive"
-        if (versionName.isBlank()) errors += "versionName is empty"
-        if (!tag.startsWith("v")) errors += "tag must start with v"
-        if (!apkUrl.startsWith("https://")) errors += "apkUrl must be HTTPS"
-        if (!releaseUrl.startsWith("https://")) errors += "releaseUrl must be HTTPS"
-        if (apkSize <= 0) errors += "apkSize must be positive"
-        if (!SHA256_PATTERN.matches(sha256)) errors += "sha256 is not a SHA-256 digest"
+        if (versionCode <= 0) errors += "versionCode debe ser mayor que 0"
+        if (versionName.isBlank()) errors += "versionName está vacío"
+        if (!tag.startsWith("v")) errors += "tag debe empezar por v"
+        if (!apkUrl.startsWith("https://")) errors += "apkUrl debe ser HTTPS"
+        if (!releaseUrl.startsWith("https://")) errors += "releaseUrl debe ser HTTPS"
+        if (apkSize <= 0) errors += "apkSize debe ser mayor que 0"
+        if (!SHA256_PATTERN.matches(sha256)) errors += "sha256 no es un resumen SHA-256"
         if (!SHA256_PATTERN.matches(signingCertificateSha256)) {
-            errors += "signingCertificateSha256 is not a SHA-256 digest"
+            errors += "signingCertificateSha256 no es un resumen SHA-256"
         }
         return UpdateValidation(errors)
     }
@@ -80,7 +80,7 @@ data class UpdateManifest(
 
         fun parse(raw: String): UpdateManifest {
             val root = JsonParser.parseString(raw).asJsonObject
-            require(root.get("schema").asString == SCHEMA) { "Unsupported update schema" }
+            require(root.get("schema").asString == SCHEMA) { "Esquema de actualización no admitido" }
             return UpdateManifest(
                 versionCode = root.get("versionCode").asInt,
                 versionName = root.get("versionName").asString,

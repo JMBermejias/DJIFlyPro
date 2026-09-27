@@ -31,7 +31,7 @@ object WpmlMissionExporter {
 
         val request = plan.request
         val validation = MissionValidator.validate(request, plan)
-        check(validation.isValid) { "Cannot export an invalid mission: ${validation.errors.joinToString("; ")}" }
+        check(validation.isValid) { "No se puede exportar una misión no válida: ${validation.errors.joinToString("; ")}" }
         val global = MissionGlobalModel(
             globalSpeed = request.speedMps,
             finishAction = when (request.finishAction) {
@@ -94,7 +94,7 @@ object WpmlMissionExporter {
             config,
             template
         )
-        check(output.exists() && output.length() > 0L) { "DJI WPML generator did not create a KMZ file" }
+        check(output.exists() && output.length() > 0L) { "El generador WPML de DJI no ha creado ningún archivo KMZ" }
         return output
     }
 

@@ -109,7 +109,14 @@ class FlightControlVM : DJIViewModel() {
             }
 
             override fun onFailure(error: IDJIError) {
-                callback(false, FlightFailure.Rejected(error.description()))
+                callback(
+                    false,
+                    FlightFailure.Rejected(
+                        error.errorType(),
+                        error.errorCode().orEmpty(),
+                        error.description().orEmpty()
+                    )
+                )
             }
         })
     }

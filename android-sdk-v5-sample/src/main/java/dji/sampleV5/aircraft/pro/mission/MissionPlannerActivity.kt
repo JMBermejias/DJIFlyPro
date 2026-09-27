@@ -15,6 +15,7 @@ import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import dji.sampleV5.aircraft.R
+import dji.sampleV5.aircraft.pro.DjiErrorText
 import dji.sampleV5.aircraft.models.MSDKManagerVM
 import dji.sampleV5.aircraft.models.globalViewModels
 import dji.sampleV5.aircraft.pro.algorithm.AlgorithmRepository
@@ -614,7 +615,7 @@ class MissionPlannerActivity : AppCompatActivity() {
                             missionState = WaypointMissionExecuteState.UNKNOWN
                             progress.visibility = View.GONE
                             refreshCapability()
-                            showError("Fallo al subir", error.description())
+                            showError("Fallo al subir", DjiErrorText.describe(this@MissionPlannerActivity, error))
                         }
                     }
                 }
@@ -779,7 +780,7 @@ class MissionPlannerActivity : AppCompatActivity() {
                         progress.visibility = View.GONE
                         missionState = WaypointMissionExecuteState.READY
                         refreshCapability()
-                        showError("No se pudo iniciar", error.description())
+                        showError("No se pudo iniciar", DjiErrorText.describe(this@MissionPlannerActivity, error))
                     }
                 }
             })
@@ -827,7 +828,7 @@ class MissionPlannerActivity : AppCompatActivity() {
             }
 
             override fun onFailure(error: IDJIError) {
-                runOnUiThread { showError("No se pudo cambiar el estado", error.description()) }
+                runOnUiThread { showError("No se pudo cambiar el estado", DjiErrorText.describe(this@MissionPlannerActivity, error)) }
             }
         }
         runCatching {
@@ -870,7 +871,7 @@ class MissionPlannerActivity : AppCompatActivity() {
                 }
 
                 override fun onFailure(error: IDJIError) {
-                    runOnUiThread { showError("No se pudo detener", error.description()) }
+                    runOnUiThread { showError("No se pudo detener", DjiErrorText.describe(this@MissionPlannerActivity, error)) }
                 }
             })
         }.onFailure { error ->

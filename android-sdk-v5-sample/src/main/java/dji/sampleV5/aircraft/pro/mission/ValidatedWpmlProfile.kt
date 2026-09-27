@@ -40,7 +40,7 @@ data class ValidatedWpmlProfile(
         requireNoPlaceholder(validationReference, "Profile validation reference")
         val upperProduct = productName.uppercase(Locale.ROOT)
         val upperRemote = remoteControllerName.uppercase(Locale.ROOT)
-        require(upperProduct !in setOf("UNKNOWN", "NONE")) { "Profile product is not an identified model" }
+        require(upperProduct !in setOf("UNKNOWN", "NONE")) { "El producto del perfil no es un modelo identificado" }
         require(upperRemote !in setOf("UNKNOWN", "NONE") && !upperRemote.startsWith("NOT_SUPPORTED")
         ) { "Profile remote controller is not identified" }
     }

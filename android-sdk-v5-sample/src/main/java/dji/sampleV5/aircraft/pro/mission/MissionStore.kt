@@ -13,7 +13,7 @@ class MissionStore(context: Context) {
 
     fun save(plan: MissionPlan): File {
         val validation = MissionValidator.validate(plan.request, plan)
-        require(validation.isValid) { "Cannot save an invalid mission: ${validation.errors.joinToString("; ")}" }
+        require(validation.isValid) { "No se puede guardar una misión no válida: ${validation.errors.joinToString("; ")}" }
         val file = File(root, "${safeName(plan.id)}.json")
         file.writeText(gson.toJson(plan), Charsets.UTF_8)
         return file

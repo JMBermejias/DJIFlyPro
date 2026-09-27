@@ -28,7 +28,7 @@
     <string name="dash_last_mission">Última misión</string>
     <string name="dash_no_missions">No hay misiones guardadas</string>
     <string name="dash_safety_notice">DJIFlyPro no sustituye las comprobaciones de vuelo. Verifica espacio aéreo, obstáculos, permisos, batería y mantenimiento antes de despegar.</string>
-    <string name="dash_product_connected">Producto conectado: DJI %1$s</string>
+    <string name="dash_product_connected">Producto conectado: DJI %1$d</string>
     <string name="dash_product_disconnected">Producto: no conectado</string>
     <string name="dash_permissions_denied">Se denegaron algunos permisos; el control del aircraft puede no estar disponible</string>
     <string name="dash_last_mission_value">%1$s\n%2$d puntos · %3$s km</string>
@@ -385,4 +385,91 @@
     <string name="sdk_not_registered_without_key">%1$s. Sin ella el SDK no se puede registrar.</string>
     <string name="sdk_registration_error">Registro DJI: %1$s</string>
     <string name="sdk_waiting_registration">Esperando registro</string>
+    <!-- ===== Errores del SDK de DJI ===== -->
+
+    <!-- Un tipo de error explica de que area es el fallo cuando el codigo concreto
+         no lo conocemos. Nunca se muestra solo: siempre se acompana del texto
+         original de DJI, que es la unica fuente autorizada. -->
+    <string name="dji_type_common">Error general del SDK</string>
+    <string name="dji_type_sdk">Error del SDK de DJI</string>
+    <string name="dji_type_network">Error de red</string>
+    <string name="dji_type_ldm">Error del gestor de licencias de DJI</string>
+    <string name="dji_type_core">Error interno del SDK</string>
+    <string name="dji_type_video">Error de vídeo</string>
+    <string name="dji_type_megaphone">Error del megáfono</string>
+    <string name="dji_type_waypoint">Error de misión waypoint</string>
+    <string name="dji_type_livestream">Error de transmisión en directo</string>
+    <string name="dji_type_rtk">Error de RTK</string>
+    <string name="dji_type_user_login">Error de inicio de sesión</string>
+    <string name="dji_type_perception">Error de percepción</string>
+    <string name="dji_type_uas">Error del UAS</string>
+    <string name="dji_type_lte">Error de LTE</string>
+    <string name="dji_type_payload">Error de la carga útil</string>
+    <string name="dji_type_mop">Error de MOP</string>
+    <string name="dji_type_fly_safe">Error de zona de vuelo seguro</string>
+    <string name="dji_type_upgrade">Error de actualización</string>
+    <string name="dji_type_real_name">Error de verificación de identidad</string>
+    <string name="dji_type_intelligent">Error de vuelo inteligente</string>
+    <string name="dji_type_unknown">Error desconocido</string>
+
+    <!-- Codigos concretos. La clave es TIPO_CODIGO porque UNKNOWN existe
+         tambien como error de waypoint y significa otra cosa. -->
+    <string name="dji_err_common_execution_failed">No se ha podido ejecutar la operación</string>
+    <string name="dji_err_common_system_busy">El sistema está demasiado ocupado para ejecutar la acción</string>
+    <string name="dji_err_common_unknown">Error desconocido del SDK</string>
+    <string name="dji_err_common_undefined">Error indefinido</string>
+    <string name="dji_err_common_timeout">La operación ha tardado demasiado y se ha cancelado</string>
+    <string name="dji_err_common_param_illegal">Parámetro no permitido</string>
+    <string name="dji_err_common_param_invalid">Parámetro no válido</string>
+    <string name="dji_err_common_unsupported">No compatible con este modelo o firmware</string>
+    <string name="dji_err_common_disconnected">Desconectado</string>
+    <string name="dji_err_common_out_of_range">Valor fuera de rango</string>
+    <string name="dji_err_sdk_register_without_init">Se ha intentado registrar el SDK sin inicializarlo</string>
+    <string name="dji_err_sdk_empty_app_key">Falta la App Key de DJI</string>
+    <string name="dji_err_sdk_invalid_app_key">La App Key no es válida</string>
+    <string name="dji_err_sdk_registration_invalid_uuid">Error de servidor de DJI al registrar (UUID no válido)</string>
+    <string name="dji_err_sdk_bundle_not_match">El identificador de la app no coincide con el registrado en DJI</string>
+    <string name="dji_err_sdk_app_key_prohibited">DJI ha bloqueado esta App Key</string>
+    <string name="dji_err_sdk_max_activation_count_reached">Esta App Key ha alcanzado el máximo de activaciones</string>
+    <string name="dji_err_sdk_app_key_invalid_platform">La App Key no es válida para esta plataforma</string>
+    <string name="dji_err_sdk_app_key_not_exist">La App Key no existe en la consola de DJI</string>
+    <string name="dji_err_sdk_app_key_level_not_permitted">La App Key no tiene los permisos necesarios</string>
+    <string name="dji_err_sdk_over_max_activations_count">Se ha superado el máximo de activaciones con esta cuenta</string>
+    <string name="dji_err_sdk_server_parse_failure">Error de servidor de DJI al procesar la respuesta</string>
+    <string name="dji_err_sdk_server_write_failure">Error de servidor de DJI al escribir la respuesta</string>
+    <string name="dji_err_sdk_server_data_abnormal">Datos anómalos del servidor de DJI</string>
+    <string name="dji_err_sdk_invalid_metadata">DJI ha rechazado los datos de la app: revisa que el package name y el firmante de la APK sean los registrados</string>
+    <string name="dji_err_sdk_registration_aes_encrypt_error">Error de cifrado al registrar con DJI</string>
+    <string name="dji_err_sdk_app_key_not_enrolled_by_beta_sdk">La app no está inscrita en el programa beta; usa una App Key de la beta</string>
+    <string name="dji_err_sdk_invalid_app_key_for_beta_version">La App Key no es válida para esta versión beta</string>
+    <string name="dji_err_sdk_sdk_version_blocked">DJI ha bloqueado esta versión del SDK</string>
+    <string name="dji_err_sdk_activate_failed">La activación de la app ha fallado</string>
+    <string name="dji_err_sdk_app_key_blocked">La App Key está bloqueada</string>
+    <string name="dji_err_sdk_could_not_connect_to_internet">La primera vez hace falta conexión a internet para registrarse</string>
+    <string name="dji_err_sdk_invalid_product_category">Categoría de producto no válida</string>
+    <string name="dji_err_sdk_msdk_version_mismatch">Esta versión del SDK no funciona en este control remoto</string>
+    <string name="dji_err_network_network_access_fail">No se ha podido acceder al servidor</string>
+    <string name="dji_err_network_call_canceled">Operación cancelada</string>
+    <string name="dji_err_network_no_network">Sin conexión a internet</string>
+    <string name="dji_err_network_no_network_delegate">No hay delegate de red disponible</string>
+    <string name="dji_err_network_system_error">Error de sistema de red; inténtalo más tarde</string>
+    <string name="dji_err_waypoint_waypoint_method_not_support">Este aircraft no admite misiones waypoint</string>
+    <string name="dji_err_waypoint_lower_battery">No se puede iniciar la misión: la batería del aircraft está muy baja</string>
+    <string name="dji_err_waypoint_cannot_break_wayline_in_cur_state">No se puede detener la misión en este estado; comprueba el aircraft</string>
+    <string name="dji_err_waypoint_cannot_start_wayline_when_wayline_running">Ya hay una misión en marcha: no se puede empezar otra</string>
+    <string name="dji_err_waypoint_cannot_stop_wayline_when_wayline_not_running">No hay ninguna misión en marcha que detener</string>
+    <string name="dji_err_waypoint_wpmz_file_load_error">No se puede iniciar: revisa que el archivo de ruta sea correcto</string>
+    <string name="dji_err_waypoint_gps_invalid">Señal GPS débil. Misión en pausa</string>
+    <string name="dji_err_waypoint_height_limit">No se puede iniciar: la altura de la ruta supera el límite permitido</string>
+    <string name="dji_err_waypoint_low_limit">La altura de la ruta está por debajo del mínimo del aircraft. Misión en pausa</string>
+    <string name="dji_err_waypoint_mission_id_not_exist">No se encuentra la misión en el aircraft: vuelve a subirla</string>
+    <string name="dji_err_waypoint_obstacal_stop">Obstáculo detectado. Misión en pausa</string>
+    <string name="dji_err_waypoint_unknown">Error desconocido de la misión</string>
+    <string name="dji_err_waypoint_upload_file_failed">No se ha podido subir la misión al aircraft</string>
+
+    <string name="dji_error_no_description">DJI no ha dado descripción para este error</string>
+    <string name="dji_error_no_code">código desconocido</string>
+    <string name="dji_error_translated">%1$s\nDJI: %2$s</string>
+    <string name="dji_error_by_type">%1$s (código %2$s)\nDJI: %3$s</string>
+
 </resources>

@@ -116,13 +116,15 @@ class DJIFlyProActivity : AppCompatActivity() {
         msdkManagerVM.lvRegisterState.observe(this) { (registered, error) ->
             connectionStatus.text = ConnectionStatusMessage.registration(
                 registered = registered,
-                errorDescription = error?.description(),
+                // Se traduce aquí y no dentro de ConnectionStatusMessage porque
+                // ese objeto no lleva Context a propósito: se prueba sin el SDK.
+                errorDescription = error?.let { DjiErrorText.describe(this, it) },
                 apiKey = apiKey
             )
         }
         msdkManagerVM.lvProductConnectionState.observe(this) { (connected, productId) ->
             productStatus.text = if (connected) {
-                "Producto conectado: DJI product $productId"
+                getString(R.string.dash_product_connected, productId)
             } else {
                 "Producto: no conectado"
             }
@@ -150,9 +152,14 @@ class DJIFlyProActivity : AppCompatActivity() {
     private fun refreshLastMission() {
         val mission = MissionStore(this).latest()
         lastMission.text = if (mission == null) {
-            "No hay misiones guardadas"
+            getString(R.string.dash_no_missions)
         } else {
-            "${mission.request.name}\n${mission.waypoints.size} puntos · ${"%.1f".format(mission.totalDistanceMeters / 1000.0)} km"
+            getString(
+                R.string.dash_last_mission_value,
+                mission.request.name,
+                mission.waypoints.size,
+                String.format(java.util.Locale.US, "%.1f", mission.totalDistanceMeters / 1000.0)
+            )
         }
     }
 

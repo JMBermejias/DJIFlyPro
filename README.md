@@ -14,7 +14,7 @@ de la cadena cartográfica.
 
 ## Releases
 
-- [v1.1.0-alpha.8](https://github.com/JMBermejias/DJIFlyPro/releases/tag/v1.1.0-alpha.8) — **la que hay que instalar**: los motivos de bloqueo ya no salen en inglés (`BATTERY_TOO_LOW` y compañía). Actualización desde la propia app, mapa con Mapbox, App Key de DJI ya correcta.
+- [v1.1.0-alpha.9](https://github.com/JMBermejias/DJIFlyPro/releases/tag/v1.1.0-alpha.9) — **la que hay que instalar**: los errores del SDK de DJI se muestran en español, conservando siempre el texto original de DJI. Motivos de bloqueo sin inglés, mapa con Mapbox, App Key correcta.
 - [v1.1.0-alpha.2](https://github.com/JMBermejias/DJIFlyPro/releases/tag/v1.1.0-alpha.2) — igual, pero además con un APK debug de otro certificado que no se puede instalar encima.
 - [v1.1.0-alpha.1](https://github.com/JMBermejias/DJIFlyPro/releases/tag/v1.1.0-alpha.1) — compilada sin App Key: no puede registrarse con DJI.
 - [v0.1.0-alpha.1](https://github.com/JMBermejias/DJIFlyPro/releases/tag/v0.1.0-alpha.1) — base de planificación de rutas.

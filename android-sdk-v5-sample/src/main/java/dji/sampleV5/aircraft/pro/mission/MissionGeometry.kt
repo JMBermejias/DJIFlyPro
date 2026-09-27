@@ -122,7 +122,7 @@ object MissionGeometry {
         require(request.altitudeMeters in 2.0..MissionValidator.MAX_GUIDED_ALTITUDE_METERS) {
             "La altura de vuelo está fuera del rango seguro"
         }
-        require(request.standoffMeters in 0.5..500.0) { "Stand-off is outside the safe range" }
+        require(request.standoffMeters in 0.5..500.0) { "La distancia de seguridad está fuera del rango seguro" }
         require(request.speedMps in 1.0..MissionValidator.MAX_SPEED_MPS) { "La velocidad está fuera del rango seguro" }
         require(request.overlapPercent in 10..90) { "El solape está fuera del rango seguro" }
         require(request.gimbalPitchDegrees.isFinite() && request.gimbalPitchDegrees in -90.0..30.0) {

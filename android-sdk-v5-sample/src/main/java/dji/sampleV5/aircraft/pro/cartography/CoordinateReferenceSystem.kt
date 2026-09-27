@@ -75,10 +75,10 @@ object CoordinateReferenceSystem {
      */
     fun zoneFor(longitudeDegrees: Double, latitudeDegrees: Double): Int {
         require(longitudeDegrees.isFinite() && longitudeDegrees in -180.0..180.0) {
-            "Longitude is outside [-180, 180]"
+            "La longitud sale del rango [-180, 180]"
         }
         require(latitudeDegrees.isFinite() && latitudeDegrees in -90.0..90.0) {
-            "Latitude is outside [-90, 90]"
+            "La latitud sale del rango [-90, 90]"
         }
         var zone = floor((longitudeDegrees + 180.0) / 6.0).toInt() + 1
         if (latitudeDegrees in 56.0..64.0 && longitudeDegrees in 3.0..12.0) zone = 32
@@ -95,7 +95,7 @@ object CoordinateReferenceSystem {
     }
 
     fun centralMeridianDegrees(zone: Int): Double {
-        require(zone in 1..60) { "UTM zone must be between 1 and 60" }
+        require(zone in 1..60) { "La zona UTM debe estar entre 1 y 60" }
         return (zone - 1) * 6.0 - 180.0 + 3.0
     }
 
@@ -109,9 +109,9 @@ object CoordinateReferenceSystem {
             "UTM is only defined between $MIN_UTM_LATITUDE° and $MAX_UTM_LATITUDE° latitude"
         }
         require(longitudeDegrees.isFinite() && longitudeDegrees in -180.0..180.0) {
-            "Longitude is outside [-180, 180]"
+            "La longitud sale del rango [-180, 180]"
         }
-        require(zone in 1..60) { "UTM zone must be between 1 and 60" }
+        require(zone in 1..60) { "La zona UTM debe estar entre 1 y 60" }
 
         val a = WGS84_SEMI_MAJOR_AXIS_METERS
         val e2 = WGS84_ECCENTRICITY_SQUARED
@@ -166,7 +166,7 @@ object CoordinateReferenceSystem {
 
     /** Inverse of [toUtm], returning latitude and longitude in degrees. */
     fun fromUtm(coordinate: UtmCoordinate): Pair<Double, Double> {
-        require(coordinate.zone in 1..60) { "UTM zone must be between 1 and 60" }
+        require(coordinate.zone in 1..60) { "La zona UTM debe estar entre 1 y 60" }
         val a = WGS84_SEMI_MAJOR_AXIS_METERS
         val e2 = WGS84_ECCENTRICITY_SQUARED
         val ep2 = WGS84_SECOND_ECCENTRICITY_SQUARED
@@ -279,8 +279,8 @@ object CoordinateReferenceSystem {
         widthMeters: Double,
         bearingDegrees: Double
     ): List<Pair<Double, Double>> {
-        require(lengthMeters.isFinite() && lengthMeters > 0.0) { "Length must be greater than 0 m" }
-        require(widthMeters.isFinite() && widthMeters > 0.0) { "Width must be greater than 0 m" }
+        require(lengthMeters.isFinite() && lengthMeters > 0.0) { "El largo debe ser mayor que 0 m" }
+        require(widthMeters.isFinite() && widthMeters > 0.0) { "El ancho debe ser mayor que 0 m" }
         val halfLength = lengthMeters / 2.0
         val halfWidth = widthMeters / 2.0
         val bearing = Math.toRadians(bearingDegrees)
