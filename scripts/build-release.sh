@@ -21,6 +21,23 @@ fi
 # an environment variable. gradle.properties is tracked, so a key written there
 # would be committed; the build reads the environment first precisely so the
 # local file is enough and nothing has to be versioned.
+#
+# The values are unquoted here on purpose. These files are written in Java
+# .properties syntax, where `KEY="value"` is legal and means `value`, and that is
+# how people write secrets. But this loop is bash, not a .properties parser, so
+# the quotes would survive into the env var, into manifestPlaceholders and into
+# the built manifest as literal quote characters: DJI received a 26-character App
+# Key with a `"` at each end instead of the real 24, and rejected it with
+# INVALID_METADATA, which looks exactly like a wrong key and is not.
+strip_surrounding_quotes() {
+  local v="$1"
+  case "$v" in
+    \"*\") v="${v#\"}"; v="${v%\"}" ;;
+    \'*\') v="${v#\'}"; v="${v%\'}" ;;
+  esac
+  printf '%s' "$v"
+}
+
 if [ -f "$ROOT_DIR/.local/api-key.properties" ]; then
   while IFS='=' read -r key value; do
     case "$key" in
@@ -31,6 +48,7 @@ if [ -f "$ROOT_DIR/.local/api-key.properties" ]; then
         # dropped on the floor and the APK shipped with a blank map, with no
         # warning anywhere. Every value that reaches the build has to be listed
         # here, or a key is silently ignored.
+        value="$(strip_surrounding_quotes "$value")"
         case "$value" in
           \#*|"") ;;
           *) export "${key}=${value}" ;;

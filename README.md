@@ -14,7 +14,7 @@ de la cadena cartográfica.
 
 ## Releases
 
-- [v1.1.0-alpha.6](https://github.com/JMBermejias/DJIFlyPro/releases/tag/v1.1.0-alpha.6) — **la que hay que instalar, y hay que reinstalarla**: App Key ya correcta para `com.djiflypro.app`, así que el SDK registra con DJI y por fin enlaza con el aircraft. Actualización desde la propia app, con la App Key incrustada.
+- [v1.1.0-alpha.7](https://github.com/JMBermejias/DJIFlyPro/releases/tag/v1.1.0-alpha.7) — **la que hay que instalar, y hay que reinstalarla**: la App Key por fin llega a la APK como DJI la emitió, así que el SDK registra y enlaza con el aircraft. Con el mapa cargando teselas. Las dos anteriores no conectaban.
 - [v1.1.0-alpha.2](https://github.com/JMBermejias/DJIFlyPro/releases/tag/v1.1.0-alpha.2) — igual, pero además con un APK debug de otro certificado que no se puede instalar encima.
 - [v1.1.0-alpha.1](https://github.com/JMBermejias/DJIFlyPro/releases/tag/v1.1.0-alpha.1) — compilada sin App Key: no puede registrarse con DJI.
 - [v0.1.0-alpha.1](https://github.com/JMBermejias/DJIFlyPro/releases/tag/v0.1.0-alpha.1) — base de planificación de rutas.

@@ -32,6 +32,30 @@ def hasMapLibreToken = mapLibreToken != null && !mapLibreToken.toString().isBlan
  */
 def allowMissingApiKey = System.getenv("DJIFLYPRO_ALLOW_MISSING_API_KEY") == "1"
 def assertReleasePreflight = {
+    if (hasAircraftApiKey) {
+        // A DJI App Key is a bare hex token. Quotes, spaces and any other
+        // character mean the value was mangled on its way in, and the SDK will
+        // reject it with INVALID_METADATA, which reads exactly like "wrong key"
+        // and sends people to the DJI console instead of to the build script.
+        // That is not hypothetical: a quoted .properties value survived the bash
+        // reader and shipped a 26-character key with two quote characters in it,
+        // and the key DJI had issued was correct all along.
+        def raw = aircraftApiKey.toString()
+        if (raw != raw.trim() || raw.contains('"') || raw.contains("'") || raw.contains(' ')) {
+            throw new GradleException(
+                    "\nDJIFlyPro release preflight failed: AIRCRAFT_API_KEY is malformed.\n" +
+                    "It contains quotes or whitespace, so it is not a bare DJI App Key.\n" +
+                    "Got: " + raw.length() + " characters starting with " + raw.take(6) + "\n" +
+                    "It is a hex token of 24 characters. If .local/api-key.properties quotes the\n" +
+                    "value, the quotes are part of it unless a reader strips them.\n")
+        }
+        if (raw.length() != 24) {
+            logger.warn(
+                    "\n*** DJIFlyPro: AIRCRAFT_API_KEY has " + raw.length() + " characters, not the\n" +
+                    "*** 24 that DJI issues. It compiles and signs, but if the SDK rejects it\n" +
+                    "*** the build is the first place worth looking.\n")
+        }
+    }
     if (!hasAircraftApiKey) {
         if (allowMissingApiKey) {
             logger.warn(
@@ -71,8 +95,8 @@ android {
         applicationId "com.djiflypro.app"
         minSdkVersion Integer.parseInt(project.ANDROID_MIN_SDK_VERSION)
         targetSdkVersion Integer.parseInt(project.ANDROID_TARGET_SDK_VERSION)
-        versionCode 7
-        versionName "1.1.0-alpha.6"
+        versionCode 8
+        versionName "1.1.0-alpha.7"
         manifestPlaceholders["API_KEY"] = aircraftApiKey ?: ''
         manifestPlaceholders["GMAP_API_KEY"] = configuredRuntimeValue('GMAP_API_KEY') ?: ''
         manifestPlaceholders["MAPLIBRE_TOKEN"] = configuredRuntimeValue('MAPLIBRE_TOKEN') ?: ''

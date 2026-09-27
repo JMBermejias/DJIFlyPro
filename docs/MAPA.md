@@ -47,6 +47,11 @@ de DJI, que es donde se instala la app en los aircraft con mando con pantalla.
 
 Ojo: Mapbox pide tarjeta para las cuentas nuevas. Si es un problema, la opción B.
 
+**Restríngelo siempre.** Un token `pk.` sin restricciones se lee descompilando la
+APK y cualquiera puede usarlo a tu cargo. La restricción por paquete y firma es
+gratis y tardas un minuto. Sin ella, la petición a Mapbox llega desde una app que
+no es la tuya, y la restricción es lo que la rechaza.
+
 ### Opción B: MapTiler
 
 1. Cuenta en https://cloud.maptiler.com.
@@ -57,6 +62,43 @@ Ojo: Mapbox pide tarjeta para las cuentas nuevas. Si es un problema, la opción 
 MapTiler tiene plan gratuito más Generoso que Mapbox, y el soporte de DJI lo
 menciona como el único proveedor mantenido. Si el estilo por defecto de MSDK se
 ve gris o no carga con Mapbox, esta es la vía que recommends.
+
+## Comillas: el fallo que costó dos releases
+
+Las claves viven en `.local/api-key.properties`, y ese fichero se escribe con la
+sintaxis de `.properties` de Java, donde `CLAVE="valor"` es legal y significa
+`valor`. El problema es quién lo lee:
+
+- Si lo lee Gradle como `.properties`, quita las comillas. Correcto.
+- Si lo lee `build-release.sh`, que es un bucle `while IFS='=' read`, **no quita
+  nada**: las comillas se van al vector de entorno, a `manifestPlaceholders` y al
+  manifiesto tal cual.
+
+El resultado era una App Key de 26 caracteres con dos `"` pegados, en vez de los
+24 de DJI. El SDK la rechazaba con `INVALID_METADATA`, que es exactamente el
+mismo error que da una clave equivocada, así que todo apuntaba a la consola de
+DJI y nadie miraba el script de build.
+
+Para que no se repita, el preflight de release **falla** si la clave trae comillas
+o espacios, y **avisa** si no mide 24 caracteres. Un preflight que solo comprueba
+"no está vacía" deja pasar una clave corrupta sin decir nada.
+
+Si ves esto al compilar, la clave está mal formada, no mal elegida:
+
+```
+DJIFlyPro release preflight failed: AIRCRAFT_API_KEY is malformed.
+Got: 26 characters starting with "e817d
+```
+
+Y para medir de verdad lo que hay en la APK, que es donde el valor acaba:
+
+```bash
+build-tools/*/aapt2 dump xmltree --file AndroidManifest.xml app.apk \
+  | grep -A1 maplibre.apikey
+```
+
+Un valor con comillas aparece como `=""pk.eyJ...""`, con dos comillas dentro. Con
+24 o 93 caracteres justos, sin comillas, está bien.
 
 ## Cómo probarlo
 
