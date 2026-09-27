@@ -24,10 +24,16 @@ fi
 if [ -f "$ROOT_DIR/.local/api-key.properties" ]; then
   while IFS='=' read -r key value; do
     case "$key" in
-      AIRCRAFT_API_KEY)
+      AIRCRAFT_API_KEY|MAPLIBRE_TOKEN)
+        # MAPLIBRE_TOKEN is a Mapbox token or a MapTiler key, not a DJI key: DJI
+        # only provides the manifest slot `com.dji.mapkit.maplibre.apikey`. It
+        # was missing from this list, which meant a token written here was
+        # dropped on the floor and the APK shipped with a blank map, with no
+        # warning anywhere. Every value that reaches the build has to be listed
+        # here, or a key is silently ignored.
         case "$value" in
           \#*|"") ;;
-          *) export "AIRCRAFT_API_KEY=${value}" ;;
+          *) export "${key}=${value}" ;;
         esac
         ;;
     esac

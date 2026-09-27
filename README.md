@@ -117,7 +117,8 @@ waypoint automática de DJI. La aplicación no lo oculta ni lo sube:
 - `legacy/`: variante MSDK V4 para Phantom 4, con `preflight.sh` y registro de
   hardware.
 - `docs/`: [idioma](docs/IDIOMA.md), cartografía,
-  [actualizaciones dentro de la app](docs/ACTUALIZACIONES.md), algoritmos,
+  [actualizaciones dentro de la app](docs/ACTUALIZACIONES.md),
+  [claves y mapa](docs/MAPA.md), algoritmos,
   compatibilidad, seguridad, compilación y [pruebas en móvil](docs/PRUEBAS.md).
 - `artifacts/`: APK/AAB generados, notas de release y manifiesto de hashes. Los
   binarios no se versionan; se publican como assets del release.

@@ -18,6 +18,11 @@ def hasReleaseSigning = [releaseStoreFile, releaseStorePassword, releaseKeyAlias
         .every { value -> value != null && !value.toString().isBlank() }
 def aircraftApiKey = configuredRuntimeValue('AIRCRAFT_API_KEY')
 def hasAircraftApiKey = aircraftApiKey != null && !aircraftApiKey.toString().isBlank()
+// Not a DJI key. DJI only provides the manifest slot; the value is a Mapbox
+// token or a MapTiler key. Missing is not fatal, the app still registers and
+// flies, but every map view renders blank, so it is worth saying out loud.
+def mapLibreToken = configuredRuntimeValue('MAPLIBRE_TOKEN')
+def hasMapLibreToken = mapLibreToken != null && !mapLibreToken.toString().isBlank()
 
 /**
  * A release artifact without a DJI App Key can never register with the SDK, so
@@ -41,6 +46,14 @@ def assertReleasePreflight = {
                     "See docs/BUILD.md. A signed APK without this key cannot register with DJI.\n" +
                     "For a local pipeline check only, set DJIFLYPRO_ALLOW_MISSING_API_KEY=1.\n")
         }
+    }
+    if (!hasMapLibreToken) {
+        logger.warn(
+                "\n*** DJIFlyPro: building WITHOUT a map token. MAPLIBRE_TOKEN is empty.\n" +
+                "*** The app will register and connect, but every map renders blank.\n" +
+                "*** It is a Mapbox token or a MapTiler key, not a DJI key: DJI only\n" +
+                "*** provides the manifest slot com.dji.mapkit.maplibre.apikey.\n" +
+                "*** Set MAPLIBRE_TOKEN in .local/api-key.properties. See docs/MAPA.md.\n")
     }
     if (!hasReleaseSigning) {
         throw new GradleException(
