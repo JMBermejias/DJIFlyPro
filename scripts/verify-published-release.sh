@@ -36,8 +36,16 @@ def get(url):
         url, headers={"Accept": "application/vnd.github+json",
                       "User-Agent": "DJIFlyPro-Android"}), timeout=40)
 releases = json.load(get(f"https://api.github.com/repos/{repo}/releases?per_page=10"))
-with_manifest = [r for r in releases
-                 if any(a["name"] == "update.json" for a in r.get("assets", []))]
+# Sorted by timestamp, never by position. This script had the same bug as the
+# app it verifies: it took the first release with a manifest, and the API
+# returned v1.1.0-alpha.10 last despite it being the newest by created_at. So it
+# kept reporting an old release as current, and the verification passed against
+# the wrong files for several releases in a row. A checker that shares the bug it
+# is meant to catch is worse than no checker, because it gives a green light.
+with_manifest = sorted(
+    (r for r in releases if any(a["name"] == "update.json" for a in r.get("assets", []))),
+    key=lambda r: r.get("published_at") or r.get("created_at") or "",
+    reverse=True)
 if not with_manifest:
     sys.exit("Ninguna release publica update.json")
 newest = with_manifest[0]
